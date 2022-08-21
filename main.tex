@@ -6,6 +6,11 @@
 \setlength{\textwidth}{6.0in}
 \renewcommand{\baselinestretch}{1.25}
 
+\usepackage[backend=bibtex,style=numeric,sorting=none]{biblatex}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+\addbibresource{ref.bib}
 
 \title{Title of Special Topic}
 \author{Lecture Course}
@@ -28,15 +33,70 @@
 \end{abstract}
 
 \section{Introduction}
+In this paper, we aim to find robust methods to solve highly anisotropic diffusion problems. Thus we want to solve
+
+\begin{equation}
+\begin{cases}
+-\nabla \cdot (\mathbb{A}\nabla u) = f, & \text{ in }\Omega,\\
+\mathbf{n}\cdot \mathbb{A}\nabla u = 0, & \text{ on }\Gamma_N, \\
+u = g, & \text{  on }\Gamma_D,
+\end{cases}
+\end{equation}
+where
+\begin{equation}
+\mathbb{A} = \epsilon^{-1} A_{||}\mathbf{b}\otimes \mathbf{b}
++(I - \mathbf{b}\otimes \mathbf{b})\mathbb{A}_{\perp}
+(I - \mathbf{b}\otimes \mathbf{b}).
+\end{equation}
+    Here $\epsilon \ll 1$ is the anisotropic coefficient. And $|\mathbf{b}|=1$ with $\mathbf{b}$ representing the magnetic field.
+
+Say $\Lambda_{in}$ can be any part of stream line
+We now discuss the notation we will be using
+
+\section{Current Methods}
+\subsection{Singular Pertubation Method}
+Excellecent method for when $\varepsilon$ is normal size
+
+\subsection{Limit Method}
+
+\subsection{MMAP Method}
+
+\subsection{AP Method}
+
+\subsection{Limit Stabalisation Method}
+
+\subsection{MMAP Stabalisation Method}
+
+\subsection{Line Integration}
+have to take average so not gonna be accurate
+
+\section{PF Method}
+We propose a new method 
 
 
+\section{Numerical Demonstrations}
+\subsection{Example 1}
+nice pictures with vector field
+of f and the exact solution
 
+\subsection{Example 1, Numerical Demostration}
+Show error plots for example
 
+\printbibliography[heading=bibintoc]
 
 \appendix
 
 \section{Title of Appendix}
 
 Appendices are definitely not necessary and assessors are not obliged to read them so only use them for non-vital text, figures or calculations.
+
+\subsection{Torus Cords}
+Talk about how to calculate r, give link to torus laplace 
+
+\subsection{Formulation of examples}
+How i found the exact solution for problems 
+
+\subsection{Solve Linear System in Parrelle}
+
 
 \end{document}
