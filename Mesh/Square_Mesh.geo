@@ -1,0 +1,43 @@
+lc = 0.03;
+Point(1) = { 0,  0, 0, lc};
+Point(2) = { 1,  0, 0, lc};
+Point(3) = { 1,  1, 0, lc};
+Point(4) = { 0,  1, 0, lc};
+Point(5) = { 0.25,  0.5, 0, lc};
+Point(6) = { 0.75,  0.5, 0, lc};
+Point(7) = { 0., 0.5, 0, lc};
+Point(8) = { 1., 0.5, 0, lc};
+
+Line(1) = {4, 7};
+Line(2) = {7, 1};
+Line(3) = {1, 2};
+Line(4) = {2, 8};
+Line(5) = {8, 3};
+Line(6) = {3, 4};
+Line(7) = {8, 6};
+Line(8) = {6, 5};
+Line(9) = {5, 7};
+Line(10) = {5, 4};
+Line(11) = {5, 1};
+Line(12) = {6, 2};
+Line(13) = {6, 3};
+
+Curve Loop(1) = {10, -6, -13, 8};
+Surface(1) = {1};
+Curve Loop(2) = {10, 1, -9};
+Surface(2) = {2};
+Curve Loop(3) = {11, -2, -9};
+Surface(3) = {3};
+Curve Loop(4) = {3, -12, 8, 11};
+Surface(4) = {4};
+Curve Loop(5) = {4, 7, 12};
+Surface(5) = {5};
+Curve Loop(6) = {5, -13, -7};
+Surface(6) = {6};
+
+Physical Curve("Loop", 9) = {8};
+Physical Curve("x=0", 1) = {1, 2};
+Physical Curve("x=1", 2) = {5, 4};
+Physical Curve("y=0", 3) = {3};
+Physical Curve("y=1", 4) = {6};
+Physical Surface("SquareDomain", 1) = {6, 1, 2, 3, 4, 5};
