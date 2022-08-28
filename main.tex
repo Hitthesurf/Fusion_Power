@@ -268,7 +268,7 @@ It is important to understand the derivation of the current methods because the 
 In these examples we calculate $f$ from passing $u$ through the PDE.
 \subsection{Example 1}
 We will solve the PDE (\ref{}) with $\Omega = [0,1]^2, \Gamma_D = \{y=0 \text{ or } y=1\}$ and $\Gamma_N = \{x=0 \text{ or } x=1\}$. We chose a magnetic field such
-\begin{equation}
+\begin{equation} \label{E1_b}
 \mathbf{b} = \frac{\mathbf{B}}{|\mathbf{B}|}, 
 \mathbf{B} = \left[ \begin{matrix}
 \alpha(2y-1)cos(m\pi x) + \pi\\
@@ -279,21 +279,17 @@ Thus we have $\Gamma_{in} := \{x=0\}$ and exact solution
 \begin{equation}
 u = \sin(\pi y + \alpha (y^2-y) \cos(m\pi x)) + \varepsilon \cos(2 \pi x) \sin(\pi y)
 \end{equation}
-We will cover three sub-examples with $(\alpha=0),(\alpha=2,m=1)$ and $(\alpha = 2, m=10)$. Thus we get electromagnetic fields  
+We will cover three sub-examples with $(\alpha=0),(\alpha=2,m=1)$ and $(\alpha = 2, m=10)$. Thus we get electromagnetic fields  shown in Figure \ref{E1_VFs}. The field for $\alpha = 0$ is not shown as it is a simple vector field with $\mathbf{b}= [1, 0]$.
 \begin{figure}[H]
- \begin{subfigure}{0.60\textwidth}
-\lstinputlisting[language=c++]{Code_Snippits/ExamplePPM.ppm}
-     \caption{.PPM file for Figure \ref{PPMOutput}}
-     \label{PPMExampleFile}
+ \begin{subfigure}{0.5\textwidth}
+     \includegraphics[width=\textwidth]{Pics/VectorField/E1b_a2_m1.png}
+     \caption{$\alpha=2, m=1$}
  \end{subfigure}
- \hfill
- \begin{subfigure}{0.39\textwidth}
-     \includegraphics[width=\textwidth]{Pics/Code/ExamplePPM.png}
-     \caption{Visual output of .PPM file}
-     \label{PPMOutput}
+   \begin{subfigure}{0.5\textwidth}
+     \includegraphics[width=\textwidth]{Pics/VectorField/E1b_a2_m10.png}
+     \caption{$\alpha=2, m=10$}
  \end{subfigure}
-  \hfill
- \caption{.PPM file text with visual output} \label{PPM_Example}
+ \caption{Electromagetic vector field $\mathbf{b}$ from (\ref{E1_b})} \label{E1_VFs}
 \end{figure}
 nice pictures with vector field
 calculation of clossed field line
@@ -302,14 +298,16 @@ have f and the exact solution at different eps (12)
 
 \subsection{Example 1, Numerical Demostration}
 Show error plots for example for ranging eps  L and H (6)
-Show stabalisation gives same
+Use MMAP, AP, Limit, SP, PF
+Due to MMAP better than AP not use AP
+Show stabalisation gives same MMAP and Stab
 Do DN plot (1)
 Changing grid size table 
 size | dof | L2 error | H1 error PF, MMAP
 Show gamma in can be on any part of streamline
 
 \section{Example 2}
-We now propose an example on an annulus woth closed field lines.
+We now propose an example on an annulus with closed field lines.
 We will solve the PDE (\ref{}) with $\Omega := \{x,y \in \mathbb{R}, 1<x^2+y^2<4\}$, $\Gamma_D := \{x,y \in \mathbb{R}, (x^2+y^2=1 \text{ or } x^2+y^2=4)\}$ and $\Gamma_N := \emptyset$. We chose the magnetic field 
 \begin{equation}
 \mathbf{b} = \frac{\mathbf{B}}{|\mathbf{B}|} = 
@@ -334,6 +332,11 @@ From Fig \ref{} it can be seen the magnetic field have closed lines. Therefore, 
 Therefore, these results strongly suggests that we can apply the condition  will investigate the numerical solution when $\Gamma_{in}$ is applied to part of the streamline, as in the numerical
 
 Do u and f plot for different eps (4)
+Show error plots for example for ranging eps  L and H (6)
+Use MMAP, Limit, SP, PF
+Redo with stab variants (6)
+Show stabalisation gives different MMAP and Stab and streamline
+Do DN plot (1)
 
 \section{Example 3, Magnetic Islands}
 We now solve an example on a square domain with non-zero boundary conditions on $\Gamma_D$ and with closed and open field lines.
@@ -350,6 +353,11 @@ We will use exact solution
 u = \sin(10\sin(\pi y)-10a\cos(4 \pi x)) + \varepsilon \cos(2 \pi x)\sin(10 \pi y)
 \end{equation}
 Do u and f plot for different eps (4)
+Use MMAP, Limit, SP, PF
+with stab variants (6)
+Do DN plot (1)
+Changing grid size table 
+size | dof | L2 error | H1 error PF, MMAP
 
 \section{Example 4, Magnetic Islands}
 Why do an example with zero BC ?
@@ -367,6 +375,11 @@ Where the exact solution is
 u = \sin(10 \sin(\pi y) \exp^{-a\cos(4 \pi x)}) 
 \end{equation}
 Do u and f plot for different eps (4)
+Use MMAP, Limit, SP, PF
+with stab variants (6)
+Do DN plot (1)
+Changing grid size table 
+size | dof | L2 error | H1 error PF, MMAP
 
 \section{Example 5, Torus}
 We now look at an example in 3D where the domain $\Omega $ is a torus with inner radius $r_I = 1$, outer radius $r_O = 0.5$ and is centred at the origin. It will have zero Dirichlet boundary conditions. For this eaxmple we will use Toroidal coordinates which are explained in Appendix \ref{} and demonstrate how to find the inverse map. We invert back to cartesian cordinates because the toroidal laplacian \cite{} is very complicated. Thus the definition of $r$ is
@@ -396,6 +409,8 @@ u =
 \end{cases}
 \end{equation}
 do u anf f but only for eps -10
+Use MMAP, Limit, SP, PF
+with stab variants (6)
 \section{Methods For Investigation}
 
 \subsection{Line Integration}
