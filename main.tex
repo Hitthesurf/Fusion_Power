@@ -9,6 +9,9 @@
 \usepackage[backend=bibtex,style=numeric,sorting=none]{biblatex}
 \usepackage{amsmath}
 \usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{subcaption}
 
 \addbibresource{ref.bib}
 
@@ -393,15 +396,28 @@ u =
 Appendices are definitely not necessary and assessors are not obliged to read them so only use them for non-vital text, figures or calculations.$\phi$
 
 \subsection{Toroidal Coordinates}
-Here we discuss how to parameterise a torus and to find its inverted map. We use the Figures \ref{} \ref{} below to help us derive the paramterisation.
+Here we discuss how to parameterise a torus and to find its inverted map. We use the Figures \ref{Torus_XY} and \ref{Torus_z} below to help us derive the parameterisation.
+\begin{figure}[H]
+ \begin{subfigure}{0.5\textwidth}
+     \includegraphics[width=\textwidth]{Pics/TorusCordsXY.png}
+     \caption{Cross section of torus with $z=0$}
+     \label{Torus_XY}
+ \end{subfigure}
+ \hfill
+ \begin{subfigure}{0.5\textwidth}
+     \includegraphics[width=\textwidth]{Pics/TorusCordsr_XYZ.png}
+     \caption{Cross section of torus}
+     \label{Torus_z}
+ \end{subfigure}
+ \caption{Visual aids for the derivation of the Toroidal parameterisation.} \label{BO}
+\end{figure}
 
-
-From visual inspection of Figure \ref{} we get 
+From visual inspection of Figure \ref{Torus_XY} we get 
 \begin{align}
 x &= (r_I + r_{xy})\cos(\theta)\\
 y &= (r_I + r_{xy})\sin(\theta)
 \end{align}
-Additionally, from Figure \ref{} we get 
+Additionally, from Figure \ref{Torus_z} we get 
 \begin{align}
 r_{xy}& = r \cos(\phi) \\
 z &= r \sin(\phi)
@@ -438,7 +454,159 @@ We use the inverse of the map because calculating the differential operators lea
 \subsection{Formulation of examples}
 How i found the exact solution for problems 
 \section{CG Order 2}
-\subsection{Solve Linear System in Parrelle}
+In our numerical simulations we use a continuous Lagrange order $2$ finite element. We now discuss the derivation of this finite element on an interval, a triangle and a tetrahedron. It should be noted we can do a substitution to make the shapes unit size. This is not implemented in code we instead use the Firedrake implementation of CG order $2$.
+For each element we have basis functions $\phi_i(\mathbf{x})$ which have a linear combination from the set $\{1, x, x^2, y, y^2, z, z^2, xy, yz, xz\}$ and locations on domain $\ell_i$.  To find the cofficients of the linear combination we must solve
+\begin{equation} \label{CG_eq}
+\phi_i(\ell_j) =
+\begin{cases}
+1, &i=j,\\
+0, &i\neq j.
+\end{cases}
+\end{equation}
+\subsection{Interval (1D)}
+Therefore, we have $i \in \{0, 1, 2\}$ and basis functions 
+\begin{equation}
+\phi_i(x) = \xi_{i0} + \xi_{i1}x + \xi_{i2}x^2
+\end{equation}
+with $\ell_0 = 0, \ell_1 = 1$ and $\ell_2 = 0.5$. Thus by using (\ref{CG_eq}) we get equations to solve
+\begin{align}
+\phi_i(\ell_0) = \phi_i(0) &= \xi_{i0} &= \delta_{i0},\\
+\phi_i(\ell_1) = \phi_i(1) &= \xi_{i0} + \xi_{i1} + \xi_{i2} &= \delta_{i1},\\
+\phi_i(\ell_2) = \phi_i(0.5) &= \xi_{i0} + \frac{\xi_{i1}}{2} + \frac{\xi_{i2}}{4} &= \delta_{i2}
+\end{align}
+where $\delta$ represents Kronecker delta. This can be put into matrix form
+\begin{equation}
+\left[ \begin{matrix}
+\xi_{i0} & \xi_{i1} & \xi_{i2}
+\end{matrix} \right]
+\left[ \begin{matrix}
+1 & 1 & 1 \\
+0 & 1 & 1/2 \\
+0 & 1 & 1/4
+\end{matrix} \right] = 
+\left[ \begin{matrix}
+\delta_{i0} & \delta_{i1} & \delta_{i2}
+\end{matrix} \right]
+\end{equation}
+It is trivial to implement this into a matrix for all basis functions in this element.
+\begin{equation}
+\left[ \begin{matrix}
+\xi_{00} & \xi_{01} & \xi_{02} \\
+\xi_{10} & \xi_{11} & \xi_{12} \\
+\xi_{20} & \xi_{21} & \xi_{22} 
+\end{matrix} \right]
+\left[ \begin{matrix}
+1 & 1 & 1 \\
+0 & 1 & 1/2 \\
+0 & 1 & 1/4
+\end{matrix} \right] = 
+\left[ \begin{matrix}
+1 & 0 & 0 \\
+0 & 1 & 0 \\
+0 & 0 & 1
+\end{matrix} \right]
+\end{equation}
+Thus we get 
+\begin{align}
+\left[ \begin{matrix}
+\xi_{00} & \xi_{01} & \xi_{02} \\
+\xi_{10} & \xi_{11} & \xi_{12} \\
+\xi_{20} & \xi_{21} & \xi_{22} 
+\end{matrix} \right] &= 
+\left[ \begin{matrix}
+1 & 1 & 1 \\
+0 & 1 & 1/2 \\
+0 & 1 & 1/4
+\end{matrix} \right]^{-1}, \\
+\left[ \begin{matrix}
+\xi_{00} & \xi_{01} & \xi_{02} \\
+\xi_{10} & \xi_{11} & \xi_{12} \\
+\xi_{20} & \xi_{21} & \xi_{22} 
+\end{matrix} \right] &= 
+\left[ \begin{matrix}
+1 & -3 & 2 \\
+0 & -1 & 2 \\
+0 & 4 & -4
+\end{matrix} \right],
+\end{align}
+This leads to the basis functions
+\begin{align}
+\phi_0(x) &= 2x^2-3x+1,\\
+\phi_1(x) &= x(2x-1),\\
+\phi_2(x) &= 4x(1-x)
+\end{align}
+With there visual representation in Figure \ref{}.
 
+\subsection{Triangle (2D)}
+For an order $2$ Lagrange element on a triangle we have $i \in \{0, 1, 2,3,4,5\}$ and the basis functions are of the form
+\begin{equation}
+\phi_i(x,y) = \xi_{i0} + \xi_{i1} x + \xi_{i2} y + \xi_{i3} xy + \xi_{i4} x^2 + \xi_{i5}y^2,
+\end{equation}
+where the domain is $x+y\leq 1, x \geq 0$ and $y\geq 0$. For $\ell_i$ we get
+\begin{align}
+\ell_0 &= (0,0), &\ell_3 = (1/2,1/2), \\
+\ell_1 &= (1,0), &\ell_4 = (0,1/2), \\
+\ell_2 &= (0,1), &\ell_5 = (1/2,0),
+\end{align}
+This leads to the set of equations
+\begin{align}
+\phi_i(\ell_0) &= \xi_{i0}, \\
+\phi_i(\ell_1) &= \xi_{i0} + \xi_{i1} + \xi_{i4}, \\
+\phi_i(\ell_2) &= \xi_{i0} + \xi_{i2} + \xi_{i5}, \\
+\phi_i(\ell_3) &= \xi_{i0} + \frac{\xi_{i1}+\xi_{i2}}{2} + \frac{\xi_{i3} + \xi_{i4} + \xi_{i5}}{4}, \\
+\phi_i(\ell_4) &= \xi_{i0} + \frac{\xi_{i2}}{2} + \frac{\xi_{i5}}{4}, \\
+\phi_i(\ell_5) &= \xi_{i0} + \frac{\xi_{i1}}{2} + \frac{\xi_{i4}}{4},
+\end{align}
+Therefore, using the equations created by (\ref{CG_eq}) we get the matrix of coficeits
+\begin{align}
+\left[ \begin{matrix}
+\xi_{00} & \xi_{01} & \xi_{02} & \xi_{03} & \xi_{04} & \xi_{05}\\
+\xi_{10} & \xi_{11} & \xi_{12} & \xi_{13} & \xi_{14} & \xi_{25}\\
+\xi_{20} & \xi_{21} & \xi_{22} & \xi_{23} & \xi_{24} & \xi_{25}\\
+\xi_{30} & \xi_{31} & \xi_{32} & \xi_{33} & \xi_{34} & \xi_{35}\\
+\xi_{40} & \xi_{41} & \xi_{42} & \xi_{43} & \xi_{44} & \xi_{45}\\
+\xi_{50} & \xi_{51} & \xi_{52} & \xi_{53} & \xi_{54} & \xi_{55}
+\end{matrix} \right] &= 
+\left[ \begin{matrix}
+1 & 1 & 1 & 1 & 1 & 1\\
+0 & 1 & 0 & 1/2 & 0 & 1/2\\
+0 & 0 & 1 & 1/2 & 1/2 & 0\\
+0 & 0 & 0 & 1/4 & 0 & 0\\
+0 & 1 & 0 & 1/4 & 0 & 1/4\\
+0 & 0 & 1 & 1/4 & 1/4 & 0
+\end{matrix} \right]^{-1}, \\
+\left[ \begin{matrix}
+\xi_{00} & \xi_{01} & \xi_{02} & \xi_{03} & \xi_{04} & \xi_{05}\\
+\xi_{10} & \xi_{11} & \xi_{12} & \xi_{13} & \xi_{14} & \xi_{25}\\
+\xi_{20} & \xi_{21} & \xi_{22} & \xi_{23} & \xi_{24} & \xi_{25}\\
+\xi_{30} & \xi_{31} & \xi_{32} & \xi_{33} & \xi_{34} & \xi_{35}\\
+\xi_{40} & \xi_{41} & \xi_{42} & \xi_{43} & \xi_{44} & \xi_{45}\\
+\xi_{50} & \xi_{51} & \xi_{52} & \xi_{53} & \xi_{54} & \xi_{55}
+\end{matrix} \right] &= 
+\left[ \begin{matrix}
+1 & -3 & -3 & 4 & 2 & 2\\
+0 & -1 & 0 & 0 & 2 & 0\\
+0 & 0 & -1 & 0 & 0 & 2\\
+0 & 0 & 0 & 4 & 0 & 0\\
+0 & 0 & 4 & -4 & 0 & -4\\
+0 & 4 & 0 & -4 & -4 & 0
+\end{matrix} \right]
+\end{align}
+Thus leading to basis functions
+\begin{align}
+\phi_0(x,y) &= 2(x+y)^2 - 3(x+y) + 1, \\
+\phi_1(x,y) &= x(2x-1), \\
+\phi_2(x,y) &= y(2y-1), \\
+\phi_3(x,y) &= 4xy, \\
+\phi_4(x,y) &= 4y(1-x-y), \\
+\phi_5(x,y) &= 4x(1-x-y),
+\end{align}
+With the visual representation in Figure \ref{}
+
+
+\subsection{}
+So why talking about it.
+
+\subsection{Solve Linear System in Parrelle}
 
 \end{document}
