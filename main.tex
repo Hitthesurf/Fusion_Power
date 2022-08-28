@@ -279,7 +279,22 @@ Thus we have $\Gamma_{in} := \{x=0\}$ and exact solution
 \begin{equation}
 u = \sin(\pi y + \alpha (y^2-y) \cos(m\pi x)) + \varepsilon \cos(2 \pi x) \sin(\pi y)
 \end{equation}
-
+We will cover three sub-examples with $(\alpha=0),(\alpha=2,m=1)$ and $(\alpha = 2, m=10)$. Thus we get electromagnetic fields  
+\begin{figure}[H]
+ \begin{subfigure}{0.60\textwidth}
+\lstinputlisting[language=c++]{Code_Snippits/ExamplePPM.ppm}
+     \caption{.PPM file for Figure \ref{PPMOutput}}
+     \label{PPMExampleFile}
+ \end{subfigure}
+ \hfill
+ \begin{subfigure}{0.39\textwidth}
+     \includegraphics[width=\textwidth]{Pics/Code/ExamplePPM.png}
+     \caption{Visual output of .PPM file}
+     \label{PPMOutput}
+ \end{subfigure}
+  \hfill
+ \caption{.PPM file text with visual output} \label{PPM_Example}
+\end{figure}
 nice pictures with vector field
 calculation of clossed field line
 have vector field of 3 examples (3)
@@ -318,6 +333,8 @@ From Fig \ref{} it can be seen the magnetic field have closed lines. Therefore, 
 
 Therefore, these results strongly suggests that we can apply the condition  will investigate the numerical solution when $\Gamma_{in}$ is applied to part of the streamline, as in the numerical
 
+Do u and f plot for different eps (4)
+
 \section{Example 3, Magnetic Islands}
 We now solve an example on a square domain with non-zero boundary conditions on $\Gamma_D$ and with closed and open field lines.
 We will solve the PDE (\ref{}) with $\Omega = [0,1]^2, \Gamma_D = \{y=0 \text{ or } y=1\}$ and $\Gamma_N = \{x=0 \text{ or } x=1\}$. We chose a magnetic field such 
@@ -332,6 +349,7 @@ We will use exact solution
 \begin{equation}
 u = \sin(10\sin(\pi y)-10a\cos(4 \pi x)) + \varepsilon \cos(2 \pi x)\sin(10 \pi y)
 \end{equation}
+Do u and f plot for different eps (4)
 
 \section{Example 4, Magnetic Islands}
 Why do an example with zero BC ?
@@ -348,6 +366,7 @@ Where the exact solution is
 \begin{equation}
 u = \sin(10 \sin(\pi y) \exp^{-a\cos(4 \pi x)}) 
 \end{equation}
+Do u and f plot for different eps (4)
 
 \section{Example 5, Torus}
 We now look at an example in 3D where the domain $\Omega $ is a torus with inner radius $r_I = 1$, outer radius $r_O = 0.5$ and is centred at the origin. It will have zero Dirichlet boundary conditions. For this eaxmple we will use Toroidal coordinates which are explained in Appendix \ref{} and demonstrate how to find the inverse map. We invert back to cartesian cordinates because the toroidal laplacian \cite{} is very complicated. Thus the definition of $r$ is
@@ -376,7 +395,7 @@ u =
 (1+\varepsilon)(0.25 -  \sqrt{r_I^2 + x^2 + y^2 + z^2 -2r_I\sqrt{x^2+y^2}})
 \end{cases}
 \end{equation}
-
+do u anf f but only for eps -10
 \section{Methods For Investigation}
 
 \subsection{Line Integration}
@@ -454,8 +473,9 @@ We use the inverse of the map because calculating the differential operators lea
 \subsection{Formulation of examples}
 How i found the exact solution for problems 
 \section{CG Order 2}
-In our numerical simulations we use a continuous Lagrange order $2$ finite element. We now discuss the derivation of this finite element on an interval, a triangle and a tetrahedron. It should be noted we can do a substitution to make the shapes unit size. This is not implemented in code we instead use the Firedrake implementation of CG order $2$.
-For each element we have basis functions $\phi_i(\mathbf{x})$ which have a linear combination from the set $\{1, x, x^2, y, y^2, z, z^2, xy, yz, xz\}$ and locations on domain $\ell_i$.  To find the cofficients of the linear combination we must solve
+In our numerical simulations we use a continuous Lagrange order $2$ finite element. We now provide a method for the derivation of this finite element on an interval and a triangle. Additionally, following a similar procedure we can derive the basis functions for other domains. The resource \cite{} states basis functions for many finite elements.This is not implemented in code we instead use the Firedrake implementation of CG order $2$. 
+
+For each element we have basis functions $\phi_i(\mathbf{x})$ which have a linear combination from the set $\{1, x, x^2, y, y^2, z, z^2, xy, yz, xz\}$ and locations on domain $\ell_i$.  To find the coefficients of the linear combination we must solve
 \begin{equation} \label{CG_eq}
 \phi_i(\ell_j) =
 \begin{cases}
@@ -463,6 +483,7 @@ For each element we have basis functions $\phi_i(\mathbf{x})$ which have a linea
 0, &i\neq j.
 \end{cases}
 \end{equation}
+It should be noted we can do a substitution to make the shapes unit size.
 \subsection{Interval (1D)}
 Therefore, we have $i \in \{0, 1, 2\}$ and basis functions 
 \begin{equation}
@@ -606,8 +627,40 @@ Thus leading to basis functions
 \phi_4(x,y) &= 4y(1-x-y), \\
 \phi_5(x,y) &= 4x(1-x-y),
 \end{align}
-With the visual representation in Figure \ref{}
-
+With the visual representation in Figure \ref{triBasisFuncs}.
+\begin{figure}[H]
+ \begin{subfigure}{0.5\textwidth}
+     \includegraphics[width=\textwidth]{Pics/BasisFunc/triBasis0.png}
+     \caption{\phi_0(x,y) = 2(x+y)^2 - 3(x+y) + 1,}
+ \end{subfigure}
+ \hfill
+ \begin{subfigure}{0.5\textwidth}
+     \includegraphics[width=\textwidth]{Pics/BasisFunc/triBasis1.png}
+     \caption{\phi_1(x,y) = x(2x-1),}
+ \end{subfigure}
+ \hfill
+ \begin{subfigure}{0.5\textwidth}
+     \includegraphics[width=\textwidth]{Pics/BasisFunc/triBasis2.png}
+     \caption{\phi_2(x,y) = y(2y-1),}
+ \end{subfigure}
+ \hfill
+ \begin{subfigure}{0.5\textwidth}
+     \includegraphics[width=\textwidth]{Pics/BasisFunc/triBasis3.png}
+     \caption{\phi_3(x,y) = 4xy,}
+ \end{subfigure}
+ \hfill
+ \begin{subfigure}{0.5\textwidth}
+     \includegraphics[width=\textwidth]{Pics/BasisFunc/triBasis4.png}
+     \caption{\phi_4(x,y) = 4y(1-x-y),}
+ \end{subfigure}
+ \hfill
+ \begin{subfigure}{0.5\textwidth}
+     \includegraphics[width=\textwidth]{Pics/BasisFunc/triBasis5.png}
+     \caption{\phi_5(x,y) = 4x(1-x-y),}
+ \end{subfigure}
+ \hfill
+ \caption{Visual aids for the derivation of the Toroidal parameterisation.} \label{triBasisFuncs}
+\end{figure}
 
 \subsection{}
 So why talking about it.
