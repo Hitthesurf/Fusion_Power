@@ -28,12 +28,16 @@
 \newpage
 \setcounter{page}{1}
 
+\section*{Acknowledgement}
 
+\newpage
 
 \begin{abstract}
   Insert some waffle here if you want. Abstracts are optional for
   special topics but are part of page count.
 \end{abstract}
+
+\newpage
 
 \section{Introduction}
 In this paper, we aim to find robust methods to solve highly anisotropic diffusion problems. Thus we want to solve
@@ -118,7 +122,7 @@ Now we will define all the spaces we will be using
 
 Need to explain why this is a problem
 
-Now we assume $b$ is perp to lam_N and $b$ parralle to lam_D
+Now we assume $b$ is perp to lam_N and $b$ parralle to $lam_D$
 
 It should be noted that that ___ are a lot easier to discretise. ()
 
@@ -142,7 +146,7 @@ The single pertubation method involves solving the weak form of equation \ref{}.
 This method excells for when $\varepsilon$ is normal size
 
 \subsection{Limit Method} \label{LM}
-We now introduce a limit method discussed in paper \cite{}. The limit method involves solving the the equation \ref{} when $\varepsilon \rightarrow 0$. This leads to solving the weak form \ref{} for the trial functions $(u, q) \in $ 
+We now introduce a limit method discussed in paper \cite{}. The limit method involves solving the the equation \ref{} when $\varepsilon \rightarrow 0$. Therefore, $\Delta_{||}u=0$ so when $g$ is constant the solution $u$ satisfies $\nabla_{||}u=0$ thus it is constant along the stream lines of the vector field. This leads to solving the weak form \ref{} for the trial functions $(u, q) \in $ 
 \begin{equation}
 (LM)
 \begin{cases}
@@ -276,7 +280,7 @@ We will solve the PDE (\ref{}) with $\Omega = [0,1]^2, \Gamma_D = \{y=0 \text{ o
 \end{matrix} \right]
 \end{equation}
 Thus we have $\Gamma_{in} := \{x=0\}$ and exact solution
-\begin{equation}
+\begin{equation} \label{E1_u}
 u = \sin(\pi y + \alpha (y^2-y) \cos(m\pi x)) + \varepsilon \cos(2 \pi x) \sin(\pi y)
 \end{equation}
 We will cover three sub-examples with $(\alpha=0),(\alpha=2,m=1)$ and $(\alpha = 2, m=10)$. Thus we get electromagnetic fields  shown in Figure \ref{E1_VFs}. The field for $\alpha = 0$ is not shown as it is a simple vector field with $\mathbf{b}= [1, 0]$.
@@ -291,6 +295,114 @@ We will cover three sub-examples with $(\alpha=0),(\alpha=2,m=1)$ and $(\alpha =
  \end{subfigure}
  \caption{Electromagetic vector field $\mathbf{b}$ from (\ref{E1_b})} \label{E1_VFs}
 \end{figure}
+In Figure \ref{E1_fs} we have the exact solution to example $1$ \ref{E1_u}. We have the source term $f$ is too complicated to write analytically so the visualisation is given in Figure \ref{E1_fs} . We analysis the equation with $\varepsilon = 0.1$ and $\varepsilon = 10^{-10}$ . We notice the $\varepsilon = 0$ and $\varepsilon = 10^{-10}$ variants are visually similar this suggests to consider a method discussed in section \ref{}. The main diffence is the solution $u$ is not constant on streamlines of the vector field $\mathbf{b}$.
+\begin{figure}[H]
+ \begin{subfigure}{0.44\textwidth}
+     \includegraphics[width=\textwidth]{Pics/uf/U_E1a_eps1.png}
+     \caption{$\alpha=0$ and $\varepsilon = 0.1$}
+ \end{subfigure}
+   \begin{subfigure}{0.44\textwidth}
+     \includegraphics[width=\textwidth]{Pics/uf/U_E1a_eps10.png}
+     \caption{$\alpha=0$ and $\varepsilon = 10^{-10}$}
+ \end{subfigure}
+ \begin{subfigure}{0.44\textwidth}
+     \includegraphics[width=\textwidth]{Pics/uf/U_E1b_eps1.png}
+     \caption{$\alpha=2, m=1$ and $\varepsilon = 0.1$}
+ \end{subfigure}
+ \begin{subfigure}{0.44\textwidth}
+     \includegraphics[width=\textwidth]{Pics/uf/U_E1b_eps_10.png}
+     \caption{$\alpha=2, m=1$ and $\varepsilon = 10^{-10}$}
+ \end{subfigure}
+ \begin{subfigure}{0.44\textwidth}
+     \includegraphics[width=\textwidth]{Pics/uf/U_E1c_eps_1.png}
+     \caption{$\alpha=2, m=10$ and $\varepsilon = 0.1$}
+ \end{subfigure}
+ \hfill
+ \begin{subfigure}{0.44\textwidth}
+     \includegraphics[width=\textwidth]{Pics/uf/u_E1c_eps_10.png}
+     \caption{$\alpha=2, m=10$ and $\varepsilon = 10^{-10}$}
+ \end{subfigure}
+ \caption{Exact solution $u$ (\ref{E1_u}) for Example $1$.} \label{E1_us}
+\end{figure}
+
+\begin{figure}[H]
+ \begin{subfigure}{0.44\textwidth}
+     \includegraphics[width=\textwidth]{Pics/uf/F_E1a_eps1.png}
+     \caption{$\alpha=0$ and $\varepsilon = 0.1$}
+ \end{subfigure}
+   \begin{subfigure}{0.44\textwidth}
+     \includegraphics[width=\textwidth]{Pics/uf/F_E1a_eps10.png}
+     \caption{$\alpha=0$ and $\varepsilon = 10^{-10}$}
+ \end{subfigure}
+ \begin{subfigure}{0.44\textwidth}
+     \includegraphics[width=\textwidth]{Pics/uf/F_E1b_eps1.png}
+     \caption{$\alpha=2, m=1$ and $\varepsilon = 0.1$}
+ \end{subfigure}
+ \begin{subfigure}{0.44\textwidth}
+     \includegraphics[width=\textwidth]{Pics/uf/F_E1b_eps_10.png}
+     \caption{$\alpha=2, m=1$ and $\varepsilon = 10^{-10}$}
+ \end{subfigure}
+ \begin{subfigure}{0.44\textwidth}
+     \includegraphics[width=\textwidth]{Pics/uf/F_E1c_eps_1.png}
+     \caption{$\alpha=2, m=10$ and $\varepsilon = 0.1$}
+ \end{subfigure}
+ \hfill
+ \begin{subfigure}{0.44\textwidth}
+     \includegraphics[width=\textwidth]{Pics/uf/f_E1c_eps_10.png}
+     \caption{$\alpha=2, m=10$ and $\varepsilon = 10^{-10}$}
+ \end{subfigure}
+ \caption{Source term $f$ for Example $1$.} \label{E1_fs}
+\end{figure}
+
+Now we numerically simulate the solution with a $20 \times 20$ grid, where each finite element is a square with width $0.05$. The finite element 
+
+The $MMAP$ line is located under the $AP$ line this strongly suggests these methods are equivalent therefore in further simulations we will only consider the $MMAP$ method as the $AP$ method requires significatly more computionaly power to use. Additionally, the $PF$ method performs worse
+
+
+\begin{table}[]
+\resizebox{\textwidth}{!}{
+\begin{tabular}{||cccccccc||}
+\cline{3-8}
+\multicolumn{2}{c|}{L2 Error} & \multicolumn{2}{c|}{$\alpha = 0$} & \multicolumn{2}{c|}{$\alpha = 2, m=1$} & \multicolumn{2}{c|}{$\alpha = 2, m=10$} \\
+\hline 
+Size          & dof          & PF        & MMAP        & PF        & MMAP        & PF        & MMAP        \\
+\hline \hline
+$10\times 10$  &  882    &  $1.26\times10^{-4}$ & $1.26\times10^{-4}$  & $1.64\times10^{-1}$ & $2.25\times10^{-4}$ & $4.29\times10^{-2}$ & $3.16\times10^{-1}$\\
+\hline
+$20\times 20$  &  3362     & $1.58\times 10^{-5}$ & $1.58\times 10^{-5}$ & $4.01\times10^{-2}$ & $2.80\times10^{-5}$ & $2.94\times10^{-2}$ & $1.25\times10^{-1}$\\
+\hline
+$40\times 40$ &   13122    & $1.97\times 10^{-6}$ & $1.97\times 10^{-6}$ & $1.42\times10^{-3}$ & $3.44\times10^{-6}$ & $4.23\times 10^{-3}$ & $1.29\times10^{-2}$\\
+\hline
+$80\times 80$  &  51842     & $2.46\times 10^{-7}$ & $2.46\times 10^{-7}$ & $2.38\times10^{-5}$ & $4.25 \times 10^{-7}$ & $9.71\times10^{-4}$ & $9.70\times10^{-4}$\\
+\hline
+$160\times 160$ & 206082   & $3.09\times 10^{-8}$ & $3.09\times 10^{-8}$ & $1.47\times10^{-6}$ & $5.25 \times 10^{-8}$ & $2.19\times10^{-4}$ & $6.36\times10^{-5}$ \\
+\hline
+\end{tabular}}
+\end{table}
+
+
+\begin{table}[]
+\resizebox{\textwidth}{!}{
+\begin{tabular}{||cccccccc||}
+\cline{3-8}
+\multicolumn{2}{c|}{H1 Error} & \multicolumn{2}{c|}{$\alpha = 0$} & \multicolumn{2}{c|}{$\alpha = 2, m=1$} & \multicolumn{2}{c|}{$\alpha = 2, m=10$} \\
+\hline 
+Size          & dof          & PF        & MMAP        & PF        & MMAP        & PF        & MMAP        \\
+\hline \hline
+$10\times 10$  &  882    &  $8.16\times10^{-3}$ & $8.16\times10^{-3}$  & $1.00\times10^{0}$ & $1.42\times10^{-2}$ & $2.57\times10^{1}$ & $4.22\times10^{0}$\\
+\hline
+$20\times 20$  &  3362     & $2.04\times 10^{-3}$ & $2.04\times 10^{-3}$ & $3.99\times10^{-1}$ & $3.57\times10^{-3}$ & $1.21\times10^{1}$ & $1.99\times10^{0}$\\
+\hline
+$40\times 40$ &   13122    & $5.11\times 10^{-4}$ & $5.11\times 10^{-4}$ & $4.37\times10^{-2}$ & $8.89\times10^{-4}$ & $4.38\times 10^{-1}$ & $3.20\times10^{-1}$\\
+\hline
+$80\times 80$  &  51842     & $1.28\times 10^{-4}$ & $1.28\times 10^{-4}$ & $7.23\times10^{-3}$ & $2.21\times 10^{-4}$ & $2.01\times10^{-1}$ & $5.00\times10^{-2}$\\
+\hline
+$160\times 160$ & 206082   & $3.19\times 10^{-5}$ & $3.19\times 10^{-5}$ & $1.77\times10^{-3}$ & $5.49\times 10^{-5}$ & $9.79\times10^{-2}$ & $ 1.10\times10^{-2}$ \\
+\hline
+\end{tabular}}
+\end{table}
+
+
 nice pictures with vector field
 calculation of clossed field line
 have vector field of 3 examples (3)
@@ -320,13 +432,31 @@ We will solve the PDE (\ref{}) with $\Omega := \{x,y \in \mathbb{R}, 1<x^2+y^2<4
  x
 \end{matrix} \right]
 \end{equation}
+which is visualised in Figure \ref{E2_VF}
+\begin{figure}[H]
+ \includegraphics[width=\textwidth]{Pics/VectorField/E2b.png}
+  \caption{Electromagnetic field $\mathbf{b}$ for Example $2$.}
+ \label{E2_VF}
+\end{figure}
+
+From Fig \ref{E2_VF} it can be seen the magnetic field has closed lines. Therefore, for methods which involve $\Gamma_{in}$ we use the stabilisation variants. However, from the numerical investigation of Example 1 we found that we can change $\Gamma_{in}$ to $\Gamma_{out}$ and get similar error. This strongly suggests that $\Gamma_{in}$ can represent a point on each streamline. Thus we will numerically investigate the consequence of setting $\Gamma_{in}:=\{x,y \in \mathbb{R}, x>0, y=0\}$.
+
 We will use solution
 \begin{equation}
 u = (1+\varepsilon)(x^2 + y^2 -1)(4-x^2-y^2)
 \end{equation}
-From Fig \ref{} it can be seen the magnetic field have closed lines. Therefore, for methods which involve $\Gamma_{in}$ we use the stabilisation variants. However, from the numerical investigation of Example 1 we found that we can change $\Gamma_{in}$ to $\Gamma_{out}$ and get similar error. This strongly suggests that $\Gamma_{in}$ can represent a point on each streamline. Thus we will numerically investigate the consequence of setting $\Gamma_{in}:=\{x,y \in \mathbb{R}, x>0, y=0\}$.
-
-
+which is visualised with its source term $f$ in Figure \ref{E2_uf} at $\varepsilon = 0.1$.
+\begin{figure}[H]
+ \begin{subfigure}{0.5\textwidth}
+     \includegraphics[width=\textwidth]{Pics/uf/U_E2_eps_1.png}
+     \caption{Exact solution $u$ with mesh.}
+ \end{subfigure}
+   \begin{subfigure}{0.5\textwidth}
+     \includegraphics[width=\textwidth]{Pics/uf/F_E2_eps_1.png}
+     \caption{Source term $f$.}
+ \end{subfigure}
+ \caption{Example $2$ with $\varepsilon = 0.1$} \label{E2_uf}
+\end{figure}
 
 
 Therefore, these results strongly suggests that we can apply the condition  will investigate the numerical solution when $\Gamma_{in}$ is applied to part of the streamline, as in the numerical
@@ -348,10 +478,42 @@ We will solve the PDE (\ref{}) with $\Omega = [0,1]^2, \Gamma_D = \{y=0 \text{ o
 4a \sin(4 \pi x)
 \end{matrix} \right]
 \end{equation}
+which is visualised in Figure \ref{E3_VF}. The problem with this example which comes from \cite{} is that $\mathbb{b}\cdot \mathbb{n} \neq 1$ on $\Gamma_{D}$. Example $4$ changes this to ensure $\mathbb{b}\cdot \mathbb{n} = 1$ on $\Gamma_{D}$.
+\begin{figure}[H]
+ \includegraphics[width=\textwidth]{Pics/VectorField/E3b.png}
+  \caption{Electromagnetic field $\mathbf{b}$ for Example $3$.}
+ \label{E3_VF}
+\end{figure}
+
 We will use exact solution
 \begin{equation}
 u = \sin(10\sin(\pi y)-10a\cos(4 \pi x)) + \varepsilon \cos(2 \pi x)\sin(10 \pi y)
 \end{equation}
+which is visualised with its source term $f$ in Figure \ref{E3_uf} at $\varepsilon = 10^{-10}$. Additionally, we visualise this for $\varepsilon = 0.1$.
+\begin{figure}[H]
+ \begin{subfigure}{0.5\textwidth}
+     \includegraphics[width=\textwidth]{Pics/uf/U_E3_eps_10.png}
+     \caption{Exact solution $u$.}
+ \end{subfigure}
+   \begin{subfigure}{0.5\textwidth}
+     \includegraphics[width=\textwidth]{Pics/uf/F_E3_eps_10.png}
+     \caption{Source term $f$.}
+ \end{subfigure}
+ \caption{Example $3$ with $\varepsilon = 10^{-10}$.} \label{E3_uf}
+\end{figure}
+\begin{figure}[H]
+ \begin{subfigure}{0.5\textwidth}
+     \includegraphics[width=\textwidth]{Pics/uf/U_E3_ep1.png}
+     \caption{Exact solution $u$.}
+ \end{subfigure}
+   \begin{subfigure}{0.5\textwidth}
+     \includegraphics[width=\textwidth]{Pics/uf/F_E3_eps_1.png}
+     \caption{Source term $f$.}
+ \end{subfigure}
+ \caption{Example $3$ with $\varepsilon = 0.1$.} \label{E3_uf_01}
+\end{figure}
+
+
 Do u and f plot for different eps (4)
 Use MMAP, Limit, SP, PF
 with stab variants (6)
@@ -370,10 +532,31 @@ Thus on $\Omega = [0,1]^2, \Gamma_D = \{y=0 \text{ or } y=1\}$ and $\Gamma_N = \
 4a \sin(4 \pi x) \sin(\pi y)
 \end{matrix} \right]
 \end{equation}
+where the electromagnetic field $\mathbf{b}$ is shown in Figure \ref{E4_VF}.
+\begin{figure}[H]
+ \includegraphics[width=\textwidth]{Pics/VectorField/E4b.png}
+  \caption{Electromagnetic field $\mathbf{b}$ for Example $4$.}
+ \label{E4_VF}
+\end{figure}
+
 Where the exact solution is 
 \begin{equation}
 u = \sin(10 \sin(\pi y) \exp^{-a\cos(4 \pi x)}) 
 \end{equation}
+which is shown in Figure \ref{E4_VF}
+
+\begin{figure}[H]
+ \begin{subfigure}{0.5\textwidth}
+     \includegraphics[width=\textwidth]{Pics/uf/U_E4_eps_10.png}
+     \caption{Exact solution $u$.}
+ \end{subfigure}
+   \begin{subfigure}{0.5\textwidth}
+     \includegraphics[width=\textwidth]{Pics/uf/F_E4_eps_10.png}
+     \caption{Source term $f$.}
+ \end{subfigure}
+ \caption{Example $4$ with $\varepsilon = 10^{-10}$.} \label{E4_uf}
+\end{figure}
+
 Do u and f plot for different eps (4)
 Use MMAP, Limit, SP, PF
 with stab variants (6)
@@ -408,6 +591,19 @@ u =
 (1+\varepsilon)(0.25 -  \sqrt{r_I^2 + x^2 + y^2 + z^2 -2r_I\sqrt{x^2+y^2}})
 \end{cases}
 \end{equation}
+This $u$ is displayed in Figure \ref{E5_uf} with its source term $f$ and $\varepsilon=10^{-10}$.
+\begin{figure}[H]
+ \begin{subfigure}{0.5\textwidth}
+     \includegraphics[width=\textwidth]{Pics/uf/U_E5_eps_10.png}
+     \caption{Exact solution $u$.}
+ \end{subfigure}
+   \begin{subfigure}{0.5\textwidth}
+     \includegraphics[width=\textwidth]{Pics/uf/F_E5_eps_10.png}
+     \caption{Source term $f$.}
+ \end{subfigure}
+ \caption{Example $5$ with $\varepsilon = 10^{-10}$.} \label{E5_uf}
+\end{figure}
+
 do u anf f but only for eps -10
 Use MMAP, Limit, SP, PF
 with stab variants (6)
