@@ -35,6 +35,7 @@ def Example_1(al = 0., m = 1., Size = 40, eps = 1e-15):
 
 def Example_2(eps = 1e-15, Restrict_CL =True):
     # Annulus (Clossed Field Lines)
+    # 1<r<2
     mesh = Mesh("Mesh/Annulus_Side_Mesh.msh")
     x, y = SpatialCoordinate(mesh)
     
@@ -42,7 +43,7 @@ def Example_2(eps = 1e-15, Restrict_CL =True):
     dOmegaD = [11, 12]
     dOmegaIN = []
     if Restrict_CL:
-        dOmegaIN.append(9)
+        dOmegaIN.append(1) #MagSplit Num
     
     #Calc Vector Field
     b_1 = -y
