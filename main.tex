@@ -380,9 +380,37 @@ In Figure \ref{E1_fs} we have the exact solution to example $1$ \ref{E1_u}. We h
      \includegraphics[width=\textwidth]{Pics/LHSims/E1c_MMAP_AP_PFH1.png}
      \caption{H1 Error, $\alpha=2, m=10$}
  \end{subfigure}
- \caption{Source term $f$ for Example $1$.} \label{E1_LH_PF}
+ \caption{Numerical demonstration for solver $MMAP, AP$ and $PF$ on a $20\times 20$ quadrilateral grid using CG order $2$ for Example $1$, with $x=\varepsilon$ and $y=$ Error.} \label{E1_LH_PF}
 \end{figure}
 
+\begin{figure}[H]
+ \begin{subfigure}{0.44\textwidth}
+     \includegraphics[width=\textwidth]{Pics/LHSims/E1a_MMAP_LM_SPL2.png}
+     \caption{L2 Error $\alpha=0$}
+ \end{subfigure}
+   \begin{subfigure}{0.44\textwidth}
+     \includegraphics[width=\textwidth]{Pics/LHSims/E1a_MMAP_LM_SPH1.png}
+     \caption{H1 Error $\alpha=0$}
+ \end{subfigure}
+ \begin{subfigure}{0.44\textwidth}
+     \includegraphics[width=\textwidth]{Pics/LHSims/E1b_MMAP_LM_SPL2.png}
+     \caption{L2 Error $\alpha=2, m=1$}
+ \end{subfigure}
+ \begin{subfigure}{0.44\textwidth}
+     \includegraphics[width=\textwidth]{Pics/LHSims/E1b_MMAP_LM_SPH1.png}
+     \caption{H1 Error, $\alpha=2, m=1$}
+ \end{subfigure}
+ \begin{subfigure}{0.44\textwidth}
+     \includegraphics[width=\textwidth]{Pics/LHSims/E1c_MMAP_LM_SPL2.png}
+     \caption{L2 Error, $\alpha=2, m=10$}
+ \end{subfigure}
+ \hfill
+ \begin{subfigure}{0.44\textwidth}
+     \includegraphics[width=\textwidth]{Pics/LHSims/E1c_MMAP_LM_SPH1.png}
+     \caption{H1 Error, $\alpha=2, m=10$}
+ \end{subfigure}
+ \caption{Numerical demonstration for solver $MMAP, LM$ and $SP$ on a $20\times 20$ quadrilateral grid using CG order $2$ for Example $1$, with $x=\varepsilon$ and $y=$ Error.} \label{E1_LM_SP}
+\end{figure}
 
 
 Now we numerically simulate the solution with a $20 \times 20$ grid, where each finite element is a square with width $0.05$. The finite element 
@@ -587,6 +615,29 @@ which is shown in Figure \ref{E4_VF}
  \end{subfigure}
  \caption{Example $4$ with $\varepsilon = 10^{-10}$.} \label{E4_uf}
 \end{figure}
+
+
+
+\begin{table}[]
+\resizebox{\textwidth}{!}{
+\begin{tabular}{||cccccc||}
+\cline{3-6}
+\multicolumn{2}{c|}{Error} & \multicolumn{2}{c|}{L2 Error} & \multicolumn{2}{c|}{H1 Error} \\
+\hline 
+Size          & dof          & PF        & MMAP        & PF        & MMAP        \\
+\hline \hline
+$10\times 10$  &  882    &  $2.33\times10^{-2}$ & $3.91\times10^{-2}$  & $1.97\times10^{0}$ & $2.16\times10^{0}$\\
+\hline
+$20\times 20$  &  3362     & $8.78\times 10^{-3}$ & $1.00\times 10^{-2}$ & $1.16\times10^{0}$ & $1.25\times10^{0}$\\
+\hline
+$40\times 40$ &   13122    & $1.14\times 10^{-3}$ & $1.26\times 10^{-3}$ & $2.98\times10^{-1}$ & $3.31\times10^{-1}$\\
+\hline
+$80\times 80$  &  51842     & $1.45\times 10^{-4}$ & $1.56\times 10^{-4}$ & $7.57\times10^{-2}$ & $8.32\times 10^{-2}$\\
+\hline
+$160\times 160$ & 206082   & $1.84\times 10^{-5}$ & $1.92\times 10^{-5}$ & $1.93\times10^{-2}$ & $2.04\times 10^{-2}$ \\
+\hline
+\end{tabular}}
+\end{table}
 
 Do u and f plot for different eps (4)
 Use MMAP, Limit, SP, PF
