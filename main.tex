@@ -354,6 +354,37 @@ In Figure \ref{E1_fs} we have the exact solution to example $1$ \ref{E1_u}. We h
  \caption{Source term $f$ for Example $1$.} \label{E1_fs}
 \end{figure}
 
+\begin{figure}[H]
+ \begin{subfigure}{0.44\textwidth}
+     \includegraphics[width=\textwidth]{Pics/LHSims/E1a_MMAP_AP_PFL2.png}
+     \caption{L2 Error $\alpha=0$}
+ \end{subfigure}
+   \begin{subfigure}{0.44\textwidth}
+     \includegraphics[width=\textwidth]{Pics/LHSims/E1a_MMAP_AP_PFH1.png}
+     \caption{H1 Error $\alpha=0$}
+ \end{subfigure}
+ \begin{subfigure}{0.44\textwidth}
+     \includegraphics[width=\textwidth]{Pics/LHSims/E1b_MMAP_AP_PFL2.png}
+     \caption{L2 Error $\alpha=2, m=1$}
+ \end{subfigure}
+ \begin{subfigure}{0.44\textwidth}
+     \includegraphics[width=\textwidth]{Pics/LHSims/E1b_MMAP_AP_PFH1.png}
+     \caption{H1 Error, $\alpha=2, m=1$}
+ \end{subfigure}
+ \begin{subfigure}{0.44\textwidth}
+     \includegraphics[width=\textwidth]{Pics/LHSims/E1c_MMAP_AP_PFL2.png}
+     \caption{L2 Error, $\alpha=2, m=10$}
+ \end{subfigure}
+ \hfill
+ \begin{subfigure}{0.44\textwidth}
+     \includegraphics[width=\textwidth]{Pics/LHSims/E1c_MMAP_AP_PFH1.png}
+     \caption{H1 Error, $\alpha=2, m=10$}
+ \end{subfigure}
+ \caption{Source term $f$ for Example $1$.} \label{E1_LH_PF}
+\end{figure}
+
+
+
 Now we numerically simulate the solution with a $20 \times 20$ grid, where each finite element is a square with width $0.05$. The finite element 
 
 The $MMAP$ line is located under the $AP$ line this strongly suggests these methods are equivalent therefore in further simulations we will only consider the $MMAP$ method as the $AP$ method requires significatly more computionaly power to use. Additionally, the $PF$ method performs worse
