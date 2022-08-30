@@ -1,4 +1,4 @@
-\documentclass[12pt,a4paper]{article}
+\documentclass[12pt]{ociamthesis}
 
 \setlength{\topmargin}{0.0in}
 \setlength{\oddsidemargin}{0.33in}
@@ -15,9 +15,13 @@
 
 \addbibresource{ref.bib}
 
-\title{Title of Special Topic}
-\author{Lecture Course}
-\date{Candidate Number: xxxxxx}
+
+\title{The Title of My M.Sc.\ Dissertation}
+\author{Mark Pearson}
+\college{Linacre College}
+%\renewcommand{\submittedtext}{Dissertation submitted in partial fulfilment of the requirements for the degree of}
+\degree{M.Sc.\ in Mathematical Modelling and Scientific Computing}
+\degreedate{Trinity Term 2020}
 
 \begin{document}
 
@@ -26,9 +30,18 @@
 \thispagestyle{empty}
 
 \newpage
-\setcounter{page}{1}
 
-\section*{Acknowledgement}
+\begin{acknowledgements} 
+
+It doesn't really matter in which order the acknowledgements and abstract come. In some ways it's nice to put the acknowledgements first then everything that follows is about the project you have done.
+
+You should generally thank your supervisor(s) in your acknowledgements --- not doing so makes quite a statement. If anyone else has helped with the project then thank them too.
+
+If you have received funding from anywhere, it is standard to thank your funding body.
+
+It's then up to you who else to thank. You can be brief and stop there, or you can thank family, friends, the college cat \ldots
+
+\end{acknowledgements}
 
 \newpage
 
@@ -38,58 +51,63 @@
 \end{abstract}
 
 \newpage
+\setcounter{page}{1}
 
+\tableofcontents
+
+
+\chapter{Introduction and Current Methods}
 \section{Introduction}
 In this paper, we aim to find robust methods to solve highly anisotropic diffusion problems. Thus we want to solve
 
-\begin{equation}
+\begin{equation} \label{PDE}
 \begin{cases}
 -\nabla \cdot (\mathbb{A}\nabla u) = f, & \text{ in }\Omega,\\
 \mathbf{n}\cdot \mathbb{A}\nabla u = 0, & \text{ on }\Gamma_N, \\
 u = g, & \text{  on }\Gamma_D,
 \end{cases}
 \end{equation}
-where
-\begin{equation}
+where $\Gamma_N \cap \Gamma_D := \partial \Omega$ and
+\begin{equation} \label{Mat_A}
 \mathbb{A} = \epsilon^{-1} A_{||}\mathbf{b}\otimes \mathbf{b}
 +(I - \mathbf{b}\otimes \mathbf{b})\mathbb{A}_{\perp}
 (I - \mathbf{b}\otimes \mathbf{b}).
 \end{equation}
-    Here $\epsilon \ll 1$ is the anisotropic coefficient. And $|\mathbf{b}|=1$ with $\mathbf{b}$ representing the magnetic field.
-State restriction on the b
+    Here $\epsilon \ll 1$ is the anisotropic coefficient. And $\mathbf{b}$ represents the electromagnetic vector field. From \cite{DN} we have restrictions on $\mathbf{b}$ they demand that
+    \begin{enumerate}
+  \item $\mathbf{b} \in \mathcal{C}^{\infty}(\Omega; \mathrm{R}^d);$.
+  \item $|\mathbf{b}|=1$ for all $\mathbf{x} \in \Omega$;
+  \item $\mathbf{b}\cdot \mathbf{n} = 0$ on $\Gamma_D$ the Dirichlet boundary;
+  \item $\mathbf{b}\cdot \mathbf{n} \neq 0$ on $\Gamma_N$ the Neumann boundary;
+\end{enumerate}
+where $\mathbf{n}$ is the outward normal.
 
-From multiple papers the best notation for this problem is stated in \cite{} \cite{}. Thus we will use a similar notation. 
+WHY is this a problem?
 
-Talk about problem (problem from not being well posed.)
-
-Say $\Lambda_{in}$ can be any part of stream line
-
-
-For a scaler feild $u\in\mathbb{R}$ and vector field $v \in \mathbb{R}^d$, we use the notation
+From multiple papers the best notation for this problem is stated in \cite{DN} and \cite{AP}. Thus we will use a similar notation. For a scalar field $u\in\mathbb{R}$ and vector field $v \in \mathbb{R}^d$, we use the notation
 \begin{align}
 v_{||} &=(\mathbf{b} \otimes \mathbf{b})v = (v \cdot \mathbf{b})\mathbf{b}
 , & v_{\perp} &= (\mathbb{I}-\mathbf{b} \otimes \mathbf{b})v,\\
 \nabla_{||}u &= (\mathbf{b} \otimes \mathbf{b}) \nabla u = (\nabla u \cdot \mathbf{b})\mathbf{b},
 & \nabla_{\perp} u &= (\mathbb{I}-\mathbf{b} \otimes \mathbf{b}) \nabla u,\\
-\nabla_{||} \cdot u &= \nabla \cdot u_{||},
-& \nabla_{\perp} \cdot u &= \nabla \cdot u_{\perp}.
+\nabla_{||} \cdot v &= \nabla \cdot v_{||},
+& \nabla_{\perp} \cdot v &= \nabla \cdot v_{\perp}.
 \end{align}
 Now we define 
-\begin{align}
+\begin{align} \label{Lap_para}
 \Delta_{||}u &= \nabla_{||}\cdot(A_{||}\nabla_{||}u)  =
-\nabla \cdot(A_{||} (\mathbf{b} \otimes \mathbf{b}) \nabla u)\\
+\nabla \cdot(A_{||} (\mathbf{b} \otimes \mathbf{b}) \nabla u)\\ \label{Lap_perp}
 \Delta_{\perp}u  &= \nabla_{\perp}\cdot(\mathbb{A}_{\perp}\nabla_{\perp}u)  = 
 \nabla \cdot((\mathbb{I}-\mathbf{b} \otimes \mathbf{b})\mathbb{A}_{\perp}(\mathbb{I}-\mathbf{b} \otimes \mathbf{b})\nabla u)
 \end{align}
 
-Thus from \ref{} and \ref{} it is clear to see \ref{} can be written as
-\begin{align}
+Thus from (\ref{Lap_para}) and (\ref{Lap_perp}) it is clear to see (\ref{Mat_A}) can be written as
+\begin{align} \label{A_grad_u}
 \mathbb{A} \nabla u = 
 \varepsilon^{-1}(A_{||}\nabla_{||} u)_{||} + 
-(\mathbb{A}_{\perp}\nabla_{\perp}u)_{\perp} \\
- \\
+(\mathbb{A}_{\perp}\nabla_{\perp}u)_{\perp} 
 \end{align}
-Thus putting \ref{} into the PDE \ref{} we get
+Thus putting (\ref{A_grad_u}) into the PDE (\ref{PDE}) we get
 \begin{equation}
 \begin{cases}
 -\varepsilon^{-1} \Delta_{||}u - \Delta_{\perp}u = f, & \text{ in }\Omega,\\
@@ -97,34 +115,37 @@ Thus putting \ref{} into the PDE \ref{} we get
 u = g, & \text{  on }\Gamma_D,
 \end{cases}
 \end{equation}
-
-With the equation (\ref{}) being equal because
-\begin{equation}
-\nabla_{||}\cdot(A_{||}\nabla_{||}u) = 
-\nabla \cdot (A_{||})_{||} 
-\end{equation}
-can be done as $A_{||}$ is scalar
-and (\ref{}) being equal because 
-
-We can now write the PDE \ref{} in weak form
-
+We now write the PDE (\ref{PDE}) in weak form
+\begin{align}
+\int_{\Omega}f\hat{u}d\mathbf{x} &= - \int_{\Omega} \nabla \cdot (\mathbb{A} \nabla u) \hat{u} \mathbf{x}\\
+&= - \int_{\partial \Omega} \hat{u} (\mathbb{A} \nabla u) \cdot \mathbf{n} d\mathbf{x}
++ \int_{\Omega}(\mathbb{A}\nabla u)\cdot \nabla \hat{u} d \mathbf{x}\\
+&= - \int_{\Gamma_D} \hat{u} (\mathbb{A}\nabla u) \cdot \mathbf{n} + 
+\varepsilon^{-1}\int_{\Omega} A_{||} \nabla_{||}u \cdot \nabla_{||}\hat{u} d\mathbf{x} +
+\int_{\Omega}(\mathbb{A}_{\perp} \nabla_{\perp} u )\cdot \nabla_{\perp} \hat{u} d\mathbf{x}
+\end{align}
+To simplify notation we use
 \begin{align}
 a_{||}(\alpha, \beta) &= \int_{\Omega} A_{||} \nabla_{||}\alpha \cdot \nabla_{||}\beta d\mathbf{x} \\
 a_{\perp}(\alpha, \beta) &= \int_{\Omega}(\mathbb{A}_{\perp} \nabla_{\perp}\alpha )\cdot \nabla_{\perp} \beta d\mathbf{x}
 \end{align}
-This can be easily calculated in firedrake using
+For are numerical simulations we use Firedrake \cite{Dragon} which written in code is 
 CODESNIP
 
-By splitting up the PDE \ref{} into parts parrelle and perpendicular to the vector feild we get the PDE 
+Also, we have 
+\begin{equation}
+\varepsilon^{-1} (A_{||}\nabla_{||}u)_{||}\cdot \mathbf{n} = \varepsilon^{-1} (A_{||}\nabla_{||}u)\cdot \mathbf{n} = \varepsilon^{-1} A_{||}(\nabla_u \cdot \mathbf{b}) \mathbf{b} \cdot \mathbf{n} = 0,
+\end{equation}
+on $\Gamma_D$ as restriction $3$ of the electromagnetic field $\mathbf{b}$ states $\mathbf{b}\cdot \mathbf{n}=0$. This means from (\ref{}) and using notation (\ref{}) and (\ref{}) we get (\ref{}) becomes
+\begin{equation}
+\int_{\Omega}f\hat{u}d\mathbf{x} = -\int_{\Gamma_D}\hat{u}(\mathbb{A}_{\perp}\nabla_{\perp} u)_{\perp}\cdot \mathbf{n} d \mathbf{x} + 
+\varepsilon^{-1} a_{||}(u,\hat{u})+a_{\perp}(u, \hat{u})\\
+\end{equation}
+In the integral over $\Gamma_D$ $u$ can be replaced with $g$.
 
-b repressents column vector 
-Now we will define all the spaces we will be using
+DEFs
 
-Need to explain why this is a problem
-
-Now we assume $b$ is perp to lam_N and $b$ parralle to $lam_D$
-
-It should be noted that that ___ are a lot easier to discretise. ()
+It should be noted that these sets are easy to discretise.
 
 \section{Overview Of Current Methods}
 For these methods and for the numerical simulations in section \ref{} we will take the boundary conditions
@@ -134,7 +155,7 @@ For these methods and for the numerical simulations in section \ref{} we will ta
 u = g, & \text{  on }\Gamma_D.
 \end{cases}
 \end{equation}
-
+Talk about restrion $4$
 \subsection{Singular Pertubation Method} \label{SP}
 The single pertubation method involves solving the weak form of equation \ref{}. Therefore we have a trial function $u \in $ and a test function $\psi \in$. Thus we solve the weak form (\ref{}) for $(u) \in $.
 \begin{equation} \label{SP_w}
@@ -232,9 +253,16 @@ This method turns the strongly anisotropic equation into two mildly anisotropic 
   \end{equation}
 With test functions $(\hat{u}, \hat{q}) \in \mathcal{V} \times \mathcal{V}$.
 
-\section{New Method}
-We introduce a new method based on unpublished notes from Patrick Farrell \cite{}. 
-By doing the substitution $q=\varepsilon^{-1} \mathbf{b} \cdot \nabla u$ into (\ref{}) we get the weak form
+\section{Proposed Methods}
+We introduce a new method based on unpublished notes from Patrick Farrell \cite{}. This involves the substitution $q=\varepsilon^{-1} \mathbf{b} \cdot \nabla u$, after some algebraic manipulation we get the following are equivalent
+\begin{align}
+q &= \varepsilon^{-1} \mathbf{b}\cdot \nabla u,\\
+q &= \varepsilon^{-1} \mathbf{b} \cdot \nabla_{||} u, \\
+\mathbf{b}q &= \varepsilon^{-1} \nabla_{||} u.
+\end{align}
+
+\subsection{PF Method}
+Therefore, by doing the substitution $q=\varepsilon^{-1} \mathbf{b} \cdot \nabla u$ into (\ref{}) we get the weak form
 \begin{equation} \label{PF_w}
 (PF)
 \begin{cases}
@@ -245,12 +273,10 @@ By doing the substitution $q=\varepsilon^{-1} \mathbf{b} \cdot \nabla u$ into (\
 = \varepsilon \int_{\Omega}q\hat{q} d \mathbf{x}, 
 \end{cases}
 \end{equation}
-We solve for trial function with test functions . Also, after some algebraic manipulation 
-\begin{align}
-q &= \varepsilon^{-1} \mathbf{b}\cdot \nabla u\\
-q &= \varepsilon^{-1} \mathbf{b} \cdot \nabla_{||} u \\
-\mathbf{b}q &= \varepsilon^{-1} \nabla_{||} u 
-\end{align}
+We solve for trial function with test functions . 
+
+
+\subsection{PF Stabilisation Method}
 Additionally, we can use the stabilisation technique stated in \cite{} to get the weak form
 \begin{equation} \label{PF_STAB_w}
 (PF\_STAB)
@@ -263,14 +289,201 @@ Additionally, we can use the stabilisation technique stated in \cite{} to get th
 \end{cases}
 \end{equation}
 
-\section{Derivation Of Current Methods}
-It is important to understand the derivation of the current methods because the techniques used ...
 
+\chapter{Numerical Demonstrations}
 
-
-\section{Numerical Demonstrations}
 In these examples we calculate $f$ from passing $u$ through the PDE.
-\subsection{Example 1}
+\section{Derivation of Lagrange Finite Element of Order $2$}
+In our numerical simulations we use a continuous Lagrange order $2$ finite element. We now provide a method for the derivation of this finite element on an interval and a triangle. Additionally, following a similar procedure we can derive the basis functions for other domains. The resource \cite{} states basis functions for many finite elements.This is not implemented in code we instead use the Firedrake implementation of CG order $2$. 
+
+For each element we have basis functions $\phi_i(\mathbf{x})$ which have a linear combination from the set $\{1, x, x^2, y, y^2, z, z^2, xy, yz, xz\}$ and locations on domain $\ell_i$.  To find the coefficients of the linear combination we must solve
+\begin{equation} \label{CG_eq}
+\phi_i(\ell_j) =
+\begin{cases}
+1, &i=j,\\
+0, &i\neq j.
+\end{cases}
+\end{equation}
+It should be noted we can do a substitution to make the shapes unit size.
+\subsection{Interval (1D)}
+Therefore, we have $i \in \{0, 1, 2\}$ and basis functions 
+\begin{equation}
+\phi_i(x) = \xi_{i0} + \xi_{i1}x + \xi_{i2}x^2
+\end{equation}
+with $\ell_0 = 0, \ell_1 = 1$ and $\ell_2 = 0.5$. Thus by using (\ref{CG_eq}) we get equations to solve
+\begin{align}
+\phi_i(\ell_0) = \phi_i(0) &= \xi_{i0} &= \delta_{i0},\\
+\phi_i(\ell_1) = \phi_i(1) &= \xi_{i0} + \xi_{i1} + \xi_{i2} &= \delta_{i1},\\
+\phi_i(\ell_2) = \phi_i(0.5) &= \xi_{i0} + \frac{\xi_{i1}}{2} + \frac{\xi_{i2}}{4} &= \delta_{i2}
+\end{align}
+where $\delta$ represents Kronecker delta. This can be put into matrix form
+\begin{equation}
+\left[ \begin{matrix}
+\xi_{i0} & \xi_{i1} & \xi_{i2}
+\end{matrix} \right]
+\left[ \begin{matrix}
+1 & 1 & 1 \\
+0 & 1 & 1/2 \\
+0 & 1 & 1/4
+\end{matrix} \right] = 
+\left[ \begin{matrix}
+\delta_{i0} & \delta_{i1} & \delta_{i2}
+\end{matrix} \right]
+\end{equation}
+It is trivial to implement this into a matrix for all basis functions in this element.
+\begin{equation}
+\left[ \begin{matrix}
+\xi_{00} & \xi_{01} & \xi_{02} \\
+\xi_{10} & \xi_{11} & \xi_{12} \\
+\xi_{20} & \xi_{21} & \xi_{22} 
+\end{matrix} \right]
+\left[ \begin{matrix}
+1 & 1 & 1 \\
+0 & 1 & 1/2 \\
+0 & 1 & 1/4
+\end{matrix} \right] = 
+\left[ \begin{matrix}
+1 & 0 & 0 \\
+0 & 1 & 0 \\
+0 & 0 & 1
+\end{matrix} \right]
+\end{equation}
+Thus we get 
+\begin{align}
+\left[ \begin{matrix}
+\xi_{00} & \xi_{01} & \xi_{02} \\
+\xi_{10} & \xi_{11} & \xi_{12} \\
+\xi_{20} & \xi_{21} & \xi_{22} 
+\end{matrix} \right] &= 
+\left[ \begin{matrix}
+1 & 1 & 1 \\
+0 & 1 & 1/2 \\
+0 & 1 & 1/4
+\end{matrix} \right]^{-1}, \\
+\left[ \begin{matrix}
+\xi_{00} & \xi_{01} & \xi_{02} \\
+\xi_{10} & \xi_{11} & \xi_{12} \\
+\xi_{20} & \xi_{21} & \xi_{22} 
+\end{matrix} \right] &= 
+\left[ \begin{matrix}
+1 & -3 & 2 \\
+0 & -1 & 2 \\
+0 & 4 & -4
+\end{matrix} \right],
+\end{align}
+This leads to the basis functions
+\begin{align}
+\phi_0(x) &= 2x^2-3x+1,\\
+\phi_1(x) &= x(2x-1),\\
+\phi_2(x) &= 4x(1-x)
+\end{align}
+With there visual representation in Figure \ref{InterFuncs}.
+\begin{figure}[H]
+     \includegraphics[width=\textwidth]{Pics/BasisFunc/IntervalFuncs.png}
+     \caption{Lagrage order 2 basis functions  on interval $[0,1]$}
+     \label{InterFuncs}
+\end{figure}
+
+\subsection{Triangle (2D)}
+For an order $2$ Lagrange element on a triangle we have $i \in \{0, 1, 2,3,4,5\}$ and the basis functions are of the form
+\begin{equation}
+\phi_i(x,y) = \xi_{i0} + \xi_{i1} x + \xi_{i2} y + \xi_{i3} xy + \xi_{i4} x^2 + \xi_{i5}y^2,
+\end{equation}
+where the domain is $x+y\leq 1, x \geq 0$ and $y\geq 0$. For $\ell_i$ we get
+\begin{align}
+\ell_0 &= (0,0), &\ell_3 = (1/2,1/2), \\
+\ell_1 &= (1,0), &\ell_4 = (0,1/2), \\
+\ell_2 &= (0,1), &\ell_5 = (1/2,0),
+\end{align}
+This leads to the set of equations
+\begin{align}
+\phi_i(\ell_0) &= \xi_{i0}, \\
+\phi_i(\ell_1) &= \xi_{i0} + \xi_{i1} + \xi_{i4}, \\
+\phi_i(\ell_2) &= \xi_{i0} + \xi_{i2} + \xi_{i5}, \\
+\phi_i(\ell_3) &= \xi_{i0} + \frac{\xi_{i1}+\xi_{i2}}{2} + \frac{\xi_{i3} + \xi_{i4} + \xi_{i5}}{4}, \\
+\phi_i(\ell_4) &= \xi_{i0} + \frac{\xi_{i2}}{2} + \frac{\xi_{i5}}{4}, \\
+\phi_i(\ell_5) &= \xi_{i0} + \frac{\xi_{i1}}{2} + \frac{\xi_{i4}}{4},
+\end{align}
+Therefore, using the equations created by (\ref{CG_eq}) we get the matrix of coficeits
+\begin{align}
+\left[ \begin{matrix}
+\xi_{00} & \xi_{01} & \xi_{02} & \xi_{03} & \xi_{04} & \xi_{05}\\
+\xi_{10} & \xi_{11} & \xi_{12} & \xi_{13} & \xi_{14} & \xi_{25}\\
+\xi_{20} & \xi_{21} & \xi_{22} & \xi_{23} & \xi_{24} & \xi_{25}\\
+\xi_{30} & \xi_{31} & \xi_{32} & \xi_{33} & \xi_{34} & \xi_{35}\\
+\xi_{40} & \xi_{41} & \xi_{42} & \xi_{43} & \xi_{44} & \xi_{45}\\
+\xi_{50} & \xi_{51} & \xi_{52} & \xi_{53} & \xi_{54} & \xi_{55}
+\end{matrix} \right] &= 
+\left[ \begin{matrix}
+1 & 1 & 1 & 1 & 1 & 1\\
+0 & 1 & 0 & 1/2 & 0 & 1/2\\
+0 & 0 & 1 & 1/2 & 1/2 & 0\\
+0 & 0 & 0 & 1/4 & 0 & 0\\
+0 & 1 & 0 & 1/4 & 0 & 1/4\\
+0 & 0 & 1 & 1/4 & 1/4 & 0
+\end{matrix} \right]^{-1}, \\
+\left[ \begin{matrix}
+\xi_{00} & \xi_{01} & \xi_{02} & \xi_{03} & \xi_{04} & \xi_{05}\\
+\xi_{10} & \xi_{11} & \xi_{12} & \xi_{13} & \xi_{14} & \xi_{25}\\
+\xi_{20} & \xi_{21} & \xi_{22} & \xi_{23} & \xi_{24} & \xi_{25}\\
+\xi_{30} & \xi_{31} & \xi_{32} & \xi_{33} & \xi_{34} & \xi_{35}\\
+\xi_{40} & \xi_{41} & \xi_{42} & \xi_{43} & \xi_{44} & \xi_{45}\\
+\xi_{50} & \xi_{51} & \xi_{52} & \xi_{53} & \xi_{54} & \xi_{55}
+\end{matrix} \right] &= 
+\left[ \begin{matrix}
+1 & -3 & -3 & 4 & 2 & 2\\
+0 & -1 & 0 & 0 & 2 & 0\\
+0 & 0 & -1 & 0 & 0 & 2\\
+0 & 0 & 0 & 4 & 0 & 0\\
+0 & 0 & 4 & -4 & 0 & -4\\
+0 & 4 & 0 & -4 & -4 & 0
+\end{matrix} \right]
+\end{align}
+Thus leading to basis functions
+\begin{align}
+\phi_0(x,y) &= 2(x+y)^2 - 3(x+y) + 1, \\
+\phi_1(x,y) &= x(2x-1), \\
+\phi_2(x,y) &= y(2y-1), \\
+\phi_3(x,y) &= 4xy, \\
+\phi_4(x,y) &= 4y(1-x-y), \\
+\phi_5(x,y) &= 4x(1-x-y),
+\end{align}
+With the visual representation in Figure \ref{triBasisFuncs}.
+\begin{figure}[H]
+ \begin{subfigure}{0.5\textwidth}
+     \includegraphics[width=\textwidth]{Pics/BasisFunc/triBasis0.png}
+     \caption{\phi_0(x,y) = 2(x+y)^2 - 3(x+y) + 1,}
+ \end{subfigure}
+ \hfill
+ \begin{subfigure}{0.5\textwidth}
+     \includegraphics[width=\textwidth]{Pics/BasisFunc/triBasis1.png}
+     \caption{\phi_1(x,y) = x(2x-1),}
+ \end{subfigure}
+ \hfill
+ \begin{subfigure}{0.5\textwidth}
+     \includegraphics[width=\textwidth]{Pics/BasisFunc/triBasis2.png}
+     \caption{\phi_2(x,y) = y(2y-1),}
+ \end{subfigure}
+ \hfill
+ \begin{subfigure}{0.5\textwidth}
+     \includegraphics[width=\textwidth]{Pics/BasisFunc/triBasis3.png}
+     \caption{\phi_3(x,y) = 4xy,}
+ \end{subfigure}
+ \hfill
+ \begin{subfigure}{0.5\textwidth}
+     \includegraphics[width=\textwidth]{Pics/BasisFunc/triBasis4.png}
+     \caption{\phi_4(x,y) = 4y(1-x-y),}
+ \end{subfigure}
+ \hfill
+ \begin{subfigure}{0.5\textwidth}
+     \includegraphics[width=\textwidth]{Pics/BasisFunc/triBasis5.png}
+     \caption{\phi_5(x,y) = 4x(1-x-y),}
+ \end{subfigure}
+ \hfill
+ \caption{Visual aids for the derivation of the Toroidal parameterisation.} \label{triBasisFuncs}
+\end{figure}
+
+\section{Example 1}
 We will solve the PDE (\ref{}) with $\Omega = [0,1]^2, \Gamma_D = \{y=0 \text{ or } y=1\}$ and $\Gamma_N = \{x=0 \text{ or } x=1\}$. We chose a magnetic field such
 \begin{equation} \label{E1_b}
 \mathbf{b} = \frac{\mathbf{B}}{|\mathbf{B}|}, 
@@ -461,23 +674,7 @@ $160\times 160$ & 206082   & $3.19\times 10^{-5}$ & $3.19\times 10^{-5}$ & $1.77
 \end{tabular}}
 \end{table}
 
-
-nice pictures with vector field
-calculation of clossed field line
-have vector field of 3 examples (3)
-have f and the exact solution at different eps (12)
-
-\subsection{Example 1, Numerical Demostration}
-Show error plots for example for ranging eps  L and H (6)
-Use MMAP, AP, Limit, SP, PF
-Due to MMAP better than AP not use AP
-Show stabalisation gives same MMAP and Stab
-Do DN plot (1)
-Changing grid size table 
-size | dof | L2 error | H1 error PF, MMAP
-Show gamma in can be on any part of streamline
-
-\section{Example 2}
+\section{Example 2, Annulus}
 We now propose an example on an annulus with closed field lines.
 We will solve the PDE (\ref{}) with $\Omega := \{x,y \in \mathbb{R}, 1<x^2+y^2<4\}$, $\Gamma_D := \{x,y \in \mathbb{R}, (x^2+y^2=1 \text{ or } x^2+y^2=4)\}$ and $\Gamma_N := \emptyset$. We chose the magnetic field 
 \begin{equation}
@@ -637,8 +834,8 @@ Changing grid size table
 size | dof | L2 error | H1 error PF, MMAP
 
 \section{Example 4, Magnetic Islands}
-Why do an example with zero BC ?
-We now introduce an example on a unit square where $\Gamma_D$ has zero boundary conditions. Additionally, this has open and closed field lines.
+
+We now introduce an example on a unit square where $\Gamma_D$ has zero boundary conditions. This is similar to example $3$ but example $3$ failed to satisfy $\mathbf{b}\cdot\mathbf{n}$ on $\Gamma_D$ this can be visually seen from Figure \ref{E3_VF} showing its vector field as $\mathbf{b}$ on $y=0$ and $y=1$ is not parallel to the boundary. The vector field for this example shown in Figure \ref{E4_VF} is parallel to the boundary on $\Gamma_D$. Additionally, this has open and closed field lines.
 Thus on $\Omega = [0,1]^2, \Gamma_D = \{y=0 \text{ or } y=1\}$ and $\Gamma_N = \{x=0 \text{ or } x=1\}$ we solve the PDE (\ref{}) with the same magnetic
 \begin{equation}
 \mathbf{b} = \frac{\mathbf{B}}{|\mathbf{B}|}, 
@@ -729,78 +926,7 @@ $160\times 160$ & 206082   & $1.84\times 10^{-5}$ & $1.92\times 10^{-5}$ & $1.93
  \caption{Visualisation of $q$ defined in sections \ref{MMAP_STAB} and \ref{PF_STAB} for Example $4$ with $\varepsilon = 10^{-10}$, CG order $2$ on a $80 \times 80$ quadrilateral grid.} \label{E3_Q}
 \end{figure}
 
-\section{Example 5, Torus}
-We now look at an example in 3D where the domain $\Omega $ is a torus with inner radius $r_I = 1$, outer radius $r_O = 0.5$ and is centred at the origin. It will have zero Dirichlet boundary conditions. For this eaxmple we will use Toroidal coordinates which are explained in Appendix \ref{} and demonstrate how to find the inverse map. We invert back to cartesian cordinates because the toroidal laplacian \cite{} is very complicated. Thus the definition of $r$ is
-\begin{equation}
-r = \sqrt{r_I^2 + x^2 + y^2 + z^2 -2r_I\sqrt{x^2+y^2}}
-\end{equation}
-Where $r$ denotes the minimum distance from the circulfurance of a circle centered at the origin with radius $r_I$ and has $z=0$. We have magnetic field 
-\begin{equation}
-\mathbf{b} = \frac{\mathbf{B}}{|\mathbf{B}|} = 
-\left[ \begin{matrix}
--y\\
- x \\
- 0
-\end{matrix} \right]/\sqrt{x^2+y^2}, 
-\mathbf{B} = \left[ \begin{matrix}
--y\\
- x\\
- 0
-\end{matrix} \right]
-\end{equation}
-Also, we will have exact solution
-\begin{equation}
-u = 
-\begin{cases}
-(1+\varepsilon)((0.5)^2 - r ),\\
-(1+\varepsilon)(0.25 -  \sqrt{r_I^2 + x^2 + y^2 + z^2 -2r_I\sqrt{x^2+y^2}})
-\end{cases}
-\end{equation}
-This $u$ is displayed in Figure \ref{E5_uf} with its source term $f$ and $\varepsilon=10^{-10}$.
-\begin{figure}[H]
- \begin{subfigure}{0.5\textwidth}
-     \includegraphics[width=\textwidth]{Pics/uf/U_E5_eps_10.png}
-     \caption{Exact solution $u$.}
- \end{subfigure}
-   \begin{subfigure}{0.5\textwidth}
-     \includegraphics[width=\textwidth]{Pics/uf/F_E5_eps_10.png}
-     \caption{Source term $f$.}
- \end{subfigure}
- \caption{Example $5$ with $\varepsilon = 10^{-10}$.} \label{E5_uf}
-\end{figure}
-
-
-\begin{figure}[H]
- \begin{subfigure}{0.5\textwidth}
-     \includegraphics[width=\textwidth]{Pics/LHSims/E5/E5_STABL2.png}
-     \caption{L2 Error}
- \end{subfigure}
-   \begin{subfigure}{0.5\textwidth}
-     \includegraphics[width=\textwidth]{Pics/LHSims/E5/E5_STABH1.png}
-     \caption{H1 Error}
- \end{subfigure}
- \caption{Numerical solution of Example $5$ for solver $MMAP\_STAB$ and $PF\_STAB$ with varying $\varepsilon$ on torus mesh with CG order $2$. This has $69976$ degrees of freedom.} \label{E5_eps}
-\end{figure}
-
-\section{Methods For Investigation}
-
-\subsection{Line Integration}
-
-
-\subsection{Mapping of f}
-
-
-\subsection{Splitting of domain}
-
-\printbibliography[heading=bibintoc]
-
-\appendix
-
-\section{Title of Appendix}
-
-Appendices are definitely not necessary and assessors are not obliged to read them so only use them for non-vital text, figures or calculations.$\phi$
-
-\subsection{Toroidal Coordinates}
+\section{Formulation of Toroidal Coordinates}
 Here we discuss how to parameterise a torus and to find its inverted map. We use the Figures \ref{Torus_XY} and \ref{Torus_z} below to help us derive the parameterisation.
 \begin{figure}[H]
  \begin{subfigure}{0.5\textwidth}
@@ -856,201 +982,82 @@ where atan2 is a common variation of the arctan function.
 
 We use the inverse of the map because calculating the differential operators leads to large expressions. These expressions can be found in \cite{}. When we need to solve a PDE on a domain which can be parameterised it is usually easier to turn the source term $f$ into Cartesian coordinates so we deal with the Cartesian differential operators.
 
-\subsection{Formulation of examples}
-How i found the exact solution for problems 
-\section{CG Order 2}
-In our numerical simulations we use a continuous Lagrange order $2$ finite element. We now provide a method for the derivation of this finite element on an interval and a triangle. Additionally, following a similar procedure we can derive the basis functions for other domains. The resource \cite{} states basis functions for many finite elements.This is not implemented in code we instead use the Firedrake implementation of CG order $2$. 
-
-For each element we have basis functions $\phi_i(\mathbf{x})$ which have a linear combination from the set $\{1, x, x^2, y, y^2, z, z^2, xy, yz, xz\}$ and locations on domain $\ell_i$.  To find the coefficients of the linear combination we must solve
-\begin{equation} \label{CG_eq}
-\phi_i(\ell_j) =
+\section{Example 5, Torus}
+We now look at an example in 3D where the domain $\Omega $ is a torus with inner radius $r_I = 1$, outer radius $r_O = 0.5$ and is centred at the origin. It will have zero Dirichlet boundary conditions. For this eaxmple we will use Toroidal coordinates which are explained in Appendix \ref{} and demonstrate how to find the inverse map. We invert back to cartesian cordinates because the toroidal laplacian \cite{} is very complicated. Thus the definition of $r$ is
+\begin{equation}
+r = \sqrt{r_I^2 + x^2 + y^2 + z^2 -2r_I\sqrt{x^2+y^2}}
+\end{equation}
+Where $r$ denotes the minimum distance from the circulfurance of a circle centered at the origin with radius $r_I$ and has $z=0$. We have magnetic field 
+\begin{equation}
+\mathbf{b} = \frac{\mathbf{B}}{|\mathbf{B}|} = 
+\left[ \begin{matrix}
+-y\\
+ x \\
+ 0
+\end{matrix} \right]/\sqrt{x^2+y^2}, 
+\mathbf{B} = \left[ \begin{matrix}
+-y\\
+ x\\
+ 0
+\end{matrix} \right]
+\end{equation}
+Also, we will have exact solution
+\begin{equation}
+u = 
 \begin{cases}
-1, &i=j,\\
-0, &i\neq j.
+(1+\varepsilon)((0.5)^2 - r ),\\
+(1+\varepsilon)(0.25 -  \sqrt{r_I^2 + x^2 + y^2 + z^2 -2r_I\sqrt{x^2+y^2}})
 \end{cases}
 \end{equation}
-It should be noted we can do a substitution to make the shapes unit size.
-\subsection{Interval (1D)}
-Therefore, we have $i \in \{0, 1, 2\}$ and basis functions 
-\begin{equation}
-\phi_i(x) = \xi_{i0} + \xi_{i1}x + \xi_{i2}x^2
-\end{equation}
-with $\ell_0 = 0, \ell_1 = 1$ and $\ell_2 = 0.5$. Thus by using (\ref{CG_eq}) we get equations to solve
-\begin{align}
-\phi_i(\ell_0) = \phi_i(0) &= \xi_{i0} &= \delta_{i0},\\
-\phi_i(\ell_1) = \phi_i(1) &= \xi_{i0} + \xi_{i1} + \xi_{i2} &= \delta_{i1},\\
-\phi_i(\ell_2) = \phi_i(0.5) &= \xi_{i0} + \frac{\xi_{i1}}{2} + \frac{\xi_{i2}}{4} &= \delta_{i2}
-\end{align}
-where $\delta$ represents Kronecker delta. This can be put into matrix form
-\begin{equation}
-\left[ \begin{matrix}
-\xi_{i0} & \xi_{i1} & \xi_{i2}
-\end{matrix} \right]
-\left[ \begin{matrix}
-1 & 1 & 1 \\
-0 & 1 & 1/2 \\
-0 & 1 & 1/4
-\end{matrix} \right] = 
-\left[ \begin{matrix}
-\delta_{i0} & \delta_{i1} & \delta_{i2}
-\end{matrix} \right]
-\end{equation}
-It is trivial to implement this into a matrix for all basis functions in this element.
-\begin{equation}
-\left[ \begin{matrix}
-\xi_{00} & \xi_{01} & \xi_{02} \\
-\xi_{10} & \xi_{11} & \xi_{12} \\
-\xi_{20} & \xi_{21} & \xi_{22} 
-\end{matrix} \right]
-\left[ \begin{matrix}
-1 & 1 & 1 \\
-0 & 1 & 1/2 \\
-0 & 1 & 1/4
-\end{matrix} \right] = 
-\left[ \begin{matrix}
-1 & 0 & 0 \\
-0 & 1 & 0 \\
-0 & 0 & 1
-\end{matrix} \right]
-\end{equation}
-Thus we get 
-\begin{align}
-\left[ \begin{matrix}
-\xi_{00} & \xi_{01} & \xi_{02} \\
-\xi_{10} & \xi_{11} & \xi_{12} \\
-\xi_{20} & \xi_{21} & \xi_{22} 
-\end{matrix} \right] &= 
-\left[ \begin{matrix}
-1 & 1 & 1 \\
-0 & 1 & 1/2 \\
-0 & 1 & 1/4
-\end{matrix} \right]^{-1}, \\
-\left[ \begin{matrix}
-\xi_{00} & \xi_{01} & \xi_{02} \\
-\xi_{10} & \xi_{11} & \xi_{12} \\
-\xi_{20} & \xi_{21} & \xi_{22} 
-\end{matrix} \right] &= 
-\left[ \begin{matrix}
-1 & -3 & 2 \\
-0 & -1 & 2 \\
-0 & 4 & -4
-\end{matrix} \right],
-\end{align}
-This leads to the basis functions
-\begin{align}
-\phi_0(x) &= 2x^2-3x+1,\\
-\phi_1(x) &= x(2x-1),\\
-\phi_2(x) &= 4x(1-x)
-\end{align}
-With there visual representation in Figure \ref{InterFuncs}.
-\begin{figure}[H]
-     \includegraphics[width=\textwidth]{Pics/BasisFunc/IntervalFuncs.png}
-     \caption{Lagrage order 2 basis functions  on interval $[0,1]$}
-     \label{InterFuncs}
-\end{figure}
-
-\subsection{Triangle (2D)}
-For an order $2$ Lagrange element on a triangle we have $i \in \{0, 1, 2,3,4,5\}$ and the basis functions are of the form
-\begin{equation}
-\phi_i(x,y) = \xi_{i0} + \xi_{i1} x + \xi_{i2} y + \xi_{i3} xy + \xi_{i4} x^2 + \xi_{i5}y^2,
-\end{equation}
-where the domain is $x+y\leq 1, x \geq 0$ and $y\geq 0$. For $\ell_i$ we get
-\begin{align}
-\ell_0 &= (0,0), &\ell_3 = (1/2,1/2), \\
-\ell_1 &= (1,0), &\ell_4 = (0,1/2), \\
-\ell_2 &= (0,1), &\ell_5 = (1/2,0),
-\end{align}
-This leads to the set of equations
-\begin{align}
-\phi_i(\ell_0) &= \xi_{i0}, \\
-\phi_i(\ell_1) &= \xi_{i0} + \xi_{i1} + \xi_{i4}, \\
-\phi_i(\ell_2) &= \xi_{i0} + \xi_{i2} + \xi_{i5}, \\
-\phi_i(\ell_3) &= \xi_{i0} + \frac{\xi_{i1}+\xi_{i2}}{2} + \frac{\xi_{i3} + \xi_{i4} + \xi_{i5}}{4}, \\
-\phi_i(\ell_4) &= \xi_{i0} + \frac{\xi_{i2}}{2} + \frac{\xi_{i5}}{4}, \\
-\phi_i(\ell_5) &= \xi_{i0} + \frac{\xi_{i1}}{2} + \frac{\xi_{i4}}{4},
-\end{align}
-Therefore, using the equations created by (\ref{CG_eq}) we get the matrix of coficeits
-\begin{align}
-\left[ \begin{matrix}
-\xi_{00} & \xi_{01} & \xi_{02} & \xi_{03} & \xi_{04} & \xi_{05}\\
-\xi_{10} & \xi_{11} & \xi_{12} & \xi_{13} & \xi_{14} & \xi_{25}\\
-\xi_{20} & \xi_{21} & \xi_{22} & \xi_{23} & \xi_{24} & \xi_{25}\\
-\xi_{30} & \xi_{31} & \xi_{32} & \xi_{33} & \xi_{34} & \xi_{35}\\
-\xi_{40} & \xi_{41} & \xi_{42} & \xi_{43} & \xi_{44} & \xi_{45}\\
-\xi_{50} & \xi_{51} & \xi_{52} & \xi_{53} & \xi_{54} & \xi_{55}
-\end{matrix} \right] &= 
-\left[ \begin{matrix}
-1 & 1 & 1 & 1 & 1 & 1\\
-0 & 1 & 0 & 1/2 & 0 & 1/2\\
-0 & 0 & 1 & 1/2 & 1/2 & 0\\
-0 & 0 & 0 & 1/4 & 0 & 0\\
-0 & 1 & 0 & 1/4 & 0 & 1/4\\
-0 & 0 & 1 & 1/4 & 1/4 & 0
-\end{matrix} \right]^{-1}, \\
-\left[ \begin{matrix}
-\xi_{00} & \xi_{01} & \xi_{02} & \xi_{03} & \xi_{04} & \xi_{05}\\
-\xi_{10} & \xi_{11} & \xi_{12} & \xi_{13} & \xi_{14} & \xi_{25}\\
-\xi_{20} & \xi_{21} & \xi_{22} & \xi_{23} & \xi_{24} & \xi_{25}\\
-\xi_{30} & \xi_{31} & \xi_{32} & \xi_{33} & \xi_{34} & \xi_{35}\\
-\xi_{40} & \xi_{41} & \xi_{42} & \xi_{43} & \xi_{44} & \xi_{45}\\
-\xi_{50} & \xi_{51} & \xi_{52} & \xi_{53} & \xi_{54} & \xi_{55}
-\end{matrix} \right] &= 
-\left[ \begin{matrix}
-1 & -3 & -3 & 4 & 2 & 2\\
-0 & -1 & 0 & 0 & 2 & 0\\
-0 & 0 & -1 & 0 & 0 & 2\\
-0 & 0 & 0 & 4 & 0 & 0\\
-0 & 0 & 4 & -4 & 0 & -4\\
-0 & 4 & 0 & -4 & -4 & 0
-\end{matrix} \right]
-\end{align}
-Thus leading to basis functions
-\begin{align}
-\phi_0(x,y) &= 2(x+y)^2 - 3(x+y) + 1, \\
-\phi_1(x,y) &= x(2x-1), \\
-\phi_2(x,y) &= y(2y-1), \\
-\phi_3(x,y) &= 4xy, \\
-\phi_4(x,y) &= 4y(1-x-y), \\
-\phi_5(x,y) &= 4x(1-x-y),
-\end{align}
-With the visual representation in Figure \ref{triBasisFuncs}.
+This $u$ is displayed in Figure \ref{E5_uf} with its source term $f$ and $\varepsilon=10^{-10}$.
 \begin{figure}[H]
  \begin{subfigure}{0.5\textwidth}
-     \includegraphics[width=\textwidth]{Pics/BasisFunc/triBasis0.png}
-     \caption{\phi_0(x,y) = 2(x+y)^2 - 3(x+y) + 1,}
+     \includegraphics[width=\textwidth]{Pics/uf/U_E5_eps_10.png}
+     \caption{Exact solution $u$.}
  \end{subfigure}
- \hfill
- \begin{subfigure}{0.5\textwidth}
-     \includegraphics[width=\textwidth]{Pics/BasisFunc/triBasis1.png}
-     \caption{\phi_1(x,y) = x(2x-1),}
+   \begin{subfigure}{0.5\textwidth}
+     \includegraphics[width=\textwidth]{Pics/uf/F_E5_eps_10.png}
+     \caption{Source term $f$.}
  \end{subfigure}
- \hfill
- \begin{subfigure}{0.5\textwidth}
-     \includegraphics[width=\textwidth]{Pics/BasisFunc/triBasis2.png}
-     \caption{\phi_2(x,y) = y(2y-1),}
- \end{subfigure}
- \hfill
- \begin{subfigure}{0.5\textwidth}
-     \includegraphics[width=\textwidth]{Pics/BasisFunc/triBasis3.png}
-     \caption{\phi_3(x,y) = 4xy,}
- \end{subfigure}
- \hfill
- \begin{subfigure}{0.5\textwidth}
-     \includegraphics[width=\textwidth]{Pics/BasisFunc/triBasis4.png}
-     \caption{\phi_4(x,y) = 4y(1-x-y),}
- \end{subfigure}
- \hfill
- \begin{subfigure}{0.5\textwidth}
-     \includegraphics[width=\textwidth]{Pics/BasisFunc/triBasis5.png}
-     \caption{\phi_5(x,y) = 4x(1-x-y),}
- \end{subfigure}
- \hfill
- \caption{Visual aids for the derivation of the Toroidal parameterisation.} \label{triBasisFuncs}
+ \caption{Example $5$ with $\varepsilon = 10^{-10}$.} \label{E5_uf}
 \end{figure}
 
-\subsection{}
-So why talking about it.
 
-\subsection{Solve Linear System in Parrelle}
+\begin{figure}[H]
+ \begin{subfigure}{0.5\textwidth}
+     \includegraphics[width=\textwidth]{Pics/LHSims/E5/E5_STABL2.png}
+     \caption{L2 Error}
+ \end{subfigure}
+   \begin{subfigure}{0.5\textwidth}
+     \includegraphics[width=\textwidth]{Pics/LHSims/E5/E5_STABH1.png}
+     \caption{H1 Error}
+ \end{subfigure}
+ \caption{Numerical solution of Example $5$ for solver $MMAP\_STAB$ and $PF\_STAB$ with varying $\varepsilon$ on torus mesh with CG order $2$. This has $69976$ degrees of freedom.} \label{E5_eps}
+\end{figure}
+
+\chapter{Conclusion and Future Work}
+
+\section{Methods For Investigation}
+
+\subsection{Line Integration}
+
+
+\subsection{Mapping of $f$}
+
+
+\subsection{Splitting of Domain}
+
+\subsection{Parallel Implementation}
+
+\printbibliography[heading=bibintoc]
+
+\appendix
+
+\section{Title of Appendix}
+
+Appendices are definitely not necessary and assessors are not obliged to read them so only use them for non-vital text, figures or calculations.$\phi$
+
+
+
 
 \end{document}

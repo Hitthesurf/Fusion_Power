@@ -1,0 +1,103 @@
+@article{STAB,
+title = {Asymptotic Preserving scheme for strongly anisotropic parabolic equations for arbitrary anisotropy direction},
+journal = {Computer Physics Communications},
+volume = {185},
+number = {12},
+pages = {3189-3203},
+year = {2014},
+issn = {0010-4655},
+doi = {https://doi.org/10.1016/j.cpc.2014.08.018},
+url = {https://www.sciencedirect.com/science/article/pii/S0010465514002999},
+author = {Jacek Narski and Maurizio Ottaviani},
+keywords = {Anisotropic parabolic equation, Ill-conditioned problem, Singular perturbation model, Limit model, Asymptotic Preserving scheme, Magnetic island},
+abstract = {This paper deals with the numerical study of a strongly anisotropic heat equation. The use of standard schemes in this situation leads to poor results, due to high anisotropy. Furthermore, the recently proposed Asymptotic-Preserving method (Lozinski et al., 2012) allows one to perform simulations regardless of the anisotropy strength but its application is limited to the case where the anisotropy direction is given by a field whose lines are all open. In this paper we introduce a new Asymptotic-Preserving method, which overcomes those limitations without any loss of precision or increase in computational costs. The convergence of the method is shown to be independent of the anisotropy parameter 0<ε<1 for fixed coarse Cartesian grids, and for variable anisotropy directions. The context of this work is magnetically confined fusion plasmas.}
+}
+
+@article{MMAP,
+title = {An asymptotic-preserving method for highly anisotropic elliptic equations based on a Micro–Macro decomposition},
+journal = {Journal of Computational Physics},
+volume = {231},
+number = {7},
+pages = {2724-2740},
+year = {2012},
+issn = {0021-9991},
+doi = {https://doi.org/10.1016/j.jcp.2011.11.040},
+url = {https://www.sciencedirect.com/science/article/pii/S0021999111006966},
+author = {Pierre Degond and Alexei Lozinski and Jacek Narski and Claudia Negulescu},
+keywords = {Anisotropic diffusion, Asymptotic preserving scheme, Finite element method},
+abstract = {The concern of the present work is the introduction of a very efficient asymptotic preserving scheme for the resolution of highly anisotropic diffusion equations. The characteristic features of this scheme are the uniform convergence with respect to the anisotropy parameter 0<ε≪1, the applicability (on cartesian grids) to cases of non-uniform and non-aligned anisotropy fields b and the simple extension to the case of a non-constant anisotropy intensity 1/ε. The mathematical approach and the numerical scheme are different from those presented in the previous work [P. Degond, F. Deluzet, A. Lozinski, J. Narski, C. Negulescu, Duality-based asymptotic-preserving method for highly anisotropic diffusion equations, Communications in Mathematical Sciences 10 (1) (2012) 1–31] and its considerable advantages are pointed out.}
+}
+
+@article{LINE_INT,
+title = {An asymptotic preserving method for strongly anisotropic diffusion equations based on field line integration},
+journal = {Journal of Computational Physics},
+volume = {330},
+pages = {735-748},
+year = {2017},
+issn = {0021-9991},
+doi = {https://doi.org/10.1016/j.jcp.2016.10.062},
+url = {https://www.sciencedirect.com/science/article/pii/S0021999116305708},
+author = {Min Tang and Yihong Wang},
+keywords = {Anisotropic diffusion, Asymptotic preserving, Uniform convergence, Field line integration},
+abstract = {In magnetized plasma, the magnetic field confines the particles around the field lines. The anisotropy intensity in the viscosity and heat conduction may reach the order of 1012. When the boundary conditions are periodic or Neumann, the strong diffusion leads to an ill-posed limiting problem. To remove the ill-conditionedness in the highly anisotropic diffusion equations, we introduce a simple but very efficient asymptotic preserving reformulation in this paper. The key idea is that, instead of discretizing the Neumann boundary conditions locally, we replace one of the Neumann boundary condition by the integration of the original problem along the field line, the singular 1/ϵ terms can be replaced by O(1) terms after the integration, which yields a well-posed problem. Small modifications to the original code are required and no change of coordinates nor mesh adaptation are needed. Uniform convergence with respect to the anisotropy strength 1/ϵ can be observed numerically and the condition number does not scale with the anisotropy.}
+}
+
+@article{AP,
+author = {Degond, Pierre and Deluzet, Fabrice and Lozinski, Alexei and Narski, Jacek and Negulescu, Claudia},
+year = {2010},
+month = {08},
+pages = {},
+title = {Duality-based Asymptotic-Preserving method for highly anisotropic diffusion equations},
+volume = {10},
+journal = {Communications in Mathematical Sciences},
+doi = {10.4310/CMS.2012.v10.n1.a2}
+}
+
+@article{DN,
+author = {Deluzet, Fabrice and Narski, Jacek},
+title = {A Two Field Iterated Asymptotic-Preserving Method for Highly Anisotropic Elliptic Equations},
+year = {2019},
+issue_date = {2019},
+publisher = {Society for Industrial and Applied Mathematics},
+address = {USA},
+volume = {17},
+number = {1},
+issn = {1540-3459},
+url = {https://doi.org/10.1137/17M115205X},
+doi = {10.1137/17M115205X},
+abstract = {A new two field iterated asymptotic-preserving method is introduced for the numerical resolution of strongly anisotropic elliptic equations. This method does not rely on any integration of the field defining the anisotropy. It rather harnesses an auxiliary variable removing any stiffness from the equation. Compared to precedent realizations using the same approach, the iterated method allows for the resolution of each field independently within an iterative process to converge the two unknowns. This brings advantages in the computational efficiency of the method for large meshes, a better scaling of the matrices condition number with respect to the mesh refinement, as well as the ability to address complex anisotropy topology including closed field lines.},
+journal = {Multiscale Model. Simul.},
+month = {jan},
+pages = {434–459},
+numpages = {26},
+keywords = {asymptotic-preserving scheme, anisotropic diffusion, iterative method, 65N30}
+}
+
+@misc{defelement,
+       AUTHOR = {{The DefElement contributors}},
+        TITLE = {{D}ef{E}lement: an encyclopedia of finite element definitions},
+         YEAR = {{2022}},
+ HOWPUBLISHED = {\url{https://defelement.com}},
+         NOTE = {[Online; accessed 14-August-2022]}
+}
+
+@online {Dragon,
+title = {Firedrake},
+year = {2022},
+URL = {https://firedrakeproject.org/},
+note = {(Last Visited 14/08/2022)}
+}
+
+@online {FEniCSx,
+title = {FEniCSx},
+year = {2022},
+URL = {https://fenicsproject.org/},
+note = {(Last Visited 14/08/2022)}
+}
+
+@online {Hub,
+title = {Fusion Power Repository},
+year = {2022},
+URL = {https://github.com/Hitthesurf/Fusion_Power},
+note = {(Last Visited 14/08/2022)}
+}
