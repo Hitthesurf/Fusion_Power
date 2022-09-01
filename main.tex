@@ -10,13 +10,44 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
 \usepackage{float}
 \usepackage{subcaption}
 
 \addbibresource{ref.bib}
 
+%New colors defined below
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
 
-\title{The Title of My M.Sc.\ Dissertation}
+%Code listing style named "mystyle"
+\lstdefinestyle{mystyle}{
+  backgroundcolor=\color{backcolour}, commentstyle=\color{codegreen},
+  keywordstyle=\color{magenta},
+  numberstyle=\tiny\color{codegray},
+  stringstyle=\color{codepurple},
+  basicstyle=\ttfamily\footnotesize,
+  breakatwhitespace=false,         
+  breaklines=true,                 
+  captionpos=b,                    
+  keepspaces=true,                 
+  numbers=left,                    
+  numbersep=5pt,                  
+  showspaces=false,                
+  showstringspaces=false,
+  showtabs=false,                  
+  tabsize=2
+}
+
+%"mystyle" code listing set
+\lstset{style=mystyle}
+
+
+\title{Parameter-Robust Discretisations of Anisotropic 
+Diffusion Problems}
 \author{Mark Pearson}
 \college{Linacre College}
 %\renewcommand{\submittedtext}{Dissertation submitted in partial fulfilment of the requirements for the degree of}
@@ -46,8 +77,7 @@ It's then up to you who else to thank. You can be brief and stop there, or you c
 \newpage
 
 \begin{abstract}
-  Insert some waffle here if you want. Abstracts are optional for
-  special topics but are part of page count.
+In this paper, we wish to solve highly anisotropic diffusion problems on a domain $\Omega$. We discuss existing methods, propose new methods and demonstrate how to implement these methods in Python using Firedrake. Then we test and compare the different methods on a range of examples.
 \end{abstract}
 
 \newpage
@@ -64,7 +94,7 @@ In this paper, we aim to find robust methods to solve highly anisotropic diffusi
 \begin{cases}
 -\nabla \cdot (\mathbb{A}\nabla u) = f, & \text{ in }\Omega,\\
 \mathbf{n}\cdot \mathbb{A}\nabla u = 0, & \text{ on }\Gamma_N, \\
-u = g, & \text{  on }\Gamma_D,
+u = 0, & \text{  on }\Gamma_D,
 \end{cases}
 \end{equation}
 where $\Gamma_N \cap \Gamma_D := \partial \Omega$ and
@@ -82,7 +112,7 @@ where $\Gamma_N \cap \Gamma_D := \partial \Omega$ and
 \end{enumerate}
 where $\mathbf{n}$ is the outward normal.
 
-WHY is this a problem?
+The main difficulty with solving this problem is that it is singular. Therefore, it is ill-conditioned for small $\varepsilon$ and when discretised we get a linear system that has an unbounded condition number. Thus we aim to find discretisations that are well posed.  
 
 From multiple papers the best notation for this problem is stated in \cite{DN} and \cite{AP}. Thus we will use a similar notation. For a scalar field $u\in\mathbb{R}$ and vector field $v \in \mathbb{R}^d$, we use the notation
 \begin{align}
@@ -112,7 +142,7 @@ Thus putting (\ref{A_grad_u}) into the PDE (\ref{PDE}) we get
 \begin{cases}
 -\varepsilon^{-1} \Delta_{||}u - \Delta_{\perp}u = f, & \text{ in }\Omega,\\
 \mathbf{n}\cdot \mathbb{A}\nabla u = 0, & \text{ on }\Gamma_N, \\
-u = g, & \text{  on }\Gamma_D,
+u = 0, & \text{  on }\Gamma_D,
 \end{cases}
 \end{equation}
 We now write the PDE (\ref{PDE}) in weak form
@@ -130,125 +160,125 @@ a_{||}(\alpha, \beta) &= \int_{\Omega} A_{||} \nabla_{||}\alpha \cdot \nabla_{||
 a_{\perp}(\alpha, \beta) &= \int_{\Omega}(\mathbb{A}_{\perp} \nabla_{\perp}\alpha )\cdot \nabla_{\perp} \beta d\mathbf{x}
 \end{align}
 For are numerical simulations we use Firedrake \cite{Dragon} which written in code is 
-CODESNIP
+\lstinputlisting[language=Python]{CodeSnips/a_para.py}
 
 Also, we have 
 \begin{equation}
 \varepsilon^{-1} (A_{||}\nabla_{||}u)_{||}\cdot \mathbf{n} = \varepsilon^{-1} (A_{||}\nabla_{||}u)\cdot \mathbf{n} = \varepsilon^{-1} A_{||}(\nabla_u \cdot \mathbf{b}) \mathbf{b} \cdot \mathbf{n} = 0,
 \end{equation}
 on $\Gamma_D$ as restriction $3$ of the electromagnetic field $\mathbf{b}$ states $\mathbf{b}\cdot \mathbf{n}=0$. This means from (\ref{}) and using notation (\ref{}) and (\ref{}) we get (\ref{}) becomes
-\begin{equation}
+\begin{equation} \label{PDE_w}
 \int_{\Omega}f\hat{u}d\mathbf{x} = -\int_{\Gamma_D}\hat{u}(\mathbb{A}_{\perp}\nabla_{\perp} u)_{\perp}\cdot \mathbf{n} d \mathbf{x} + 
 \varepsilon^{-1} a_{||}(u,\hat{u})+a_{\perp}(u, \hat{u})\\
 \end{equation}
-In the integral over $\Gamma_D$ $u$ can be replaced with $g$.
+In the integral over $\Gamma_D$ in (\ref{}) $u$ can be replaced with $0$. This is included in the formula to show how one would calculate the problem with non zero boundary conditions.
+Our methods require the use of the sets 
+\begin{align}
+\mathcal{H}^1 &:= \{\} \\
+\Gamma_{in} &:= \{\mathbf{b} \in \Gamma : \mathbf{b} \cdot \mathbf{n} < 0\} \\
+\mathcal{V} &:= \{v \in \mathcal{H}^1(\Omega) : v|_{\Gamma_{D}} = 0\} \\
+\mathcal{L} &:= \{\lambda \in \mathcal{H}^1(\Omega) : \lambda |_{\Gamma_{in}\cup \Gamma_{D}} = 0\}
+\end{align}
 
-DEFs
-
-It should be noted that these sets are easy to discretise.
+It should be noted that sets $\mathcal{V}$ and $\mathcal{L}$ are easy to discretise. However, from numerical simulations we find 
 
 \section{Overview Of Current Methods}
-For these methods and for the numerical simulations in section \ref{} we will take the boundary conditions
-\begin{equation}
-\begin{cases}
-\mathbf{n}\cdot \mathbb{A}\nabla u = 0, & \text{ on }\Gamma_N, \\
-u = g, & \text{  on }\Gamma_D.
-\end{cases}
-\end{equation}
-Talk about restrion $4$
+ We now state some methods for solving the PDE (\ref{PDE}).
 \subsection{Singular Pertubation Method} \label{SP}
-The single pertubation method involves solving the weak form of equation \ref{}. Therefore we have a trial function $u \in $ and a test function $\psi \in$. Thus we solve the weak form (\ref{}) for $(u) \in $.
+The single perturbation method involves solving the weak form of equation (\ref{PDE}). Therefore we have a trial function $u \in \mathcal{V}$ and a test function $\psi \in \mathcal{V}$. Thus we solve the weak form (\ref{SP_w}) for $(u) \in \mathcal{V}$.
 \begin{equation} \label{SP_w}
 (SP)
 \begin{cases}
-\varepsilon^{-1}a_{||}(u, \psi) + a_{\perp}(u, \psi) = \int_{\Omega} f \psi d\mathbf{x}
+\varepsilon^{-1}a_{||}(u, \psi) + a_{\perp}(u, \psi) = \int_{\Omega} f \psi d\mathbf{x}, \forall \psi \in \mathcal{V}
 \end{cases}
 \end{equation}
 This method excells for when $\varepsilon$ is normal size
 
 \subsection{Limit Method} \label{LM}
-We now introduce a limit method discussed in paper \cite{}. The limit method involves solving the the equation \ref{} when $\varepsilon \rightarrow 0$. Therefore, $\Delta_{||}u=0$ so when $g$ is constant the solution $u$ satisfies $\nabla_{||}u=0$ thus it is constant along the stream lines of the vector field. This leads to solving the weak form \ref{} for the trial functions $(u, q) \in $ 
+We now introduce a limit method discussed in paper \cite{AP}. The limit method involves solving the the equation (\ref{PDE}) when $\varepsilon \rightarrow 0$. Therefore, $\Delta_{||}u=0$ so since we have zero dirichlet boundary conditions the solution $u$ satisfies $\nabla_{||}u=0$ thus it is constant along the stream lines of the vector field. We apply this restriction using a Lagrangian parameter. This leads to solving the weak form (\ref{LM_w}) for the trial functions $(u, q) \in \mathcal{V} \times \mathcal{L}$ 
 \begin{equation} \label{LM_w}
 (LM)
 \begin{cases}
 a_{\perp}(u, \hat{u}) + a_{||}(q, \hat{u}) = \int_{\Omega} f \hat{u} d\mathbf{x}, 
-&\forall \hat{u} \in \\
-a_{||}(u, \hat{q}) = 0, & \forall \hat{q} \in 
+&\forall \hat{u} \in \mathcal{V},\\
+a_{||}(u, \hat{q}) = 0, & \forall \hat{q} \in \mathcal{L},
 \end{cases}
 \end{equation}
-
-where $(\hat{u}, \hat{q}) \in $ are test functions.
+where $(\hat{u}, \hat{q}) \in \mathcal{V} \times \mathcal{L}$ are test functions.
 
 \subsection{MMAP Method} \label{MMAP}
-We now introduce a Micro-Macro Asymptotic-Preserving method discussed in paper \cite{}. This method is similar to the $(LM)$ method from section \ref{LM} but from the additional $\varepsilon$ term it is able to deal with $\varepsilon \approx 1$. This leads to solving the weak form \ref{} for the trial functions $(u, q) \in $ 
+We now introduce a Micro-Macro Asymptotic-Preserving method discussed in paper \cite{MMAP}. This method is similar to the $(LM)$ method from section \ref{LM} but from the additional $\varepsilon$ term it is able to deal with $\varepsilon \approx 1$. This leads to solving the weak form (\ref{MMAP_w}) for the trial functions $(u, q) \in  \mathcal{V} \times \mathcal{L}$. 
 \begin{equation} \label{MMAP_w}
 (MMAP)
 \begin{cases}
 a_{\perp}(u, \hat{u}) + a_{||}(q, \hat{u}) = \int_{\Omega} f \hat{u} d\mathbf{x}, 
-&\forall \hat{u} \in \\
-a_{||}(u, \hat{q}) - \varepsilon a_{||}(q, \hat{q}) = 0, & \forall \hat{q} \in 
+&\forall \hat{u} \in \mathcal{V}, \\
+a_{||}(u, \hat{q}) - \varepsilon a_{||}(q, \hat{q}) = 0, 
+&\forall \hat{q} \in \mathcal{L},
 \end{cases}
 \end{equation}
-
-where $(\hat{u}, \hat{q}) \in $ are test functions.
+where $(\hat{u}, \hat{q}) \in \mathcal{V}\times \mathcal{L} $ are test functions.
 
 \subsection{AP Method} \label{AP}
-We now discuss an Asymptotic-Preserving method stated in paper \cite{}. This method involves solving the weak form (\ref{}) for trial functions $(p, \lambda, q, \ell, \mu) \in $
+We now discuss an Asymptotic-Preserving method stated in paper \cite{AP}. This method involves solving the weak form (\ref{AP_w}) for trial functions $(p, \lambda, q, \ell, \mu) \in \mathcal{V} \times \mathcal{L}  \times \mathcal{V}  \times \mathcal{V}  \times \mathcal{L}$.
 
 \begin{equation} \label{AP_w}
 (AP)
 \begin{cases}
-a_{\perp}(p, \eta)+a_{\perp}(q, \eta) + a_{||}(\eta, \lambda) &= \int_{\Omega}f \eta d\mathbf{x},
-\\
- a_{||}(p, \kappa) &= 0, 
- \\
- a_{||}(q, \xi) + \varepsilon a_{\perp}(p+q, \xi) &= 
- \int_{\Omega} (\varepsilon f -\ell)\xi d\mathbf{x},
- \\
- a_{||}(\chi, \mu) + \int_{\Omega}q \chi d\mathbf{x} &= 0,
- \\
- a_{||}(\ell, \tau) &= 0,
- \\
+a_{\perp}(p, \eta)+a_{\perp}(q, \eta) + a_{||}(\eta, \lambda) = \int_{\Omega}f \eta d\mathbf{x},
+&\forall \eta \in \mathcal{V}\\
+a_{||}(p, \kappa) = 0, 
+&\forall \kappa \in \mathcal{L}\\
+a_{||}(q, \xi) + \varepsilon a_{\perp}(p+q, \xi) = 
+\int_{\Omega} (\varepsilon f -\ell)\xi d\mathbf{x},
+&\forall \xi \in \mathcal{V}\\
+a_{||}(\chi, \mu) + \int_{\Omega}q \chi d\mathbf{x} = 0,
+&\forall \chi \in \mathcal{V}\\
+a_{||}(\ell, \tau) = 0,
+&\forall \tau \in \mathcal{L}\\
 \end{cases}
 \end{equation}
-where $(\eta, \kappa, \xi, \chi, \tau)\in$ are test functions.
+where $(\eta, \kappa, \xi, \chi, \tau)\in \mathcal{V} \times \mathcal{L}  \times \mathcal{V}  \times \mathcal{V}  \times \mathcal{L}$ are test functions. We have $u=p+q$.
 
 
 \subsection{Limit Stabilisation Method} \label{LM_STAB}
-The $(LM)$ method stated in section \ref{LM} struggles when there is a magnetic field $\mathbf{b}$ with closed lines. Thus we introduce a stabilisation method which is discussed in \cite{}. We implement this modification to get the weak form
+The $(LM)$ method stated in section \ref{LM} struggles when there is a magnetic field $\mathbf{b}$ with closed lines. Thus we introduce a stabilisation method which is discussed in \cite{STAB}. We implement this modification to get the weak form
 \begin{equation} \label{LM_STAB_w}
 (LM\_STAB)
 \begin{cases}
 a_{\perp}(u, \hat{u}) + a_{||}(q, \hat{u}) = \int_{\Omega} f \hat{u} d\mathbf{x}, 
-&\forall \hat{u} \in \\
-a_{||}(u, \hat{q}) = \sigma \int_{\Omega} q \hat{q} d\mathbf{x}, & \forall \hat{q} \in 
+&\forall \hat{u} \in \mathcal{V}\\
+a_{||}(u, \hat{q}) = \sigma \int_{\Omega} q \hat{q} d\mathbf{x}, & \forall \hat{q} \in \mathcal{V}
 \end{cases}
 \end{equation}
-We solve for trial functions $(u, q) \in $ with test functions $(\hat{u}, \hat{q}) \in $. Say what sigma is proportional too
+We solve for trial functions $(u, q) \in \mathcal{V} \times \mathcal{V}$ with test functions $(\hat{u}, \hat{q}) \in \mathcal{V} \times \mathcal{V}$. Say what sigma is proportional too
+Additionally, we do not use $\mathcal{L}$ therefore there are no complications when the electromagnetic field $\mathbf{b}$ has closed field lines or field lines that converge to a point like $\dot{x} = x/|x|$ with $x=0$.
 
 \subsection{MMAP Stabilisation Method} \label{MMAP_STAB}
+We also apply the stabilisation method mentioned in \cite{STAB} to the $(MMAP)$ method stated in section \ref{MMAP}. Thus we get weak form
 \begin{equation} \label{MMAP_STAB_w}
 (MMAP\_STAB)
 \begin{cases}
 a_{\perp}(u, \hat{u}) + a_{||}(q, \hat{u}) = \int_{\Omega} f \hat{u} d\mathbf{x}, 
-&\forall \hat{u} \in \\
-a_{||}(u, \hat{q}) - \varepsilon a_{||}(q, \hat{q}) = \sigma \int_{\Omega} q \hat{q} d\mathbf{x}, & \forall \hat{q}\in 
+&\forall \hat{u} \in \mathcal{V}\\
+a_{||}(u, \hat{q}) - \varepsilon a_{||}(q, \hat{q}) = \sigma \int_{\Omega} q \hat{q} d\mathbf{x}, & \forall \hat{q}\in \mathcal{V}
 \end{cases}
 \end{equation}
+where we solve for trial functions $(u,q) \in \mathcal{V} \times \mathcal{V}$ with test functions $(\hat{u}, \hat{q}) \in \mathcal{V} \times \mathcal{V}$. 
 
 \subsection{Deluzet-Narski Method} \label{DN}
-This method turns the strongly anisotropic equation into two mildly anisotropic equations to be solved by iteration. This method is stated in \cite{}. This introduces $\varepsilon_0 \gg \varepsilon$ and gives the weak form \ref{} which solves for the sequence of trial functions $(u^{(n)}, q^{(n)}) \in $ .
+This method turns the strongly anisotropic equation into two mildly anisotropic equations to be solved by iteration. This method is stated in \cite{DN}. This introduces $\varepsilon_0 \gg \varepsilon$ and gives the weak form \ref{DN_w} which solves for the sequence of trial functions $(u^{(n)}, q^{(n)}) \in \mathcal{V} \times \mathcal{V}$ .
  \begin{equation} \label{DN_w}
  (DN)
    \begin{cases}
-  a_{||}(u, \hat{u}) + \varepsilon_0 a_{\perp}(u, \hat{u}) = 
+  a_{||}(u^{(n+1)}, \hat{u}) + \varepsilon_0 a_{\perp}(u^{(n+1)}, \hat{u}) = 
   \varepsilon_0 \int_{\Omega} f \hat{u} d\mathbf{x}
-  +(\varepsilon-\varepsilon_0)a_{||}(q, \hat{u}),
-  & \forall \hat{u} \in \\
-  a_{||}(q, \hat{q}) + \varepsilon_0 a_{\perp}(q, \hat{q}) = 
+  +(\varepsilon-\varepsilon_0)a_{||}(q^{(n)}, \hat{u}),
+  & \forall \hat{u} \in \mathcal{V}\\
+  a_{||}(q^{(n+1)}, \hat{q}) + \varepsilon_0 a_{\perp}(q^{(n+1)}, \hat{q}) = 
   \int_{\Omega} f \hat{q} d\mathbf{x}
-  -a_{\perp}(u - \varepsilon_0 q, \hat{q}),
-  & \forall \hat{q} \in 
+  -a_{\perp}(u^{(n+1)} - \varepsilon_0 q^{(n)}, \hat{q}),
+  & \forall \hat{q} \in \mathcal{V}
   \end{cases}
   \end{equation}
 With test functions $(\hat{u}, \hat{q}) \in \mathcal{V} \times \mathcal{V}$.
@@ -260,41 +290,52 @@ q &= \varepsilon^{-1} \mathbf{b}\cdot \nabla u,\\
 q &= \varepsilon^{-1} \mathbf{b} \cdot \nabla_{||} u, \\
 \mathbf{b}q &= \varepsilon^{-1} \nabla_{||} u.
 \end{align}
+Also, we introduce new sets 
+\begin{align}
+\mathcal{Q}_{in} &:= \{ q \in \mathcal{H}^1(\Omega) : q|_{\Gamma_{in}}=0\}, \\
+\mathcal{Q} &:= \{ q \in \mathcal{H}^1(\Omega)\}.
+\end{align}
 
 \subsection{PF Method}
-Therefore, by doing the substitution $q=\varepsilon^{-1} \mathbf{b} \cdot \nabla u$ into (\ref{}) we get the weak form
+Therefore, by doing the substitution $q=\varepsilon^{-1} \mathbf{b} \cdot \nabla u$ into (\ref{PDE}) we get the weak form
 \begin{equation} \label{PF_w}
 (PF)
 \begin{cases}
 \int_{\Omega}A_{||}q\mathbf{b} \cdot \nabla \hat{u}  d\mathbf{x} + a_{\perp}(u, \hat{u}) 
-= \int{\Omega} f \hat{u} d\mathbf{x},
-\\
+= \int_{\Omega} f \hat{u} d\mathbf{x},
+&\forall \hat{u} \in \mathcal{V}\\
 \int_{\Omega}\mathbf{b} \cdot \nabla \hat{u}\hat{q} d\mathbf{x} 
 = \varepsilon \int_{\Omega}q\hat{q} d \mathbf{x}, 
+&\forall \hat{q} \in \mathcal{Q}_{in}.
 \end{cases}
 \end{equation}
-We solve for trial function with test functions . 
+We solve for trial functions $(u,q) \in \mathcal{V} \times \mathcal{Q}_{in}$ with test functions $(\hat{u}, \hat{q}) \in \mathcal{V} \times \mathcal{Q}_{in}$. 
 
 
 \subsection{PF Stabilisation Method}
-Additionally, we can use the stabilisation technique stated in \cite{} to get the weak form
+Additionally, we can use the stabilisation technique stated in \cite{STAB} to get the weak form
 \begin{equation} \label{PF_STAB_w}
 (PF\_STAB)
 \begin{cases}
 \int_{\Omega}A_{||}q\mathbf{b} \cdot \nabla \hat{u}  d\mathbf{x} + a_{\perp}(u, \hat{u}) 
 = \int{\Omega} f \hat{u} d\mathbf{x},
-\\
+&\forall \hat{u} \in \mathcal{Q}_D,\\
 \int_{\Omega}\mathbf{b} \cdot \nabla \hat{u}\hat{q} d\mathbf{x} 
 = (\varepsilon + \sigma)\int_{\Omega}q\hat{q} d \mathbf{x}, 
+&\forall \hat{q} \in \mathcal{Q}.
 \end{cases}
 \end{equation}
-
+We solve for trial functions $(u,q) \in \mathcal{V} \times \mathcal{Q}$ with test functions $(\hat{u}, \hat{q}) \in \mathcal{V} \times \mathcal{Q}$. 
 
 \chapter{Numerical Demonstrations}
 
 In these examples we calculate $f$ from passing $u$ through the PDE.
+Explain how to calculte system of PDEs
+
+Say use firedrake then do speed up test on GPU?
+
 \section{Derivation of Lagrange Finite Element of Order $2$}
-In our numerical simulations we use a continuous Lagrange order $2$ finite element. We now provide a method for the derivation of this finite element on an interval and a triangle. Additionally, following a similar procedure we can derive the basis functions for other domains. The resource \cite{} states basis functions for many finite elements.This is not implemented in code we instead use the Firedrake implementation of CG order $2$. 
+In our numerical simulations we use a continuous Lagrange order $2$ finite element. We now provide a method for the derivation of this finite element on an interval and a triangle. Additionally, following a similar procedure we can derive the basis functions for other domains. The resource \cite{defelement} states basis functions for many finite elements. This is not implemented in code we instead use the Firedrake implementation of CG order $2$. 
 
 For each element we have basis functions $\phi_i(\mathbf{x})$ which have a linear combination from the set $\{1, x, x^2, y, y^2, z, z^2, xy, yz, xz\}$ and locations on domain $\ell_i$.  To find the coefficients of the linear combination we must solve
 \begin{equation} \label{CG_eq}
@@ -377,7 +418,7 @@ This leads to the basis functions
 \phi_1(x) &= x(2x-1),\\
 \phi_2(x) &= 4x(1-x)
 \end{align}
-With there visual representation in Figure \ref{InterFuncs}.
+With their visual representation in Figure \ref{InterFuncs}.
 \begin{figure}[H]
      \includegraphics[width=\textwidth]{Pics/BasisFunc/IntervalFuncs.png}
      \caption{Lagrage order 2 basis functions  on interval $[0,1]$}
@@ -480,11 +521,11 @@ With the visual representation in Figure \ref{triBasisFuncs}.
      \caption{\phi_5(x,y) = 4x(1-x-y),}
  \end{subfigure}
  \hfill
- \caption{Visual aids for the derivation of the Toroidal parameterisation.} \label{triBasisFuncs}
+ \caption{Basis Functions for Order 2 Lagrange Finite Element on a Triangle.} \label{triBasisFuncs}
 \end{figure}
 
 \section{Example 1}
-We will solve the PDE (\ref{}) with $\Omega = [0,1]^2, \Gamma_D = \{y=0 \text{ or } y=1\}$ and $\Gamma_N = \{x=0 \text{ or } x=1\}$. We chose a magnetic field such
+We will solve the PDE (\ref{PDE}) with $\Omega = [0,1]^2, \Gamma_D = \{y=0 \text{ or } y=1\}$ and $\Gamma_N = \{x=0 \text{ or } x=1\}$. We chose a magnetic field such
 \begin{equation} \label{E1_b}
 \mathbf{b} = \frac{\mathbf{B}}{|\mathbf{B}|}, 
 \mathbf{B} = \left[ \begin{matrix}
@@ -508,7 +549,7 @@ We will cover three sub-examples with $(\alpha=0),(\alpha=2,m=1)$ and $(\alpha =
  \end{subfigure}
  \caption{Electromagetic vector field $\mathbf{b}$ from (\ref{E1_b})} \label{E1_VFs}
 \end{figure}
-In Figure \ref{E1_fs} we have the exact solution to example $1$ \ref{E1_u}. We have the source term $f$ is too complicated to write analytically so the visualisation is given in Figure \ref{E1_fs} . We analysis the equation with $\varepsilon = 0.1$ and $\varepsilon = 10^{-10}$ . We notice the $\varepsilon = 0$ and $\varepsilon = 10^{-10}$ variants are visually similar this suggests to consider a method discussed in section \ref{}. The main diffence is the solution $u$ is not constant on streamlines of the vector field $\mathbf{b}$.
+In Figure \ref{E1_us} we have the exact solution $u$ (\ref{E1_u}) to example $1$. We have the source term $f$ is too complicated to write analytically so the visualisation is given in Figure \ref{E1_fs}. We analysis the equation with $\varepsilon = 0.1$ and $\varepsilon = 10^{-10}$. We notice the $\varepsilon = 0$ and $\varepsilon = 10^{-10}$ variants are visually similar for the source term $f$ and exact term $u$ this suggests to consider a method discussed in section \ref{MAP_f}. The main difference is the solution $u$ is not constant on streamlines of the vector field $\mathbf{b}$ this makes logical sense because increasing the anisotripc strength (make $\varepsilon$ smaller) leads to less diffusion perpendicular to the magnetic field and undisturbed diffusion parralle to the magnetic field.
 \begin{figure}[H]
  \begin{subfigure}{0.44\textwidth}
      \includegraphics[width=\textwidth]{Pics/uf/U_E1a_eps1.png}
@@ -754,8 +795,7 @@ Show stabalisation gives different MMAP and Stab and streamline
 Do DN plot (1)
 
 \section{Example 3, Magnetic Islands}
-We now solve an example on a square domain with non-zero boundary conditions on $\Gamma_D$ and with closed and open field lines.
-We will solve the PDE (\ref{}) with $\Omega = [0,1]^2, \Gamma_D = \{y=0 \text{ or } y=1\}$ and $\Gamma_N = \{x=0 \text{ or } x=1\}$. We chose a magnetic field such 
+We now solve an example on a square domain with non-zero boundary conditions on $\Gamma_D$ and with closed and open field lines. We will solve the PDE (\ref{PDE}) with $\Omega = [0,1]^2, \Gamma_D = \{y=0 \text{ or } y=1\}$ and $\Gamma_N = \{x=0 \text{ or } x=1\}$. We choose a magnetic field such 
 \begin{equation}
 \mathbf{b} = \frac{\mathbf{B}}{|\mathbf{B}|}, 
 \mathbf{B} = \left[ \begin{matrix}
@@ -763,7 +803,7 @@ We will solve the PDE (\ref{}) with $\Omega = [0,1]^2, \Gamma_D = \{y=0 \text{ o
 4a \sin(4 \pi x)
 \end{matrix} \right]
 \end{equation}
-which is visualised in Figure \ref{E3_VF}. The problem with this example which comes from \cite{} is that $\mathbb{b}\cdot \mathbb{n} \neq 1$ on $\Gamma_{D}$. Example $4$ changes this to ensure $\mathbb{b}\cdot \mathbb{n} = 1$ on $\Gamma_{D}$.
+which is visualised in Figure \ref{E3_VF}. This example was proposed by \cite{DN} but it does not satisfy the restrictions we impose. The restrictions are $\mathbf{b} \cdot \mathbf{n} = 0$ on $\Gamma_D$ this failed restriction can be seen in Figure \ref{VF_E3} and $u = 0$ on $\Gamma_D$ this failed restriction can be seen in Figure \ref{E3_u}. Thus, our numerical solvers will struggle to solve this example, this problem is rectified by in Example $4$. Additionally, \cite{DN} rectified this problem by defining $\Gamma_D := \{\mathbf{x} \in \partial \Omega :  \mathbf{b} \cdot \mathbf{n} = 0\}$.
 \begin{figure}[H]
  \includegraphics[width=\textwidth]{Pics/VectorField/E3b.png}
   \caption{Electromagnetic field $\mathbf{b}$ for Example $3$.}
@@ -776,7 +816,7 @@ u = \sin(10\sin(\pi y)-10a\cos(4 \pi x)) + \varepsilon \cos(2 \pi x)\sin(10 \pi 
 \end{equation}
 which is visualised with its source term $f$ in Figure \ref{E3_uf} at $\varepsilon = 10^{-10}$. Additionally, we visualise this for $\varepsilon = 0.1$.
 \begin{figure}[H]
- \begin{subfigure}{0.5\textwidth}
+ \begin{subfigure}{0.5\textwidth} \label{E3_u}
      \includegraphics[width=\textwidth]{Pics/uf/U_E3_eps_10.png}
      \caption{Exact solution $u$.}
  \end{subfigure}
@@ -835,8 +875,8 @@ size | dof | L2 error | H1 error PF, MMAP
 
 \section{Example 4, Magnetic Islands}
 
-We now introduce an example on a unit square where $\Gamma_D$ has zero boundary conditions. This is similar to example $3$ but example $3$ failed to satisfy $\mathbf{b}\cdot\mathbf{n}$ on $\Gamma_D$ this can be visually seen from Figure \ref{E3_VF} showing its vector field as $\mathbf{b}$ on $y=0$ and $y=1$ is not parallel to the boundary. The vector field for this example shown in Figure \ref{E4_VF} is parallel to the boundary on $\Gamma_D$. Additionally, this has open and closed field lines.
-Thus on $\Omega = [0,1]^2, \Gamma_D = \{y=0 \text{ or } y=1\}$ and $\Gamma_N = \{x=0 \text{ or } x=1\}$ we solve the PDE (\ref{}) with the same magnetic
+We now introduce an example on a unit square where $\Gamma_D$ has zero boundary conditions. This is similar to example $3$ but example $3$ failed to satisfy $\mathbf{b}\cdot\mathbf{n} = 0$ on $\Gamma_D$ this can be visually seen from Figure \ref{E3_VF} showing its vector field as $\mathbf{b}$ on $y=0$ and $y=1$ is not parallel to the boundary. The vector field for this example shown in Figure \ref{E4_VF} is parallel to the $\Gamma_D$ boundary. Additionally, this has open and closed field lines.
+Thus on $\Omega = [0,1]^2, \Gamma_D = \{y=0 \text{ or } y=1\}$ and $\Gamma_N = \{x=0 \text{ or } x=1\}$ we solve the PDE (\ref{PDE}) with the same magnetic
 \begin{equation}
 \mathbf{b} = \frac{\mathbf{B}}{|\mathbf{B}|}, 
 \mathbf{B} = \left[ \begin{matrix}
@@ -872,11 +912,11 @@ which is shown in Figure \ref{E4_uf}
 \begin{figure}[H]
  \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/LHSims/E4/E4_STABL2.png}
-     \caption{Exact solution $u$.}
+     \caption{L2 Error}
  \end{subfigure}
    \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/LHSims/E4/E4_STABH1.png}
-     \caption{Source term $f$.}
+     \caption{H1 Error}
  \end{subfigure}
  \caption{Numerical solution of Example $4$ for solver $MMAP\_STAB$ and $PF\_STAB$ with varying $\varepsilon$ on $20 \times 20$ quadrilateral grid with CG order $2$. This has $3362$ degrees of freedom.} \label{E4_eps}
 \end{figure}
@@ -1040,14 +1080,18 @@ This $u$ is displayed in Figure \ref{E5_uf} with its source term $f$ and $\varep
 \section{Methods For Investigation}
 
 \subsection{Line Integration}
+The paper \cite{LINE_INT} states we can use line integration to solve PDE (\ref{PDE}).  to The idea of line integration is to reduce the dimension 
+
+\subsection{Mapping of $f$} \label{MAP_f}
 
 
-\subsection{Mapping of $f$}
 
 
 \subsection{Splitting of Domain}
 
 \subsection{Parallel Implementation}
+
+\section{Conclusion}
 
 \printbibliography[heading=bibintoc]
 
