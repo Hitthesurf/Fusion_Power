@@ -154,14 +154,13 @@ We now write the PDE (\ref{PDE}) in weak form
 \varepsilon^{-1}\int_{\Omega} A_{||} \nabla_{||}u \cdot \nabla_{||}\hat{u} d\mathbf{x} +
 \int_{\Omega}(\mathbb{A}_{\perp} \nabla_{\perp} u )\cdot \nabla_{\perp} \hat{u} d\mathbf{x}
 \end{align}
-To simplify notation we use
+Where $u$ is a trial function and $\hat{u}$ is a test function. To simplify notation we use
 \begin{align}
 a_{||}(\alpha, \beta) &= \int_{\Omega} A_{||} \nabla_{||}\alpha \cdot \nabla_{||}\beta d\mathbf{x} \\
 a_{\perp}(\alpha, \beta) &= \int_{\Omega}(\mathbb{A}_{\perp} \nabla_{\perp}\alpha )\cdot \nabla_{\perp} \beta d\mathbf{x}
 \end{align}
 For are numerical simulations we use Firedrake \cite{Dragon} which written in code is 
 \lstinputlisting[language=Python]{CodeSnips/a_para.py}
-
 Also, we have 
 \begin{equation}
 \varepsilon^{-1} (A_{||}\nabla_{||}u)_{||}\cdot \mathbf{n} = \varepsilon^{-1} (A_{||}\nabla_{||}u)\cdot \mathbf{n} = \varepsilon^{-1} A_{||}(\nabla_u \cdot \mathbf{b}) \mathbf{b} \cdot \mathbf{n} = 0,
@@ -171,7 +170,7 @@ on $\Gamma_D$ as restriction $3$ of the electromagnetic field $\mathbf{b}$ state
 \int_{\Omega}f\hat{u}d\mathbf{x} = -\int_{\Gamma_D}\hat{u}(\mathbb{A}_{\perp}\nabla_{\perp} u)_{\perp}\cdot \mathbf{n} d \mathbf{x} + 
 \varepsilon^{-1} a_{||}(u,\hat{u})+a_{\perp}(u, \hat{u})\\
 \end{equation}
-In the integral over $\Gamma_D$ in (\ref{}) $u$ can be replaced with $0$. This is included in the formula to show how one would calculate the problem with non zero boundary conditions.
+In the integral over $\Gamma_D$ in (\ref{PDE_w}) $u$ can be replaced with $0$ because in the boundary conditions for (\ref{PDE}) $u,\hat{u} \in \mathcal{V}$. This is included in the formula to show how one would calculate the problem with non zero boundary conditions.
 Our methods require the use of the sets 
 \begin{align}
 \mathcal{H}^1 &:= \{\} \\
@@ -328,8 +327,7 @@ Additionally, we can use the stabilisation technique stated in \cite{STAB} to ge
 We solve for trial functions $(u,q) \in \mathcal{V} \times \mathcal{Q}$ with test functions $(\hat{u}, \hat{q}) \in \mathcal{V} \times \mathcal{Q}$. 
 
 \chapter{Numerical Demonstrations}
-
-In these examples we calculate $f$ from passing $u$ through the PDE.
+In these examples we calculate $f$ from passing $u$ through the PDE. Additionally, in these example we take $A_{||}=0$ and $\mathbb{A}_{\perp} = \mathbb{I}$. Where $\mathbb{I}$ is the identity matrix.
 Explain how to calculte system of PDEs
 
 Say use firedrake then do speed up test on GPU?
@@ -537,7 +535,7 @@ Thus we have $\Gamma_{in} := \{x=0\}$ and exact solution
 \begin{equation} \label{E1_u}
 u = \sin(\pi y + \alpha (y^2-y) \cos(m\pi x)) + \varepsilon \cos(2 \pi x) \sin(\pi y)
 \end{equation}
-We will cover three sub-examples with $(\alpha=0),(\alpha=2,m=1)$ and $(\alpha = 2, m=10)$. Thus we get electromagnetic fields  shown in Figure \ref{E1_VFs}. The field for $\alpha = 0$ is not shown as it is a simple vector field with $\mathbf{b}= [1, 0]$.
+This test problem came from \cite{DN}. However, the same or similar problem is very popular and appears in papers \cite{LINE_INT}, \cite{AP}, \cite{MMAP} and \cite{STAB}. We will cover three sub-examples with $(\alpha=0),(\alpha=2,m=1)$ and $(\alpha = 2, m=10)$. Thus we get electromagnetic fields  shown in Figure \ref{E1_VFs}. The field for $\alpha = 0$ is not shown as it is a simple vector field with $\mathbf{b}= [1, 0]$.
 \begin{figure}[H]
  \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/VectorField/E1b_a2_m1.png}
@@ -1080,7 +1078,43 @@ This $u$ is displayed in Figure \ref{E5_uf} with its source term $f$ and $\varep
 \section{Methods For Investigation}
 
 \subsection{Line Integration}
-The paper \cite{LINE_INT} states we can use line integration to solve PDE (\ref{PDE}).  to The idea of line integration is to reduce the dimension 
+The paper \cite{LINE_INT} states we can use line integration to solve PDE (\ref{PDE}).  The idea of line integration is to use the fact that the solution should be approximately constant along streamlines for $\varepsilon \ll 1$. Therefore, we only have to calculate the PDE on $\Gamma_{in}$. A proof is located 
+We demonstrate the idea of this method for Example $1$ when $\alpha=0$. Thus, the magnetic field $\mathbf{b} = [1, 0]$. When substituting this $\mathbf{b}$ into (\ref{PDE}) we get 
+\begin{equation} \label{LINE_PDE}
+\begin{cases}
+\varepsilon^{-1}u_{xx} + u_{yy} = f(x,y), &\in \Omega,\\
+u_x = 0, &\text{on } \Gamma_{N},\\
+u = 0, &\text{on } \Gamma_{D}.
+\end{cases}
+\end{equation}
+Now we take line integrals along the vector field and take the limit of $\varepsilon \rightarrow 0$ in (\ref{LINE_PDE}) to get
+\begin{equation} \label{LINE_ID1}
+\begin{cases}
+u_{xx} = 0, &\in \Omega,\\
+u_{x} = 0, & \text{on }x=0,\\
+-\int_0^1 u_{yy} dx = \int_0^1f(x,y)dx, &\forall y \in [0,1],\\
+u = 0, &\text{on } y=0 \text{ or } y=1.
+\end{cases}
+\end{equation}
+This problem can be solved. From the first two equations in (\ref{LINE_ID1}) we get the solution for $u$ is constant along $\mathbf{b}$. Thus $u$ is independent of $x$. From this fact and last the two equations we get
+\begin{equation}
+\begin{cases}
+-u_{yy} =\int_0^1 f(x, y) dx, &\text{on } x=0,\\
+u = 0, &\text{on } y=0 \text{ or } y=1,
+\end{cases}
+\end{equation}
+Now we demonstrate this works. For Example 1 with $\alpha = 0$ we get 
+\begin{equation}
+f(x,y) = \sin(\pi y)\pi^2(1+(4+\varepsilon)\cos(2\pi x)) 
+\end{equation}
+Thus after some integration we get
+\begin{equation}
+u_{yy} = - \int_0^1 f(x,y)dx = - \int_0^1 \sin(\pi y)\pi^2(1+(4+\varepsilon)\cos(2\pi x)) dx = -\pi^2 sin(\pi y)
+\end{equation}
+Which implies $u= \sin(\pi y)$, this is missing the $\varepsilon$ order term from (\ref{E1_u}) because we have solved the limit problem. Therefore we get the value of $u$
+ as $\varepsilon \rightarrow 0$. Additionally, the paper \cite{LINE_INT} describes how to use this method for a vector field of the form $\mathbf{b} = [\cos(\theta), \sin(\theta)]$. Also, as Example $1$ is a popular example to use to demonstrate methods for solving PDE (\ref{PDE}), they cover $(\alpha = 0)$ and $(\alpha=2, m=1)$ in their numerical demonstrations. Additionally, our $(PF)$ and $(MMAP)$ seem to have smaller L2 Error for the same examples, this is hard to compare because they used a finite difference method to numerically solve their PDE.
+ 
+ However, it is not clear how a stabilisation technique can be used to solve vector fields with closed field lines. At the end of their paper it stated their future would solve this problem. One potential solution could be to take a point on each stream line and then join the points together with respect to which streamlines are touching. Then solve the reduced dimension PDE.
 
 \subsection{Mapping of $f$} \label{MAP_f}
 
@@ -1092,6 +1126,7 @@ The paper \cite{LINE_INT} states we can use line integration to solve PDE (\ref{
 \subsection{Parallel Implementation}
 
 \section{Conclusion}
+Check out github page \cite{Hub}
 
 \printbibliography[heading=bibintoc]
 
