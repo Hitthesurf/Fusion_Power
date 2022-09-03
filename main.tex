@@ -520,17 +520,102 @@ With the visual representation in Figure \ref{triBasisFuncs}.
 \end{figure}
 
 \section{Deriving the Linear System}
-We wish to find a matrix $\mathbb{B}^{(G)}$ and vector $\mathbf{F}^{(G)}$ so that the solution $\mathbf{u}$ to $\mathbb{B}^{(G)} \mathbf{u} = \mathbf{F}^{(G)}$ contains the coefficients of are $u$ in the discretised space. We can use a local formulation appoach. Thus we calculate the local $\mathbb{B}^{(L)}$ and $\mathbf{F}^{(L)}$ and using a local to global map we add the results to the global system. Here is an algorithm to add the local system to the global system. (In this case $d=2$).
+We wish to find a matrix $\mathbb{B}^{(G)}$ and vector $\mathbf{F}^{(G)}$ so that the solution $\mathbf{u}$ to $\mathbb{B}^{(G)} \mathbf{u} = \mathbf{F}^{(G)}$ contains the coefficients for $u$ in the discretised space. We can use a local formulation approach on the domain of a single finite element $(\Omega_{FE})$. Thus we calculate the local $\mathbb{B}^{(L)}$ and $\mathbf{F}^{(L)}$ and using a local to global map we add the results to the global system. Here is an algorithm to add the local system to the global system.
 \lstinputlisting[language=Python]{CodeSnips/Global_Local_Map.py}
 
 This approach is well known for one test function. But when multiple test functions are involved it may not be clear how this translates to a linear system. Thus we show the derivation of the linear system for the $(MMAP)$ method.
 
-In these derivations of linear systems we will use a finite element with two basis function. But it is trivial how to introduce more basis functions. 
-\section{Linear System for $(SP)$}
-We now find
-We will discrtise $u$ From (\ref{SP_w}) we substitute are approximation for $u$ on this finite element. 
+In these derivations of linear systems we will use a finite element with two basis function. In this case $d=2$. But it is trivial how to introduce more basis functions. 
+\subsection{Linear System for $(SP)$}
+We will discrtise $u$ from (\ref{SP_w}) on the finite element domain with basis functions $\phi_0$ and $\phi_1$. Thus we substitute $u=u_0\phi_0 + u_1 \phi_1$ into (\ref{SP_w}) to get equations 
+\begin{equation} \label{SP_Eqs}
+\varepsilon^{-1}u_0a_{||}(\psi_0, \psi_i) +
+\varepsilon^{-1}u_1a_{||}(\psi_1, \psi_i) +
+u_0a_{\perp}(\psi_0, \psi_i) +
+u_1a_{\perp}(\psi_1, \psi_i) =
+\int_{\Omega_{FE}} f \psi_i d\mathbf{x}
+\end{equation}
+For $i \in \{0,1\}$. It should be noted that the integrals are over the finite element domain $\Omega_{FE}$. Thus from (\ref{SP_Eqs}) we get linear system
+\begin{equation} 
+\left[
+\begin{matrix}
+\varepsilon^{-1}a_{||}(\psi_0, \psi_0) + a_{\perp}(\psi_0,\psi_0) &
+\varepsilon^{-1}a_{||}(\psi_1, \psi_0) + a_{\perp}(\psi_1,\psi_0)\\
+\varepsilon^{-1}a_{||}(\psi_0, \psi_1) + a_{\perp}(\psi_0,\psi_1) &
+\varepsilon^{-1}a_{||}(\psi_1, \psi_1) + a_{\perp}(\psi_1,\psi_1)\\
+\end{matrix}
+\right] 
+\left [
+\begin{matrix}
+u_0 \\
+u_1
+\end{matrix}
+\right ] =
+\left[
+\begin{matrix}
+\int_{\Omega_{FE}} f \psi_0 d\mathbf{x} \\
+\int_{\Omega_{FE}} f \psi_1 d\mathbf{x}
+\end{matrix}
+\right].
+\end{equation}
+Then we add this local system to the global system.
 
-\section{Linear System for $(MMAP)$}
+\subsection{Linear System for $(MMAP)$}
+Now we will discrtise $u$ and  $q$ from (\ref{MMAP_w}). For the local formulation we get test functions $\hat{u}_0, \hat{u}_1, \hat{q_0}$ and $\hat{q_1}$. Now we substitute $u = u_0 \hat{u}_0 + u_1\hat{u}_1$ and $q = q_0\hat{q}_0 + q_1\hat{q}_1$ into (\ref{MMAP_w}). Thus we get equations
+\begin{equation} \label{MMAP_Eqs}
+\begin{cases}
+u_0a_{\perp}(\hat{u}_0, \hat{u}_i) +
+u_1a_{\perp}(\hat{u}_1, \hat{u}_i) +
+q_0a_{||}(\hat{q}_0, \hat{u}_i) +
+q_1a_{||}(\hat{q}_1, \hat{u}_i) &=
+\int_{\Omega_{FE}} f \hat{u}_i d\mathbf{x}, \\
+u_0a_{||}(\hat{u}_0, \hat{q}_i) +
+u_1a_{||}(\hat{u}_1, \hat{q}_i) -
+\varepsilon q_0a_{||}(\hat{q}_0, \hat{q}_i) -
+\varepsilon q_1a_{||}(\hat{q}_1, \hat{q}_i) &=
+0.
+\end{cases}
+\end{equation}
+For $i\in\{0,1\}$. Thus from (\ref{MMAP_Eqs}) we get the linear system
+\begin{equation}
+\left [
+\begin{matrix}
+a_{\perp}(\hat{u}_0, \hat{u}_0) &
+a_{\perp}(\hat{u}_1, \hat{u}_0) &
+a_{||}(\hat{q}_0, \hat{u}_0) &
+a_{||}(\hat{q}_1, \hat{u}_0) \\
+a_{\perp}(\hat{u}_0, \hat{u}_1) &
+a_{\perp}(\hat{u}_1, \hat{u}_1) &
+a_{||}(\hat{q}_0, \hat{u}_1) &
+a_{||}(\hat{q}_1, \hat{u}_1) \\
+a_{||}(\hat{u}_0, \hat{q}_0) &
+a_{||}(\hat{u}_1, \hat{q}_0) &
+-\varepsilon a_{||}(\hat{q}_0, \hat{q}_0) &
+-\varepsilon a_{||}(\hat{q}_1, \hat{q}_0) \\
+a_{||}(\hat{u}_0, \hat{q}_1) &
+a_{||}(\hat{u}_1, \hat{q}_1) &
+-\varepsilon a_{||}(\hat{q}_0, \hat{q}_1) &
+-\varepsilon a_{||}(\hat{q}_1, \hat{q}_1) \\
+\end{matrix}
+\right ]
+\left [
+\begin{matrix}
+u_0 \\
+u_1 \\
+q_0 \\
+q_1
+\end{matrix}
+\right ] =
+\left [
+\begin{matrix}
+\int_{\Omega_{FE}}f\hat{u}_0 d \mathbf{x} \\
+\int_{\Omega_{FE}}f\hat{u}_1 d \mathbf{x} \\
+0 \\
+0
+\end{matrix}
+\right ].
+\end{equation}
+Then we add this local system to the global system.
 
 \section{Example 1}
 We will solve the PDE (\ref{PDE}) with $\Omega = [0,1]^2, \Gamma_D = \{y=0 \text{ or } y=1\}$ and $\Gamma_N = \{x=0 \text{ or } x=1\}$. We chose a magnetic field such
