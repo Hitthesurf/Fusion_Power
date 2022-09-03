@@ -64,7 +64,7 @@ Diffusion Problems}
 
 \begin{acknowledgements} 
 
-Firstly, I would like to thank my supervisor Patrick Farrell. He provided me with guidance and direction for this project. Additionally, he contributed his unpublished notes on the problem.
+Firstly, I would like to thank my supervisor Prof Patrick Farrell. He provided me with guidance and direction for this project. Additionally, he contributed his unpublished notes on the problem.
 
 Secondly, thanks is given to Dr Kathryn Gillow for providing a well organised course and constant support.
 
@@ -75,7 +75,7 @@ Finally, I thank Culham Centre for Fusion Energy for funding this project.
 \newpage
 
 \begin{abstract}
-In this paper, we wish to solve highly anisotropic diffusion problems on a domain $\Omega$. We discuss existing methods, propose new methods and demonstrate how to implement these methods in Python using Firedrake. Then we test and compare the different methods on a range of examples.
+In this paper, we wish to solve highly anisotropic diffusion problems on a domain $\Omega$. We discuss existing methods, propose new methods and demonstrate how to implement these methods in Python using Firedrake. Then we test and compare the different methods on a range of examples. Additionally, we provide the code on GitHub at \cite{Hub}
 \end{abstract}
 
 \newpage
@@ -326,7 +326,6 @@ We solve for trial functions $(u,q) \in \mathcal{V} \times \mathcal{Q}$ with tes
 
 \chapter{Numerical Demonstrations}
 In these examples we calculate $f$ from passing $u$ through the PDE. Additionally, in these example we take $A_{||}=0$ and $\mathbb{A}_{\perp} = \mathbb{I}$. Where $\mathbb{I}$ is the identity matrix.
-Explain how to calculte system of PDEs
 
 Say use firedrake then do speed up test on GPU?
 
@@ -519,6 +518,19 @@ With the visual representation in Figure \ref{triBasisFuncs}.
  \hfill
  \caption{Basis Functions for Order 2 Lagrange Finite Element on a Triangle.} \label{triBasisFuncs}
 \end{figure}
+
+\section{Deriving the Linear System}
+We wish to find a matrix $\mathbb{B}^{(G)}$ and vector $\mathbf{F}^{(G)}$ so that the solution $\mathbf{u}$ to $\mathbb{B}^{(G)} \mathbf{u} = \mathbf{F}^{(G)}$ contains the coefficients of are $u$ in the discretised space. We can use a local formulation appoach. Thus we calculate the local $\mathbb{B}^{(L)}$ and $\mathbf{F}^{(L)}$ and using a local to global map we add the results to the global system. Here is an algorithm to add the local system to the global system. (In this case $d=2$).
+\lstinputlisting[language=Python]{CodeSnips/Global_Local_Map.py}
+
+This approach is well known for one test function. But when multiple test functions are involved it may not be clear how this translates to a linear system. Thus we show the derivation of the linear system for the $(MMAP)$ method.
+
+In these derivations of linear systems we will use a finite element with two basis function. But it is trivial how to introduce more basis functions. 
+\section{Linear System for $(SP)$}
+We now find
+We will discrtise $u$ From (\ref{SP_w}) we substitute are approximation for $u$ on this finite element. 
+
+\section{Linear System for $(MMAP)$}
 
 \section{Example 1}
 We will solve the PDE (\ref{PDE}) with $\Omega = [0,1]^2, \Gamma_D = \{y=0 \text{ or } y=1\}$ and $\Gamma_N = \{x=0 \text{ or } x=1\}$. We chose a magnetic field such
@@ -1155,6 +1167,8 @@ When using a local formulation it is trivial to calculate and add the contributi
 What is not so clear is how to solve a linear system in parallel. 
 
 What takes the most time in FEM
+
+No one uses Guassian or direct methods for large systems.
 
 Future work would involve a git branch 
 
