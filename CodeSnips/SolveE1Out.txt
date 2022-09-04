@@ -1,0 +1,3 @@
+MMAP, Z.dim() = 206082, Order = 2, eps = 1e-10.
+MMAP eps 1e-10 ||u - u_exact||_L2: 6.4e-05
+MMAP eps 1e-10 ||u - u_exact||_H1: 1.1e-02
