@@ -25,13 +25,15 @@ def SAVE(to_save, f, b, mesh, u_h, u_e, Order, name, Extra):
     File(path_name_file).write(*to_save) 
 
 def Solve_MMAP_Method(f, b, mesh, dOmegaD, dOmegaIN, dOmegaDVal=0,
-                      A_para = 1, A_perp = None, Order = 1, eps = 1e-15,
-                      save = False, BC_As_Exact = True):
+                      A_para = 1, A_perp = None, Order = 1,
+                      eps = 1e-15, save = False,
+                      BC_As_Exact = True):
     V = FunctionSpace(mesh, "CG", Order)
     L = FunctionSpace(mesh, "CG", Order)   
     Z = V*L
     
-    print(f"MMAP, Z.dim() = {Z.dim()}, Order = {Order}, eps = {eps}.")
+    print(f"MMAP, Z.dim() = {Z.dim()}, Order = {Order},"+
+          f" eps = {eps}.")
     if (eps==0):
         print("LM, As eps=0.")
         
@@ -50,8 +52,10 @@ def Solve_MMAP_Method(f, b, mesh, dOmegaD, dOmegaIN, dOmegaDVal=0,
     
     grad_para = lambda alpha: dot(outer(b,b), grad(alpha))
     grad_perp = lambda alpha: dot(I-outer(b,b), grad(alpha))
-    a_perp = lambda alpha, beta: inner(A_perp*grad_perp(alpha), grad_perp(beta))
-    a_para = lambda alpha, beta: inner(A_para*grad_para(alpha), grad_para(beta))    
+    a_perp = lambda alpha, beta: inner(A_perp*grad_perp(alpha),
+                                       grad_perp(beta))
+    a_para = lambda alpha, beta: inner(A_para*grad_para(alpha),
+                                       grad_para(beta))    
     
     z = Function(Z)
     u, q = split(z)
@@ -84,18 +88,21 @@ def Solve_MMAP_Method(f, b, mesh, dOmegaD, dOmegaIN, dOmegaDVal=0,
         name = "MMAP"
         if eps == 0:
             name = "LM"
-        SAVE(to_save, f, b, mesh, u_h, dOmegaDVal, Order, name, BC_As_Exact)
+        SAVE(to_save, f, b, mesh, u_h, dOmegaDVal,
+             Order, name, BC_As_Exact)
     return u_h   
 
     
 
-def Solve_MMAP_STAB_Method(f, b, mesh, dOmegaD, dOmegaIN, dOmegaDVal=0,
-                           A_para = 1, A_perp = None, Order = 1, eps = 1e-15,
-                           sigma = 0.1, save = False, BC_As_Exact = True):
+def Solve_MMAP_STAB_Method(f, b, mesh, dOmegaD, dOmegaIN,
+                           dOmegaDVal=0, A_para = 1, A_perp = None,
+                           Order = 1, eps = 1e-15, sigma = 0.1,
+                           save = False, BC_As_Exact = True):
     V = FunctionSpace(mesh, "CG", Order) 
     Z = V*V
     
-    print(f"MMAP_STAB, Z.dim() = {Z.dim()}, Order = {Order}, eps = {eps}.")
+    print(f"MMAP_STAB, Z.dim() = {Z.dim()}, Order = {Order},"+
+          f" eps = {eps}.")
     if (eps==0):
         print("LM_STAB, As eps=0.")
     I = Identity(mesh.geometric_dimension())
@@ -109,8 +116,10 @@ def Solve_MMAP_STAB_Method(f, b, mesh, dOmegaD, dOmegaIN, dOmegaDVal=0,
     
     grad_para = lambda alpha: dot(outer(b,b), grad(alpha))
     grad_perp = lambda alpha: dot(I-outer(b,b), grad(alpha))
-    a_perp = lambda alpha, beta: inner(A_perp*grad_perp(alpha), grad_perp(beta))
-    a_para = lambda alpha, beta: inner(A_para*grad_para(alpha), grad_para(beta))    
+    a_perp = lambda alpha, beta: inner(A_perp*grad_perp(alpha),
+                                       grad_perp(beta))
+    a_para = lambda alpha, beta: inner(A_para*grad_para(alpha),
+                                       grad_para(beta))    
     
     z = Function(Z)
     u, q = split(z)
@@ -145,32 +154,44 @@ def Solve_MMAP_STAB_Method(f, b, mesh, dOmegaD, dOmegaIN, dOmegaDVal=0,
         name = "MMAP_STAB"
         if eps == 0:
             name = "LM_STAB"
-        SAVE(to_save, f, b, mesh, u_h, dOmegaDVal, Order, name, BC_As_Exact)
+        SAVE(to_save, f, b, mesh, u_h, dOmegaDVal,
+             Order, name, BC_As_Exact)
     return u_h    
 
 
 def Solve_Limit_Method(f, b, mesh, dOmegaD, dOmegaIN, dOmegaDVal=0, 
-                       A_para = 1, A_perp = None, Order = 1, eps = None,
-                       save = False, BC_As_Exact = True):
-    return Solve_MMAP_Method(f, b, mesh, dOmegaD, dOmegaIN, dOmegaDVal=dOmegaDVal, 
-                             A_para = A_para, A_perp = A_perp, Order = Order, eps = 0,
-                             save = save, BC_As_Exact = BC_As_Exact)
+                       A_para = 1, A_perp = None, Order = 1,
+                       eps = None, save = False,
+                       BC_As_Exact = True):
+    return Solve_MMAP_Method(f, b, mesh, dOmegaD, dOmegaIN,
+                             dOmegaDVal=dOmegaDVal, 
+                             A_para = A_para, A_perp = A_perp,
+                             Order = Order, eps = 0, save = save,
+                             BC_As_Exact = BC_As_Exact)
 
-def Solve_Limit_STAB_Method(f, b, mesh, dOmegaD, dOmegaIN, dOmegaDVal=0, 
-                       A_para = 1, A_perp = None, Order = 1, eps = None,
-                            sigma = 0.1, save = False, BC_As_Exact = True):
-    return Solve_MMAP_STAB_Method(f, b, mesh, dOmegaD, dOmegaIN, dOmegaDVal=dOmegaDVal, 
-                             A_para = A_para, A_perp = A_perp, Order = Order, eps = 0,
-                                  sigma = sigma, save = save, BC_As_Exact = BC_As_Exact)
+def Solve_Limit_STAB_Method(f, b, mesh, dOmegaD, dOmegaIN,
+                            dOmegaDVal=0, A_para = 1,
+                            A_perp = None, Order = 1, eps = None,
+                            sigma = 0.1, save = False,
+                            BC_As_Exact = True):
+    return Solve_MMAP_STAB_Method(f, b, mesh, dOmegaD, dOmegaIN,
+                                  dOmegaDVal=dOmegaDVal, 
+                                  A_para = A_para, A_perp = A_perp,
+                                  Order = Order, eps = 0,
+                                  sigma = sigma, save = save,
+                                  BC_As_Exact = BC_As_Exact)
 
    
 
-def Solve_Singular_Pert_Method(f, b, mesh, dOmegaD, dOmegaIN, dOmegaDVal=0,
-                               A_para = 1, A_perp = None, Order = 1, eps = 1e-15,
-                               save = False, BC_As_Exact = True):
+def Solve_Singular_Pert_Method(f, b, mesh, dOmegaD, dOmegaIN,
+                               dOmegaDVal=0, A_para = 1,
+                               A_perp = None, Order = 1,
+                               eps = 1e-15, save = False,
+                               BC_As_Exact = True):
     U = FunctionSpace(mesh, "CG", Order)
     
-    print(f"SP, Z.dim() = {U.dim()}, Order = {Order}, eps = {eps}.")
+    print(f"SP, Z.dim() = {U.dim()}, Order = {Order},"+
+          f" eps = {eps}.")
     I = Identity(mesh.geometric_dimension())
     if A_perp == None:
         A_perp = I
@@ -181,8 +202,10 @@ def Solve_Singular_Pert_Method(f, b, mesh, dOmegaD, dOmegaIN, dOmegaDVal=0,
     
     grad_para = lambda alpha: dot(outer(b,b), grad(alpha))
     grad_perp = lambda alpha: dot(I-outer(b,b), grad(alpha))
-    a_perp = lambda alpha, beta: inner(A_perp*grad_perp(alpha), grad_perp(beta))
-    a_para = lambda alpha, beta: inner(A_para*grad_para(alpha), grad_para(beta))
+    a_perp = lambda alpha, beta: inner(A_perp*grad_perp(alpha),
+                                       grad_perp(beta))
+    a_para = lambda alpha, beta: inner(A_para*grad_para(alpha),
+                                       grad_para(beta))
     
     u = TrialFunction(U)
     psi = TestFunction(U)
@@ -197,17 +220,19 @@ def Solve_Singular_Pert_Method(f, b, mesh, dOmegaD, dOmegaIN, dOmegaDVal=0,
     #Save Data
     if save:
         to_save = [u_h]
-        SAVE(to_save, f, b, mesh, u_h, dOmegaDVal, Order, "SP", BC_As_Exact)  
+        SAVE(to_save, f, b, mesh, u_h, dOmegaDVal,
+             Order, "SP", BC_As_Exact)  
     return u_h
 
 def Solve_AP_Method(f, b, mesh, dOmegaD, dOmegaIN, dOmegaDVal=0,
-                    A_para = 1, A_perp = None, Order = 1, eps = 1e-15,
-                    save = False, BC_As_Exact = True):
+                    A_para = 1, A_perp = None, Order = 1,
+                    eps = 1e-15, save = False, BC_As_Exact = True):
     V = FunctionSpace(mesh, "CG", Order)
     L = FunctionSpace(mesh, "CG", Order)   
     Z = V*L*V*V*L
     
-    print(f"AP, Z.dim() = {Z.dim()}, Order = {Order}, eps = {eps}.")
+    print(f"AP, Z.dim() = {Z.dim()}, Order = {Order},"+
+          f" eps = {eps}.")
     I = Identity(mesh.geometric_dimension())
     if A_perp == None:
         A_perp = I
@@ -229,8 +254,10 @@ def Solve_AP_Method(f, b, mesh, dOmegaD, dOmegaIN, dOmegaDVal=0,
     
     grad_para = lambda alpha: dot(outer(b,b), grad(alpha))
     grad_perp = lambda alpha: dot(I-outer(b,b), grad(alpha))
-    a_perp = lambda alpha, beta: inner(A_perp*grad_perp(alpha), grad_perp(beta))
-    a_para = lambda alpha, beta: inner(A_para*grad_para(alpha), grad_para(beta))    
+    a_perp = lambda alpha, beta: inner(A_perp*grad_perp(alpha),
+                                       grad_perp(beta))
+    a_para = lambda alpha, beta: inner(A_para*grad_para(alpha),
+                                       grad_para(beta))    
     
     z = Function(Z)
     p, lam, q, l, mu = split(z)
@@ -259,17 +286,19 @@ def Solve_AP_Method(f, b, mesh, dOmegaD, dOmegaIN, dOmegaDVal=0,
     #Save Data
     if save:
         to_save = [u_h]
-        SAVE(to_save, f, b, mesh, u_h, dOmegaDVal, Order, "AP", BC_As_Exact)  
+        SAVE(to_save, f, b, mesh, u_h, dOmegaDVal,
+             Order, "AP", BC_As_Exact)  
     return u_h    
 
 def Solve_PF_Method(f, b, mesh, dOmegaD, dOmegaIN, dOmegaDVal=0,
-                    A_para = 1, A_perp = None, Order = 1, eps = 1e-15,
-                    save = False, BC_As_Exact = True):
+                    A_para = 1, A_perp = None, Order = 1,
+                    eps = 1e-15, save = False, BC_As_Exact = True):
     U = FunctionSpace(mesh, "CG", Order)
     Q = FunctionSpace(mesh, "CG", Order)   
     Z = U*Q
     
-    print(f"PF, Z.dim() = {Z.dim()}, Order = {Order}, eps = {eps}.")
+    print(f"PF, Z.dim() = {Z.dim()}, Order = {Order},"+
+          f" eps = {eps}.")
     I = Identity(mesh.geometric_dimension())
     if A_perp == None:
         A_perp = I
@@ -283,8 +312,10 @@ def Solve_PF_Method(f, b, mesh, dOmegaD, dOmegaIN, dOmegaDVal=0,
     
     #grad_para = lambda alpha: dot(outer(b,b), grad(alpha))
     grad_perp = lambda alpha: dot(I-outer(b,b), grad(alpha))
-    a_perp = lambda alpha, beta: inner(A_perp*grad_perp(alpha), grad_perp(beta))
-    #a_para = lambda alpha, beta: inner(A_para*grad_para(alpha), grad_para(beta))    
+    a_perp = lambda alpha, beta: inner(A_perp*grad_perp(alpha),
+                                       grad_perp(beta))
+    #a_para = lambda alpha, beta: inner(A_para*grad_para(alpha),
+                                       #grad_para(beta))    
     
     z = Function(Z)
     u, q = split(z)
@@ -304,17 +335,20 @@ def Solve_PF_Method(f, b, mesh, dOmegaD, dOmegaIN, dOmegaDVal=0,
     q_h.rename("q_h")
     if save:
         to_save = [u_h, q_h]
-        SAVE(to_save, f, b, mesh, u_h, dOmegaDVal, Order, "PF", BC_As_Exact)
+        SAVE(to_save, f, b, mesh, u_h, dOmegaDVal,
+             Order, "PF", BC_As_Exact)
     return u_h
 
-def Solve_PF_STAB_Method(f, b, mesh, dOmegaD, dOmegaIN, dOmegaDVal=0,
-                         A_para = 1, A_perp = None, Order = 1, eps = 1e-15,
-                         sigma = 0.1, save = False, BC_As_Exact = True):
+def Solve_PF_STAB_Method(f, b, mesh, dOmegaD, dOmegaIN,
+                         dOmegaDVal=0, A_para = 1, A_perp = None,
+                         Order = 1, eps = 1e-15, sigma = 0.1,
+                         save = False, BC_As_Exact = True):
     U = FunctionSpace(mesh, "CG", Order)
     Q = FunctionSpace(mesh, "CG", Order)   
     Z = U*Q
     
-    print(f"PF_STAB, Z.dim() = {Z.dim()}, Order = {Order}, eps = {eps}.")
+    print(f"PF_STAB, Z.dim() = {Z.dim()}, Order = {Order},"+
+          f" eps = {eps}.")
     I = Identity(mesh.geometric_dimension())
     if A_perp == None:
         A_perp = I
@@ -324,8 +358,10 @@ def Solve_PF_STAB_Method(f, b, mesh, dOmegaD, dOmegaIN, dOmegaDVal=0,
     
     #grad_para = lambda alpha: dot(outer(b,b), grad(alpha))
     grad_perp = lambda alpha: dot(I-outer(b,b), grad(alpha))
-    a_perp = lambda alpha, beta: inner(A_perp*grad_perp(alpha), grad_perp(beta))
-    #a_para = lambda alpha, beta: inner(A_para*grad_para(alpha), grad_para(beta))    
+    a_perp = lambda alpha, beta: inner(A_perp*grad_perp(alpha),
+                                       grad_perp(beta))
+    #a_para = lambda alpha, beta: inner(A_para*grad_para(alpha),
+                                       #grad_para(beta))    
     
     z = Function(Z)
     u, q = split(z)
@@ -346,13 +382,21 @@ def Solve_PF_STAB_Method(f, b, mesh, dOmegaD, dOmegaIN, dOmegaDVal=0,
     q_h.rename("q_h")
     if save:
         to_save = [u_h, q_h]
-        SAVE(to_save, f, b, mesh, u_h, dOmegaDVal, Order, "PF_STAB", BC_As_Exact) 
+        SAVE(to_save, f, b, mesh, u_h, dOmegaDVal,
+             Order, "PF_STAB", BC_As_Exact) 
     return u_h
 
-def Solve_DN_Method(f, b, mesh, dOmegaD, dOmegaIN, dOmegaDVal=0, A_para = 1, A_perp = None,
-                          Order = 1, eps = 1e-15, eps_0 = 1e-7, Repeats = 8):
+def Solve_DN_Method(f, b, mesh, dOmegaD, dOmegaIN, dOmegaDVal=0,
+                    A_para = 1, A_perp = None, Order = 1, 
+                    eps = 1e-15, eps_0 = 1e-7, Repeats = 8):
     V = FunctionSpace(mesh, "CG", Order)
-    print(f"DN, Z.dim() = {Z.dim()}, Order = {Order}, eps = {eps}.")
+    print(f"DN, Z.dim() = {V.dim()}, Order = {Order},"+
+          f" eps = {eps}.")
+    u_e = Function(V)
+    if (dOmegaDVal==0):
+        u_e.interpolate(Constant(0))
+    else:
+        u_e.interpolate(dOmegaDVal)
     
     #v, w = TestFunctions(Z)
     v = TestFunction(V)
@@ -367,11 +411,9 @@ def Solve_DN_Method(f, b, mesh, dOmegaD, dOmegaIN, dOmegaDVal=0, A_para = 1, A_p
     a_para = lambda u, v: inner(grad_para(u),grad(v))*dx 
     a_perp = lambda u, v: inner(grad_perp(u),grad(v))*dx
     a_eps_0 = lambda u, v : a_para(u, v) + eps_0 * a_perp(u, v)
-
     
-    
-    u = Function(V).interpolate(x*0)
-    q = Function(V).interpolate(x*0)
+    u = Function(V).interpolate(Constant(0))
+    q = Function(V).interpolate(Constant(0))
     
     counter = 0
     L2_errors = []
@@ -379,15 +421,19 @@ def Solve_DN_Method(f, b, mesh, dOmegaD, dOmegaIN, dOmegaDVal=0, A_para = 1, A_p
     while counter < Repeats:
         counter += 1
         u_ = TrialFunction(V) #under score denotes n+1
-        solve(a_eps_0(u_, v) == inner(eps_0*f,v)*dx+(eps-eps_0)*a_para(q,v), u, bcs)
+        solve(a_eps_0(u_, v) == inner(eps_0*f,v)*dx+
+                                (eps-eps_0)*a_para(q,v), u, bcs)
         
         q_ = TrialFunction(V)
-        solve(a_eps_0(q_, w) == inner(f,w)*dx+eps*a_perp(q,w)-a_perp(u,w) , q, bcs) 
+        solve(a_eps_0(q_, w) == inner(f,w)*dx+eps*a_perp(q,w)-
+                                a_perp(u,w), q, bcs) 
         
         L2_error = norm(u - u_e, "L2")
         H1_error = norm(u - u_e, "H1")
         L2_errors.append(L2_error)
         H1_errors.append(H1_error)
-        print("Counter: "+str(counter) + ", ||u - u_exact||_L2: %.1e" % L2_error)
-        print("Counter: "+str(counter) + ", ||u - u_exact||_H1: %.1e" % H1_error)    
+        print("Counter: "+str(counter) +
+              ", ||u - u_exact||_L2: %.1e" % L2_error)
+        print("Counter: "+str(counter) + 
+              ", ||u - u_exact||_H1: %.1e" % H1_error)    
     return u, L2_errors, H1_errors

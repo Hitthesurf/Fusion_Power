@@ -66,7 +66,8 @@ def Example_2(eps = 1e-15, Restrict_CL =True):
     f = -div(dot(A_eps, grad(u_e)))
     return f, b, mesh, dOmegaD, dOmegaIN, u_e
 
-def Example_3(a = 0.05, Size = 40, eps = 1e-15, Restrict_CL = False):
+def Example_3(a = 0.05, Size = 40,
+              eps = 1e-15, Restrict_CL = False):
     #Magnetic Island (Clossed Feild Lines) from DN paper
     #Create Mesh
     mesh = UnitSquareMesh(Size,Size, quadrilateral= True)
@@ -103,7 +104,8 @@ def Example_3(a = 0.05, Size = 40, eps = 1e-15, Restrict_CL = False):
     f = -div(dot(A_eps, grad(u_e)))
     return f, b, mesh, dOmegaD, dOmegaIN, u_e
 
-def Example_4(a = 0.05, Size = 40, eps = 1e-15, Restrict_CL = False):
+def Example_4(a = 0.05, Size = 40,
+              eps = 1e-15, Restrict_CL = False):
     #Magnetic Island (Clossed Feild Lines) adaption of example 3
     # Enforces vector field to have b dot n = 0, on dOmegaD
     #Create Mesh
@@ -144,7 +146,7 @@ def Example_4(a = 0.05, Size = 40, eps = 1e-15, Restrict_CL = False):
 def Example_5(eps = 1e-15, Restrict_CL = True):
     #Torus (Clossed Field Lines)
     r_I = 1
-    mesh = Mesh("Mesh/Torus_Side_Mesh.msh")#TorusMesh(40,40,r_I,0.5)
+    mesh = Mesh("Mesh/Torus_Side_Mesh.msh")
     x, y, z = SpatialCoordinate(mesh)
     
     
