@@ -182,7 +182,7 @@ Our methods require the use of the sets
 It should be noted that sets $\mathcal{V}$ and $\mathcal{L}$ are easy to discretise. However, from numerical simulations we find 
 
 \section{Overview Of Current Methods}
- We now state some methods for solving the PDE (\ref{PDE}).
+ We now state some methods for solving the PDE (\ref{PDE}). Additionally, for a few methods we show the key parts of their Python implementation with Firedrake \cite{Dragon}. The full implementation of the methods can be found in Appendix \ref{CFSolve}.
 \subsection{Singular Pertubation Method} \label{SP}
 The single perturbation method involves solving the weak form of equation (\ref{PDE}). Therefore we have a trial function $u \in \mathcal{V}$ and a test function $\psi \in \mathcal{V}$. Thus we solve the weak form (\ref{SP_w}) for $(u) \in \mathcal{V}$.
 \begin{equation} \label{SP_w}
@@ -191,7 +191,8 @@ The single perturbation method involves solving the weak form of equation (\ref{
 \varepsilon^{-1}a_{||}(u, \psi) + a_{\perp}(u, \psi) = \int_{\Omega} f \psi d\mathbf{x}, \forall \psi \in \mathcal{V}
 \end{cases}
 \end{equation}
-CODE SNIP
+Below we have the key points of our Firedrake \cite{Dragon} implementation
+\lstinputlisting[language=Python]{CodeSnips/SP.py}
 This method excells for when $\varepsilon$ is normal size
 
 \subsection{Limit Method} \label{LM}
@@ -204,8 +205,8 @@ a_{\perp}(u, \hat{u}) + a_{||}(q, \hat{u}) = \int_{\Omega} f \hat{u} d\mathbf{x}
 a_{||}(u, \hat{q}) = 0, & \forall \hat{q} \in \mathcal{L},
 \end{cases}
 \end{equation}
-where $(\hat{u}, \hat{q}) \in \mathcal{V} \times \mathcal{L}$ are test functions.
-CODE SNIP
+where $(\hat{u}, \hat{q}) \in \mathcal{V} \times \mathcal{L}$ are test functions. This can be written in Firedrake with the following code
+\lstinputlisting[language=Python]{CodeSnips/LM.py}
 
 \subsection{MMAP Method} \label{MMAP}
 We now introduce a Micro-Macro Asymptotic-Preserving method discussed in paper \cite{MMAP}. This method is similar to the $(LM)$ method from section \ref{LM} but from the additional $\varepsilon$ term it is able to deal with $\varepsilon \approx 1$. This leads to solving the weak form (\ref{MMAP_w}) for the trial functions $(u, q) \in  \mathcal{V} \times \mathcal{L}$. 
@@ -219,7 +220,7 @@ a_{||}(u, \hat{q}) - \varepsilon a_{||}(q, \hat{q}) = 0,
 \end{cases}
 \end{equation}
 where $(\hat{u}, \hat{q}) \in \mathcal{V}\times \mathcal{L} $ are test functions. The code is the same as the $(LM)$ method in section \ref{LM} but $F$ is defined as 
-CODE SNIP
+\lstinputlisting[language=Python]{CodeSnips/MMAP.py}
 
 \subsection{AP Method} \label{AP}
 We now discuss an Asymptotic-Preserving method stated in paper \cite{AP}. This method involves solving the weak form (\ref{AP_w}) for trial functions $(p, \lambda, q, \ell, \mu) \in \mathcal{V} \times \mathcal{L}  \times \mathcal{V}  \times \mathcal{V}  \times \mathcal{L}$.
@@ -255,6 +256,8 @@ a_{||}(u, \hat{q}) = \sigma \int_{\Omega} q \hat{q} d\mathbf{x}, & \forall \hat{
 \end{equation}
 We solve for trial functions $(u, q) \in \mathcal{V} \times \mathcal{V}$ with test functions $(\hat{u}, \hat{q}) \in \mathcal{V} \times \mathcal{V}$. Say what sigma is proportional too
 Additionally, we do not use $\mathcal{L}$ therefore there are no complications when the electromagnetic field $\mathbf{b}$ has closed field lines or field lines that converge to a point like $\dot{x} = x/|x|$ with $x=0$.
+We can implement this in Firedrake \cite{Dragon} with the following code
+\lstinputlisting[language=Python]{CodeSnips/LM_STAB.py}
 
 \subsection{MMAP Stabilisation Method} \label{MMAP_STAB}
 We also apply the stabilisation method mentioned in \cite{STAB} to the $(MMAP)$ method stated in section \ref{MMAP}. Thus we get weak form
@@ -266,7 +269,8 @@ a_{\perp}(u, \hat{u}) + a_{||}(q, \hat{u}) = \int_{\Omega} f \hat{u} d\mathbf{x}
 a_{||}(u, \hat{q}) - \varepsilon a_{||}(q, \hat{q}) = \sigma \int_{\Omega} q \hat{q} d\mathbf{x}, & \forall \hat{q}\in \mathcal{V}
 \end{cases}
 \end{equation}
-where we solve for trial functions $(u,q) \in \mathcal{V} \times \mathcal{V}$ with test functions $(\hat{u}, \hat{q}) \in \mathcal{V} \times \mathcal{V}$. 
+where we solve for trial functions $(u,q) \in \mathcal{V} \times \mathcal{V}$ with test functions $(\hat{u}, \hat{q}) \in \mathcal{V} \times \mathcal{V}$. The code is similar to the $(LM_STAB)$ method in section \ref{LM_STAB} but $F$ is defined as
+\lstinputlisting[language=Python]{CodeSnips/MMAP_STAB.py}
 
 \subsection{Deluzet-Narski Method} \label{DN}
 This method turns the strongly anisotropic equation into two mildly anisotropic equations to be solved by iteration. This method is stated in \cite{DN}. This introduces $\varepsilon_0 \gg \varepsilon$ and gives the weak form \ref{DN_w} which solves for the sequence of trial functions $(u^{(n)}, q^{(n)}) \in \mathcal{V} \times \mathcal{V}$ .
@@ -1405,16 +1409,15 @@ Check out github page \cite{Hub}
 
 \appendix
 
-\section{Example of Using Our Code}
+\chapter{Example of Using Our Code}
 The code below shows how to use our code to calculate a solution to Example $1$ with $\alpha=2$ and $m=10$ in Python with Firedrake \cite{Dragon}.
 \lstinputlisting[language=Python]{CodeSnips/SolveE1.py}
-This will output 
+This will output the following text to the command line
+\lstinputlisting{CodeSnips/SolveE1Out.txt}
+From this code it is trivial to change the example and method used.
 
+\chapter{Code File: Solvers.py} \label{CFSolve}
 
-
-Appendices are definitely not necessary and assessors are not obliged to read them so only use them for non-vital text, figures or calculations.$\phi$
-
-
-
+\chapter{Code File: Examples.py} \label{CFExample}
 
 \end{document}
