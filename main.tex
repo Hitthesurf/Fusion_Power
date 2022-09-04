@@ -238,7 +238,6 @@ a_{||}(\ell, \tau) = 0,
 \end{equation}
 where $(\eta, \kappa, \xi, \chi, \tau)\in \mathcal{V} \times \mathcal{L}  \times \mathcal{V}  \times \mathcal{V}  \times \mathcal{L}$ are test functions. We have $u=p+q$.
 
-
 \subsection{Limit Stabilisation Method} \label{LM_STAB}
 The $(LM)$ method stated in section \ref{LM} struggles when there is a magnetic field $\mathbf{b}$ with closed lines. Thus we introduce a stabilisation method which is discussed in \cite{STAB}. We implement this modification to get the weak form
 \begin{equation} \label{LM_STAB_w}
@@ -1213,11 +1212,11 @@ $160\times 160$ & 206082   & $1.84\times 10^{-5}$ & $1.92\times 10^{-5}$ & $1.93
 \begin{figure}[H]
  \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/ErrorPlots/E4_MMAP_STAB_Q.png}
-     \caption{Solves $q$ defined in equation (\ref{MMAP_STAB_w}) for $MMAP\_STAB$}
+     \caption{Solves $q$ defined in equation (\ref{MMAP_STAB_w}) for $(MMAP\_STAB)$}
  \end{subfigure}
    \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/ErrorPlots/E4_PF_STAB_Q.png}
-     \caption{Solves $q$ defined in equation (\ref{PF_STAB_w}) for $PF\_STAB$}
+     \caption{Solves $q$ defined in equation (\ref{PF_STAB_w}) for $(PF\_STAB)$}
  \end{subfigure}
  \caption{Visualisation of $q$ defined in sections \ref{MMAP_STAB} and \ref{PF_STAB} for Example $4$ with $\varepsilon = 10^{-10}$, CG order $2$ on a $80 \times 80$ quadrilateral grid.} \label{E3_Q}
 \end{figure}
@@ -1423,6 +1422,8 @@ No one uses Guassian or direct methods for large systems.
 Future work would involve a git branch 
 
 \section{Conclusion}
+Do pros and cons of methods
+State using lagrange element leads to high error in H1
 Check out github page \cite{Hub}
 
 \printbibliography[heading=bibintoc]
