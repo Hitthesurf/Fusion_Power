@@ -110,6 +110,8 @@ where $\Gamma_N \cap \Gamma_D := \partial \Omega$ and
 \end{enumerate}
 where $\mathbf{n}$ is the outward normal.
 
+STATE restr on $A_{||}$
+
 The main difficulty with solving this problem is that it is singular. Therefore, it is ill-conditioned for small $\varepsilon$ and when discretised we get a linear system that has an unbounded condition number. Thus we aim to find discretisations that are well posed.  
 
 From multiple papers the best notation for this problem is stated in \cite{DN} and \cite{AP}. Thus we will use a similar notation. For a scalar field $u\in\mathbb{R}$ and vector field $v \in \mathbb{R}^d$, we use the notation
@@ -189,6 +191,7 @@ The single perturbation method involves solving the weak form of equation (\ref{
 \varepsilon^{-1}a_{||}(u, \psi) + a_{\perp}(u, \psi) = \int_{\Omega} f \psi d\mathbf{x}, \forall \psi \in \mathcal{V}
 \end{cases}
 \end{equation}
+CODE SNIP
 This method excells for when $\varepsilon$ is normal size
 
 \subsection{Limit Method} \label{LM}
@@ -202,6 +205,7 @@ a_{||}(u, \hat{q}) = 0, & \forall \hat{q} \in \mathcal{L},
 \end{cases}
 \end{equation}
 where $(\hat{u}, \hat{q}) \in \mathcal{V} \times \mathcal{L}$ are test functions.
+CODE SNIP
 
 \subsection{MMAP Method} \label{MMAP}
 We now introduce a Micro-Macro Asymptotic-Preserving method discussed in paper \cite{MMAP}. This method is similar to the $(LM)$ method from section \ref{LM} but from the additional $\varepsilon$ term it is able to deal with $\varepsilon \approx 1$. This leads to solving the weak form (\ref{MMAP_w}) for the trial functions $(u, q) \in  \mathcal{V} \times \mathcal{L}$. 
@@ -214,7 +218,8 @@ a_{||}(u, \hat{q}) - \varepsilon a_{||}(q, \hat{q}) = 0,
 &\forall \hat{q} \in \mathcal{L},
 \end{cases}
 \end{equation}
-where $(\hat{u}, \hat{q}) \in \mathcal{V}\times \mathcal{L} $ are test functions.
+where $(\hat{u}, \hat{q}) \in \mathcal{V}\times \mathcal{L} $ are test functions. The code is the same as the $(LM)$ method in section \ref{LM} but $F$ is defined as 
+CODE SNIP
 
 \subsection{AP Method} \label{AP}
 We now discuss an Asymptotic-Preserving method stated in paper \cite{AP}. This method involves solving the weak form (\ref{AP_w}) for trial functions $(p, \lambda, q, \ell, \mu) \in \mathcal{V} \times \mathcal{L}  \times \mathcal{V}  \times \mathcal{V}  \times \mathcal{L}$.
@@ -325,9 +330,145 @@ Additionally, we can use the stabilisation technique stated in \cite{STAB} to ge
 We solve for trial functions $(u,q) \in \mathcal{V} \times \mathcal{Q}$ with test functions $(\hat{u}, \hat{q}) \in \mathcal{V} \times \mathcal{Q}$. 
 
 \chapter{Numerical Demonstrations}
-In these examples we calculate $f$ from passing $u$ through the PDE. Additionally, in these example we take $A_{||}=0$ and $\mathbb{A}_{\perp} = \mathbb{I}$. Where $\mathbb{I}$ is the identity matrix.
+In these examples we calculate $f$ from passing $u$ through the PDE. Additionally, in these example we take $A_{||}=1$ and $\mathbb{A}_{\perp} = \mathbb{I}$. Where $\mathbb{I}$ is the identity matrix. But first we briefly discuss the basic idea of how the finite element solver Firedrake \cite{Dragon} calculates the solution. 
 
 Say use firedrake then do speed up test on GPU?
+
+\section{Mapping to Reference Element} \label{RE}
+For each finite element we would like to create a map to a reference element. Thus we only need to calculate the basis functions for one element. We will define a linear transformation $\mathcal{M}$ which takes the reference element $RE$ to a finite element $FE$. Where $\mathcal{M}^{-1}$ denotes the inverse. 
+\begin{align}
+\mathcal{M}: &RE \rightarrow FE, \\
+\mathcal{M}^{-1}: &FE \rightarrow RE.
+\end{align}
+We denote $\phi_i^{(RE)}$ as the basis functions on the reference element and $\phi_i^{(FE)}$ as the basis functions on a finite element. We have the following relationship
+\begin{align}
+\phi_i^{(FE)}(x) &= \phi_i^{(RE)}(\xi), \\
+\phi_i^{(FE)}(x) &= \phi_i^{(RE)}(\mathcal{M}^{-1}(x)), \\
+\phi_i^{(FE)}(\mathcal{M}(\xi)) &= \phi_i^{(RE)}(\xi).
+\end{align}
+where $\mathbf{x} \in FE$ and $\mathbf{\xi} \in RE$. Also, the $i$ means the same basis function location in other words $\mathcal{M}(\ell_i^{(RE)}) = \ell_i^{(FE)}$. Thus we will use the equation (\ref{CoC}) to calculate the integral in the $RE$ region.
+\begin{equation} \label{CoC}
+\int_{\mathcal{M}(RE)=FE}g(\mathbf{x}) d\mathbf{x} =
+\int_{RE}g(\mathcal{M(\xi)})\cdot |\det(D\mathcal{M}(\xi))| d\mathbf{x}.
+\end{equation}
+where $g$ is an arbitrary function.
+\subsection{Interval (1D)}
+For an interval finite element we have $0\leq\xi\leq1$ and $L \leq x \leq U$. Thus we get the transformation
+\begin{align}
+\mathcal{M}(\xi) &= L + \xi(U-L),\\
+\mathcal{M}^{-1}(x) &= \frac{x-L}{U-L}.
+\end{align}
+Using (\ref{CoC}) we now find an integral that is simpler to calculate for a function $f$.
+\begin{align}
+\int_{FE} f(x)\phi_i^{(FE)}(x) dx &=
+\int_{RE}f(\mathcal{M}(\xi))\phi_i^{(FE)}(\mathcal{M}(\xi))\cdot |\det(D\mathcal{M}(\xi))| d\xi, \\
+&= (U-L) \int_{RE}f(\mathcal{M}(\xi)) \phi_i^{(RE)}(\xi) d\xi.
+\end{align}
+Furthermore, we can use 
+\begin{equation}
+\partial_x \phi_i^{(FE)}(x) =
+\partial_{\xi}\phi_i^{(FE)}(\mathcal{M}(\xi)) \xi_x = 
+\partial_{\xi}\phi_i^{(PE)}(\xi)/(U-L),
+\end{equation}
+when derivatives of test functions are involved.
+
+\subsection{Triangle (2D)}
+For a triangle finite element we have $0 \leq \xi_0, \xi_1 \leq 1$ and the constraint $\xi_0+\xi_1 \leq 1$. Where $\xi_0$ represents the $(1,0)$ direction and $\xi_1$ represents the $(0,1)$ direction on the reference element $RE$. Additionally, we have positions on the finite element $FE$
+\begin{align}
+\mathcal{M}(0,0) = \ell_0^{(FE)} = (x_0, y_0) \\
+\mathcal{M}(1,0) = \ell_1^{(FE)} = (x_1, y_1) \\
+\mathcal{M}(0,1) = \ell_2^{(FE)} = (x_2, y_2)
+\end{align}
+where the linear transformation $\mathcal{M}(\xi_0,\xi_1)$ is defined as 
+\begin{align}
+    \mathcal{M}(\xi_0,\xi_1) &= \ell_0^{(FE)} + \xi_0(\ell_1^{(FE)}-\ell_0^{(FE)})+ \xi_1(\ell_2^{(FE)}-\ell_0^{(FE)})\\
+    x &= x_0 + \xi_0(x_1-x_0)+\xi_1(x_2-x_0) \\
+    y &= y_0 + \xi_0(y_1-y_0)+\xi_1(y_2-y_0)
+\end{align}
+And the inverse linear transformation $\mathcal{M}^{-1}(x,y)$ defined as
+\begin{equation} \label{Map_In_Tri}
+\left [
+\begin{matrix}
+\xi_0 \\
+\xi_1
+\end{matrix}
+\right ] =
+\frac{1}{2A}
+\left [
+\begin{matrix}
+(y_2-y_0)(x-x_0)+(x_0-x_2)(y-y_0)\\
+(y_0-y_1)(x-x_0)+(x_1-x_0)(y-y_0)
+\end{matrix}
+\right ].
+\end{equation}
+Where $2A=(x_1-x_0)(y_2-y_0)-(x_2-x_0)(y_1-y_0)$ and $|A|$ is the area of the finite element traingle. Now we acquire the jaobian of the transformation $\mathcal{M}(\xi_0, \xi_1)$
+\begin{equation}
+D\mathcal{M}(\xi_0, \xi_1) = 
+\left [
+\begin{matrix}
+\frac{\partial x}{\partial \xi_0} & \frac{\partial x}{\partial \xi_1} \\
+\frac{\partial y}{\partial \xi_0} & \frac{\partial y}{\partial \xi_1}
+\end{matrix}
+\right ] = 
+\left [
+\begin{matrix}
+x_1-x_0 & x_2-x_0 \\
+y_1-y_0 & y_2-y_0
+\end{matrix}
+\right ]
+\end{equation}
+Now we calculate the absolute value of the determinate 
+\begin{equation}
+|\det(D\mathcal{M}(\xi))| = |(x_1-x_0)(y_2-y_0)-(x_2-x_0)(y_1-y_0)| = 2|A|.
+\end{equation}
+We substitute into (\ref{CoC}) to get
+\begin{equation}
+\int_{FE}f(x,y)\phi_i^{(FE)}(x,y)dxdy =
+2A\int_{RE}f(\mathcal{M}(\xi_0,\xi_1)) \phi_i^{(RE)}(\xi_0,\xi_1)d\xi_0d\xi_1.
+\end{equation}
+Furthermore, we can use
+\begin{equation}
+\nabla \phi_i^{(FE)}(x,y) = 
+\left [
+\begin{matrix}
+\partial_x \\
+\partial_y
+\end{matrix}
+\right]
+\phi_i^{(RE)}(\xi_0, \xi_1) =
+\left[
+\begin{matrix}
+\frac{\partial \xi_0}{\partial x} & 
+\frac{\partial \xi_1}{\partial x} \\
+\frac{\partial \xi_0}{\partial y} &
+\frac{\partial \xi_1}{\partial y}
+\end{matrix}
+\right] 
+\left [
+\begin{matrix}
+\partial_{\xi_0} \\
+\partial_{\xi_1}
+\end{matrix}
+\right ]
+\phi_i^{(RE)}(\xi_0, \xi_1)
+\end{equation}
+when derivatives of test functions are involved. From the inverse transformation $\mathcal{M}^{-1}(x, y)$ (\ref{Map_In_Tri}) we have
+\begin{equation}
+\left[
+\begin{matrix}
+\frac{\partial \xi_0}{\partial x} & 
+\frac{\partial \xi_1}{\partial x} \\
+\frac{\partial \xi_0}{\partial y} &
+\frac{\partial \xi_1}{\partial y}
+\end{matrix}
+\right] = \frac{1}{2A}
+\left[
+\begin{matrix}
+y_2-y_0 & y_0-y_1 \\
+x_0-x_2 & x_1-x_0 
+\end{matrix}
+\right].
+\end{equation}
 
 \section{Derivation of Lagrange Finite Element of Order $2$}
 In our numerical simulations we use a continuous Lagrange order $2$ finite element. We now provide a method for the derivation of this finite element on an interval and a triangle. Additionally, following a similar procedure we can derive the basis functions for other domains. The resource \cite{defelement} states basis functions for many finite elements. This is not implemented in code we instead use the Firedrake implementation of CG order $2$. 
@@ -340,7 +481,7 @@ For each element we have basis functions $\phi_i(\mathbf{x})$ which have a linea
 0, &i\neq j.
 \end{cases}
 \end{equation}
-It should be noted we can do a substitution to make the shapes unit size.
+In section \ref{RE} we discuss how to map a finite element to its reference finite element.
 \subsection{Interval (1D)}
 Therefore, we have $i \in \{0, 1, 2\}$ and basis functions 
 \begin{equation}
@@ -519,18 +660,103 @@ With the visual representation in Figure \ref{triBasisFuncs}.
  \caption{Basis Functions for Order 2 Lagrange Finite Element on a Triangle.} \label{triBasisFuncs}
 \end{figure}
 
-\section{Deriving the Linear System}
-We wish to find a matrix $\mathbb{B}^{(G)}$ and vector $\mathbf{F}^{(G)}$ so that the solution $\mathbf{u}$ to $\mathbb{B}^{(G)} \mathbf{u} = \mathbf{F}^{(G)}$ contains the coefficients of are $u$ in the discretised space. We can use a local formulation appoach. Thus we calculate the local $\mathbb{B}^{(L)}$ and $\mathbf{F}^{(L)}$ and using a local to global map we add the results to the global system. Here is an algorithm to add the local system to the global system. (In this case $d=2$).
+\section{Derivation of the Linear System}
+We wish to find a matrix $\mathbb{B}^{(G)}$ and vector $\mathbf{F}^{(G)}$ so that the solution $\mathbf{u}$ to $\mathbb{B}^{(G)} \mathbf{u} = \mathbf{F}^{(G)}$ contains the coefficients for $u$ in the discretised space. We can use a local formulation approach on the domain of a single finite element $(\Omega_{FE})$. Thus we calculate the local $\mathbb{B}^{(L)}$ and $\mathbf{F}^{(L)}$ and using a local to global map we add the results to the global system. Here is an algorithm to add the local system to the global system.
 \lstinputlisting[language=Python]{CodeSnips/Global_Local_Map.py}
 
 This approach is well known for one test function. But when multiple test functions are involved it may not be clear how this translates to a linear system. Thus we show the derivation of the linear system for the $(MMAP)$ method.
 
-In these derivations of linear systems we will use a finite element with two basis function. But it is trivial how to introduce more basis functions. 
-\section{Linear System for $(SP)$}
-We now find
-We will discrtise $u$ From (\ref{SP_w}) we substitute are approximation for $u$ on this finite element. 
+In these derivations of linear systems we will use a finite element with two basis function. In this case $d=2$. But it is trivial how to introduce more basis functions. Additionally, Firedrake \cite{Dragon} does this automatically thus does not need to be implemented in code.
+\subsection{Linear System for $(SP)$}
+We will discrtise $u$ from (\ref{SP_w}) on the finite element domain with basis functions $\phi_0$ and $\phi_1$. Thus we substitute $u=u_0\phi_0 + u_1 \phi_1$ into (\ref{SP_w}) to get equations 
+\begin{equation} \label{SP_Eqs}
+\varepsilon^{-1}u_0a_{||}(\psi_0, \psi_i) +
+\varepsilon^{-1}u_1a_{||}(\psi_1, \psi_i) +
+u_0a_{\perp}(\psi_0, \psi_i) +
+u_1a_{\perp}(\psi_1, \psi_i) =
+\int_{\Omega_{FE}} f \psi_i d\mathbf{x}
+\end{equation}
+For $i \in \{0,1\}$. It should be noted that the integrals are over the finite element domain $\Omega_{FE}$. Thus from (\ref{SP_Eqs}) we get linear system
+\begin{equation} 
+\left[
+\begin{matrix}
+\varepsilon^{-1}a_{||}(\psi_0, \psi_0) + a_{\perp}(\psi_0,\psi_0) &
+\varepsilon^{-1}a_{||}(\psi_1, \psi_0) + a_{\perp}(\psi_1,\psi_0)\\
+\varepsilon^{-1}a_{||}(\psi_0, \psi_1) + a_{\perp}(\psi_0,\psi_1) &
+\varepsilon^{-1}a_{||}(\psi_1, \psi_1) + a_{\perp}(\psi_1,\psi_1)\\
+\end{matrix}
+\right] 
+\left [
+\begin{matrix}
+u_0 \\
+u_1
+\end{matrix}
+\right ] =
+\left[
+\begin{matrix}
+\int_{\Omega_{FE}} f \psi_0 d\mathbf{x} \\
+\int_{\Omega_{FE}} f \psi_1 d\mathbf{x}
+\end{matrix}
+\right].
+\end{equation}
+Then we add this local system to the global system.
 
-\section{Linear System for $(MMAP)$}
+\subsection{Linear System for $(MMAP)$}
+Now we will discrtise $u$ and  $q$ from (\ref{MMAP_w}). For the local formulation we get test functions $\hat{u}_0, \hat{u}_1, \hat{q_0}$ and $\hat{q_1}$. Now we substitute $u = u_0 \hat{u}_0 + u_1\hat{u}_1$ and $q = q_0\hat{q}_0 + q_1\hat{q}_1$ into (\ref{MMAP_w}). Thus we get equations
+\begin{equation} \label{MMAP_Eqs}
+\begin{cases}
+u_0a_{\perp}(\hat{u}_0, \hat{u}_i) +
+u_1a_{\perp}(\hat{u}_1, \hat{u}_i) +
+q_0a_{||}(\hat{q}_0, \hat{u}_i) +
+q_1a_{||}(\hat{q}_1, \hat{u}_i) &=
+\int_{\Omega_{FE}} f \hat{u}_i d\mathbf{x}, \\
+u_0a_{||}(\hat{u}_0, \hat{q}_i) +
+u_1a_{||}(\hat{u}_1, \hat{q}_i) -
+\varepsilon q_0a_{||}(\hat{q}_0, \hat{q}_i) -
+\varepsilon q_1a_{||}(\hat{q}_1, \hat{q}_i) &=
+0.
+\end{cases}
+\end{equation}
+For $i\in\{0,1\}$. Thus from (\ref{MMAP_Eqs}) we get the linear system
+\begin{equation}
+\left [
+\begin{matrix}
+a_{\perp}(\hat{u}_0, \hat{u}_0) &
+a_{\perp}(\hat{u}_1, \hat{u}_0) &
+a_{||}(\hat{q}_0, \hat{u}_0) &
+a_{||}(\hat{q}_1, \hat{u}_0) \\
+a_{\perp}(\hat{u}_0, \hat{u}_1) &
+a_{\perp}(\hat{u}_1, \hat{u}_1) &
+a_{||}(\hat{q}_0, \hat{u}_1) &
+a_{||}(\hat{q}_1, \hat{u}_1) \\
+a_{||}(\hat{u}_0, \hat{q}_0) &
+a_{||}(\hat{u}_1, \hat{q}_0) &
+-\varepsilon a_{||}(\hat{q}_0, \hat{q}_0) &
+-\varepsilon a_{||}(\hat{q}_1, \hat{q}_0) \\
+a_{||}(\hat{u}_0, \hat{q}_1) &
+a_{||}(\hat{u}_1, \hat{q}_1) &
+-\varepsilon a_{||}(\hat{q}_0, \hat{q}_1) &
+-\varepsilon a_{||}(\hat{q}_1, \hat{q}_1) \\
+\end{matrix}
+\right ]
+\left [
+\begin{matrix}
+u_0 \\
+u_1 \\
+q_0 \\
+q_1
+\end{matrix}
+\right ] =
+\left [
+\begin{matrix}
+\int_{\Omega_{FE}}f\hat{u}_0 d \mathbf{x} \\
+\int_{\Omega_{FE}}f\hat{u}_1 d \mathbf{x} \\
+0 \\
+0
+\end{matrix}
+\right ].
+\end{equation}
+Then we add this local system to the global system.
 
 \section{Example 1}
 We will solve the PDE (\ref{PDE}) with $\Omega = [0,1]^2, \Gamma_D = \{y=0 \text{ or } y=1\}$ and $\Gamma_N = \{x=0 \text{ or } x=1\}$. We chose a magnetic field such
