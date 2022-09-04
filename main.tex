@@ -308,8 +308,8 @@ Therefore, by doing the substitution $q=\varepsilon^{-1} \mathbf{b} \cdot \nabla
 &\forall \hat{q} \in \mathcal{Q}_{in}.
 \end{cases}
 \end{equation}
-We solve for trial functions $(u,q) \in \mathcal{V} \times \mathcal{Q}_{in}$ with test functions $(\hat{u}, \hat{q}) \in \mathcal{V} \times \mathcal{Q}_{in}$. 
-
+We solve for trial functions $(u,q) \in \mathcal{V} \times \mathcal{Q}_{in}$ with test functions $(\hat{u}, \hat{q}) \in \mathcal{V} \times \mathcal{Q}_{in}$. The key parts of our  Firedrake \cite{Dragon} implementation are
+\lstinputlisting[language=Python]{CodeSnips/Methods/PF.py}
 
 \subsection{PF Stabilisation Method}
 Additionally, we can use the stabilisation technique stated in \cite{STAB} to get the weak form
@@ -318,13 +318,14 @@ Additionally, we can use the stabilisation technique stated in \cite{STAB} to ge
 \begin{cases}
 \int_{\Omega}A_{||}q\mathbf{b} \cdot \nabla \hat{u}  d\mathbf{x} + a_{\perp}(u, \hat{u}) 
 = \int{\Omega} f \hat{u} d\mathbf{x},
-&\forall \hat{u} \in \mathcal{Q}_D,\\
+&\forall \hat{u} \in \mathcal{V},\\
 \int_{\Omega}\mathbf{b} \cdot \nabla \hat{u}\hat{q} d\mathbf{x} 
 = (\varepsilon + \sigma)\int_{\Omega}q\hat{q} d \mathbf{x}, 
 &\forall \hat{q} \in \mathcal{Q}.
 \end{cases}
 \end{equation}
-We solve for trial functions $(u,q) \in \mathcal{V} \times \mathcal{Q}$ with test functions $(\hat{u}, \hat{q}) \in \mathcal{V} \times \mathcal{Q}$. 
+We solve for trial functions $(u,q) \in \mathcal{V} \times \mathcal{Q}$ with test functions $(\hat{u}, \hat{q}) \in \mathcal{V} \times \mathcal{Q}$. Thus in our code we change our $F$ and the boundary condition constraints to
+\lstinputlisting[language=Python]{CodeSnips/Methods/PF_STAB.py}
 
 \chapter{Numerical Demonstrations}
 In these examples we calculate $f$ from passing $u$ through the PDE. Additionally, in these example we take $A_{||}=1$ and $\mathbb{A}_{\perp} = \mathbb{I}$. Where $\mathbb{I}$ is the identity matrix. But first we briefly discuss the basic idea of how the finite element solver Firedrake \cite{Dragon} calculates the solution. 
