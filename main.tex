@@ -770,15 +770,19 @@ We will solve the PDE (\ref{PDE}) with $\Omega = [0,1]^2, \Gamma_D = \{y=0 \text
 \begin{equation} \label{E1_b}
 \mathbf{b} = \frac{\mathbf{B}}{|\mathbf{B}|}, 
 \mathbf{B} = \left[ \begin{matrix}
-\alpha(2y-1)cos(m\pi x) + \pi\\
-\pi \alpha m (y^2-y)sin(m \pi x)
+\alpha(2y-1)\cos(m\pi x) + \pi\\
+\alpha m \pi (y^2-y)\sin(m \pi x)
 \end{matrix} \right]
 \end{equation}
-Thus we have $\Gamma_{in} := \{x=0\}$ and exact solution
+Thus we have $\Gamma_{in} := \{x=0\}$ and we have the streamlines are defined by 
+\begin{equation}
+\pi y + \alpha (y^2-y) \cos(m\pi x) = C,
+\end{equation}
+with $0 \leq C \leq \pi$. This is calculated in Appendix \ref{E1_Stream_Calc}. For $\varepsilon \ll 1$ we have the solution is constant along streamlines, thus to find exact solutions to test we need to calculate the streamlines. This leads to the exact solution 
 \begin{equation} \label{E1_u}
 u = \sin(\pi y + \alpha (y^2-y) \cos(m\pi x)) + \varepsilon \cos(2 \pi x) \sin(\pi y)
 \end{equation}
-This test problem came from \cite{DN}. However, the same or similar problem is very popular and appears in papers \cite{LINE_INT}, \cite{AP}, \cite{MMAP} and \cite{STAB}. We will cover three sub-examples with $(\alpha=0),(\alpha=2,m=1)$ and $(\alpha = 2, m=10)$. Thus we get electromagnetic fields  shown in Figure \ref{E1_VFs}. The field for $\alpha = 0$ is not shown as it is a simple vector field with $\mathbf{b}= [1, 0]$.
+This test problem came from \cite{DN}. However, the same or similar problem is very popular and appears in papers \cite{LINE_INT}, \cite{AP}, \cite{MMAP} and \cite{STAB}. We will cover three sub-examples with $(\alpha=0),(\alpha=2,m=1)$ and $(\alpha = 2, m=10)$. Thus we get electromagnetic fields shown in Figure \ref{E1_VFs}. The field for $\alpha = 0$ is not shown as it is a simple vector field with $\mathbf{b}= [1, 0]$.
 \begin{figure}[H]
  \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/VectorField/E1b_a2_m1.png}
@@ -1431,6 +1435,27 @@ The code below shows how to use our code to calculate a solution to Example $1$ 
 This will output the following text to the command line
 \lstinputlisting{CodeSnips/SolveE1Out.txt}
 From this code it is trivial to change the example and method used.
+
+\chapter{Calculation of Streamlines} \label{E1_Stream_Calc}
+Here we present the method we used to calculate the streamlines for the vector field $\mathbf{b}$ (\ref{E1_b}) in Example $1$. A similar approach can be used to calculate the streamlines for the other examples covered in this paper. First we have
+\begin{equation}
+\frac{dy}{dx} = \frac{\dot{y}}{\dot{x}} = 
+\frac{\alpha m \pi (y^2-y)\sin(m \pi x)}{\alpha(2y-1)\cos(m\pi x) + \pi},
+\end{equation}
+after some algerbraic manipulation we get
+\begin{equation}
+df = (\alpha m\pi (y^2-y)\sin(m\pi x))dx + 
+(\alpha(2y-1)\cos(m\pi x)+\pi)dy = 0.
+\end{equation}
+This is in exact form so we must solve the following equations
+\begin{align}
+\frac{\partial f}{\partial x} &= \alpha m\pi (y^2-y)\sin(m\pi x)\\
+\frac{\partial f}{\partial y} &= (\alpha(2y-1)\cos(m\pi x)+\pi)
+\end{align}
+Thus we get the following function for the streamlines
+\begin{equation}
+\pi y + \alpha (y^2-y)\cos(m\pi x) = C.
+\end{equation}
 
 \chapter{Code File: Solvers.py} \label{CFSolve}
 
