@@ -1,6 +1,6 @@
-U = FunctionSpace(mesh, "CG", Order)
+V = FunctionSpace(mesh, "CG", Order)
 Q = FunctionSpace(mesh, "CG", Order)   
-Z = U*Q
+Z = V*Q
 ...
 bc0 = DirichletBC(Z.sub(0), 0, dOmegaD)
 bc2 = DirichletBC(Z.sub(1), 0, dOmegaIN)
