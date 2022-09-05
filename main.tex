@@ -52,7 +52,7 @@ Diffusion Problems}
 \college{Linacre College}
 %\renewcommand{\submittedtext}{Dissertation submitted in partial fulfilment of the requirements for the degree of}
 \degree{M.Sc.\ in Mathematical Modelling and Scientific Computing}
-\degreedate{Trinity Term 2020}
+\degreedate{Trinity Term 2022}
 
 \begin{document}
 
@@ -75,7 +75,7 @@ Finally, I thank Culham Centre for Fusion Energy for funding this project.
 \newpage
 
 \begin{abstract}
-In this paper, we wish to solve highly anisotropic diffusion problems on a domain $\Omega$. We discuss existing methods, propose new methods and demonstrate how to implement these methods in Python using Firedrake. Then we test and compare the different methods on a range of examples. Additionally, we provide the code on GitHub at \cite{Hub}
+In this paper, we wish to solve highly anisotropic diffusion problems on a domain $\Omega$. We discuss existing methods, propose new methods and demonstrate how to implement these methods in Python using Firedrake. Then we test and compare the different methods on a range of examples. Additionally, we provide the code on GitHub at \cite{Hub}.
 \end{abstract}
 
 \newpage
@@ -468,7 +468,7 @@ x_0-x_2 & x_1-x_0
 \right].
 \end{equation}
 
-\section{Derivation of Lagrange Finite Element of Order $2$}
+\section{Derivation of Lagrange Finite Element of Order $2$} \label{LDEF}
 In our numerical simulations we use a continuous Lagrange order $2$ finite element. We now provide a method for the derivation of this finite element on an interval and a triangle. Additionally, following a similar procedure we can derive the basis functions for other domains. The resource \cite{defelement} states basis functions for many finite elements. This is not implemented in code we instead use the Firedrake implementation of CG order $2$. 
 
 For each element we have basis functions $\phi_i(\mathbf{x})$ which have a linear combination from the set $\{1, x, x^2, y, y^2, z, z^2, xy, yz, xz\}$ and locations on domain $\ell_i$.  To find the coefficients of the linear combination we must solve
@@ -794,7 +794,63 @@ This test problem came from \cite{DN}. However, the same or similar problem is v
  \end{subfigure}
  \caption{Electromagetic vector field $\mathbf{b}$ from (\ref{E1_b})} \label{E1_VFs}
 \end{figure}
-In Figure \ref{E1_us} we have the exact solution $u$ (\ref{E1_u}) to example $1$. We have the source term $f$ is too complicated to write analytically so the visualisation is given in Figure \ref{E1_fs}. We analysis the equation with $\varepsilon = 0.1$ and $\varepsilon = 10^{-10}$. We notice the $\varepsilon = 0$ and $\varepsilon = 10^{-10}$ variants are visually similar for the source term $f$ and exact term $u$ this suggests to consider a method discussed in section \ref{MAP_f}. The main difference is the solution $u$ is not constant on streamlines of the vector field $\mathbf{b}$ this makes logical sense because increasing the anisotripc strength (make $\varepsilon$ smaller) leads to less diffusion perpendicular to the magnetic field and undisturbed diffusion parralle to the magnetic field.
+In Figure \ref{E1_us} we have the exact solution $u$ (\ref{E1_u}) to example $1$. We have the source term $f$ is too complicated to write analytically so the visualisation is given in Figure \ref{E1_fs}. We analysis the equation with $\varepsilon = 0.1$ and $\varepsilon = 10^{-10}$. We notice the $\varepsilon = 0.1$ and $\varepsilon = 10^{-10}$ variants are visually similar for the source term $f$ and exact term $u$ this suggests to consider a method discussed in section \ref{MAP_f}. The main difference is the solution $u$ is not constant on streamlines of the vector field $\mathbf{b}$ this makes logical sense because increasing the anisotripc strength (make $\varepsilon$ smaller) leads to less diffusion perpendicular to the magnetic field and undisturbed diffusion parralle to the magnetic field.
+
+In Figures \ref{E1_LH_PF} and \ref{E1_LM_SP} we numerically simulate the PDE created by Example $1$ with a $20 \times 20$ grid, where each finite element is a square with width $0.05$ discrtised with an order $2$ Lagrange element. Also, each red dot represents a numerical calculation with varying $\varepsilon$. Where the degrees of freedom for $(MMAP), (PF), (LM)$ are $3362$, $(SP)$ is $1681$ and $(AP)$ is $8405$.
+
+In Figure \ref{E1_LH_PF} we compare methods $(MMAP), (PF)$ and $(AP)$. The error plot for $(MMAP)$ is located under the error plot for $(AP)$ this strongly suggests these methods will calculate a similar value for the error. Thus for further numerical calculations we will only consider the $(MMAP)$ because for similar error it has less degrees of freedom than the $(AP)$ method. This decreases the amount of computational power used. Additionally, when the vector field is not anisotropic $(\alpha = 0)$ all methods produce small error for $0 <\varepsilon \leq 1$. Also, from Figure \ref{E1_Mild_Ans} it visually suggests when the vector field is mildly anisotropic the $(MMAP)$ method performs better than the $(PF)$ method. However, from Figure \ref{E1_Strong_Ans} we infer when the vector field is highly anisotropic $(PF)$ performs better than $(MMAP)$. 
+
+In the numerical calculations shown in Figure \ref{E1_LM_SP} it follows our logic that the $(LM)$ method produces small error for $\varepsilon \ll 1$ and much larger error for $\varepsilon \approx 1$. Also, it shows the $(SP)$ method failing when $\varepsilon \ll 1$. This strongly suggests that we have implemented our code correctly. For further numerical calculations we use $(MMAP)$ instead of $(LM)$ and $(SP)$ as in Figure \ref{E1_LM_SP} $(MMAP)$ has the smallest error for  $0 < \varepsilon \leq 1$.
+
+However, the $(SP)$ method has less degrees of freedom than the $(MMAP)$ method and from the Figure \ref{E1_LM_SP} there exists an $\varepsilon_0$ where when $\varepsilon \geq \varepsilon_0$ the $(SP)$ method has similar error to the $(MMAP)$ method. Thus we can propose a new method that involves using $(MMAP)$ when $\varepsilon < \varepsilon_0$ and using the $(SP)$ method when $\varepsilon \leq \varepsilon_0$. One problem with this method is that when the PDE becomes more anisotropic $\varepsilon_0$ increases and we are interested in methods for highly anisotropic diffusion problem with $\varepsilon \ll 1$. Thus this method is not further discussed.
+
+\begin{table}[H]
+\resizebox{\textwidth}{!}{
+\begin{tabular}{||cccccccc||}
+\cline{3-8}
+\multicolumn{2}{c|}{L2 Error} & \multicolumn{2}{c|}{$\alpha = 0$} & \multicolumn{2}{c|}{$\alpha = 2, m=1$} & \multicolumn{2}{c|}{$\alpha = 2, m=10$} \\
+\hline 
+Size          & dof          & PF        & MMAP        & PF        & MMAP        & PF        & MMAP        \\
+\hline \hline
+$10\times 10$  &  882    &  $1.26\times10^{-4}$ & $1.26\times10^{-4}$  & $1.64\times10^{-1}$ & $2.25\times10^{-4}$ & $4.29\times10^{-2}$ & $3.16\times10^{-1}$\\
+\hline
+$20\times 20$  &  3362     & $1.58\times 10^{-5}$ & $1.58\times 10^{-5}$ & $4.01\times10^{-2}$ & $2.80\times10^{-5}$ & $2.94\times10^{-2}$ & $1.25\times10^{-1}$\\
+\hline
+$40\times 40$ &   13122    & $1.97\times 10^{-6}$ & $1.97\times 10^{-6}$ & $1.42\times10^{-3}$ & $3.44\times10^{-6}$ & $4.23\times 10^{-3}$ & $1.29\times10^{-2}$\\
+\hline
+$80\times 80$  &  51842     & $2.46\times 10^{-7}$ & $2.46\times 10^{-7}$ & $2.38\times10^{-5}$ & $4.25 \times 10^{-7}$ & $9.71\times10^{-4}$ & $9.70\times10^{-4}$\\
+\hline
+$160\times 160$ & 206082   & $3.09\times 10^{-8}$ & $3.09\times 10^{-8}$ & $1.47\times10^{-6}$ & $5.25 \times 10^{-8}$ & $2.19\times10^{-4}$ & $6.36\times10^{-5}$ \\
+\hline
+\end{tabular}}
+\end{table}
+
+
+\begin{table}[H]
+\resizebox{\textwidth}{!}{
+\begin{tabular}{||cccccccc||}
+\cline{3-8}
+\multicolumn{2}{c|}{H1 Error} & \multicolumn{2}{c|}{$\alpha = 0$} & \multicolumn{2}{c|}{$\alpha = 2, m=1$} & \multicolumn{2}{c|}{$\alpha = 2, m=10$} \\
+\hline 
+Size          & dof          & PF        & MMAP        & PF        & MMAP        & PF        & MMAP        \\
+\hline \hline
+$10\times 10$  &  882    &  $8.16\times10^{-3}$ & $8.16\times10^{-3}$  & $1.00\times10^{0}$ & $1.42\times10^{-2}$ & $2.57\times10^{1}$ & $4.22\times10^{0}$\\
+\hline
+$20\times 20$  &  3362     & $2.04\times 10^{-3}$ & $2.04\times 10^{-3}$ & $3.99\times10^{-1}$ & $3.57\times10^{-3}$ & $1.21\times10^{1}$ & $1.99\times10^{0}$\\
+\hline
+$40\times 40$ &   13122    & $5.11\times 10^{-4}$ & $5.11\times 10^{-4}$ & $4.37\times10^{-2}$ & $8.89\times10^{-4}$ & $4.38\times 10^{-1}$ & $3.20\times10^{-1}$\\
+\hline
+$80\times 80$  &  51842     & $1.28\times 10^{-4}$ & $1.28\times 10^{-4}$ & $7.23\times10^{-3}$ & $2.21\times 10^{-4}$ & $2.01\times10^{-1}$ & $5.00\times10^{-2}$\\
+\hline
+$160\times 160$ & 206082   & $3.19\times 10^{-5}$ & $3.19\times 10^{-5}$ & $1.77\times10^{-3}$ & $5.49\times 10^{-5}$ & $9.79\times10^{-2}$ & $ 1.10\times10^{-2}$ \\
+\hline
+\end{tabular}}
+\caption{Error for varying quadrilateral grid size for variants of Example $1$ using $(PF)$ and $(MMAP)$ with order $2$ Lagrange finite element and $\varepsilon=10^{-10}$.}
+\label{tlb_E1_Error}
+\end{table}
+
+As can be seen in Table \ref{tlb_E1_Error} when the number of finite elements in the grid is increased the error is reduced.
+
 \begin{figure}[H]
  \begin{subfigure}{0.44\textwidth}
      \includegraphics[width=\textwidth]{Pics/uf/U_E1a_eps1.png}
@@ -864,7 +920,7 @@ In Figure \ref{E1_us} we have the exact solution $u$ (\ref{E1_u}) to example $1$
  \end{subfigure}
  \begin{subfigure}{0.44\textwidth}
      \includegraphics[width=\textwidth]{Pics/LHSims/E1b_MMAP_AP_PFL2.png}
-     \caption{L2 Error $\alpha=2, m=1$}
+     \caption{L2 Error $\alpha=2, m=1$} \label{E1_Mild_Ans}
  \end{subfigure}
  \begin{subfigure}{0.44\textwidth}
      \includegraphics[width=\textwidth]{Pics/LHSims/E1b_MMAP_AP_PFH1.png}
@@ -872,7 +928,7 @@ In Figure \ref{E1_us} we have the exact solution $u$ (\ref{E1_u}) to example $1$
  \end{subfigure}
  \begin{subfigure}{0.44\textwidth}
      \includegraphics[width=\textwidth]{Pics/LHSims/E1c_MMAP_AP_PFL2.png}
-     \caption{L2 Error, $\alpha=2, m=10$}
+     \caption{L2 Error, $\alpha=2, m=10$} \label{E1_Strong_Ans}
  \end{subfigure}
  \hfill
  \begin{subfigure}{0.44\textwidth}
@@ -912,57 +968,56 @@ In Figure \ref{E1_us} we have the exact solution $u$ (\ref{E1_u}) to example $1$
 \end{figure}
 
 
-Now we numerically simulate the solution with a $20 \times 20$ grid, where each finite element is a square with width $0.05$. The finite element 
-
-The $MMAP$ line is located under the $AP$ line this strongly suggests these methods are equivalent therefore in further simulations we will only consider the $MMAP$ method as the $AP$ method requires significatly more computionaly power to use. Additionally, the $PF$ method performs worse
 
 
-\begin{table}[]
-\resizebox{\textwidth}{!}{
-\begin{tabular}{||cccccccc||}
-\cline{3-8}
-\multicolumn{2}{c|}{L2 Error} & \multicolumn{2}{c|}{$\alpha = 0$} & \multicolumn{2}{c|}{$\alpha = 2, m=1$} & \multicolumn{2}{c|}{$\alpha = 2, m=10$} \\
-\hline 
-Size          & dof          & PF        & MMAP        & PF        & MMAP        & PF        & MMAP        \\
-\hline \hline
-$10\times 10$  &  882    &  $1.26\times10^{-4}$ & $1.26\times10^{-4}$  & $1.64\times10^{-1}$ & $2.25\times10^{-4}$ & $4.29\times10^{-2}$ & $3.16\times10^{-1}$\\
-\hline
-$20\times 20$  &  3362     & $1.58\times 10^{-5}$ & $1.58\times 10^{-5}$ & $4.01\times10^{-2}$ & $2.80\times10^{-5}$ & $2.94\times10^{-2}$ & $1.25\times10^{-1}$\\
-\hline
-$40\times 40$ &   13122    & $1.97\times 10^{-6}$ & $1.97\times 10^{-6}$ & $1.42\times10^{-3}$ & $3.44\times10^{-6}$ & $4.23\times 10^{-3}$ & $1.29\times10^{-2}$\\
-\hline
-$80\times 80$  &  51842     & $2.46\times 10^{-7}$ & $2.46\times 10^{-7}$ & $2.38\times10^{-5}$ & $4.25 \times 10^{-7}$ & $9.71\times10^{-4}$ & $9.70\times10^{-4}$\\
-\hline
-$160\times 160$ & 206082   & $3.09\times 10^{-8}$ & $3.09\times 10^{-8}$ & $1.47\times10^{-6}$ & $5.25 \times 10^{-8}$ & $2.19\times10^{-4}$ & $6.36\times10^{-5}$ \\
-\hline
-\end{tabular}}
-\end{table}
 
 
 \begin{table}[]
 \resizebox{\textwidth}{!}{
-\begin{tabular}{||cccccccc||}
-\cline{3-8}
-\multicolumn{2}{c|}{H1 Error} & \multicolumn{2}{c|}{$\alpha = 0$} & \multicolumn{2}{c|}{$\alpha = 2, m=1$} & \multicolumn{2}{c|}{$\alpha = 2, m=10$} \\
+\begin{tabular}{||ccccc||}
+\cline{2-5}
+\multicolumn{1}{c|}{} & \multicolumn{2}{c|}{$\Gamma_{in} := \{x=0\}$} & \multicolumn{2}{c|}{$\Gamma_{in} := \{x=1\}$}\\
 \hline 
-Size          & dof          & PF        & MMAP        & PF        & MMAP        & PF        & MMAP        \\
+L2 Error & PF        & MMAP        & PF        & MMAP   \\
 \hline \hline
-$10\times 10$  &  882    &  $8.16\times10^{-3}$ & $8.16\times10^{-3}$  & $1.00\times10^{0}$ & $1.42\times10^{-2}$ & $2.57\times10^{1}$ & $4.22\times10^{0}$\\
+$\alpha = 0$ & $2.4624E-07$  & $2.4624E-07$ & $2.4624E-07$ & $2.4624E-07$\\
 \hline
-$20\times 20$  &  3362     & $2.04\times 10^{-3}$ & $2.04\times 10^{-3}$ & $3.99\times10^{-1}$ & $3.57\times10^{-3}$ & $1.21\times10^{1}$ & $1.99\times10^{0}$\\
+$\alpha = 2, m=1$ & 
+$2.3834E-05$  & $4.2451E-07$ & $2.3834E-05$ & $4.2451E-07$\\
 \hline
-$40\times 40$ &   13122    & $5.11\times 10^{-4}$ & $5.11\times 10^{-4}$ & $4.37\times10^{-2}$ & $8.89\times10^{-4}$ & $4.38\times 10^{-1}$ & $3.20\times10^{-1}$\\
-\hline
-$80\times 80$  &  51842     & $1.28\times 10^{-4}$ & $1.28\times 10^{-4}$ & $7.23\times10^{-3}$ & $2.21\times 10^{-4}$ & $2.01\times10^{-1}$ & $5.00\times10^{-2}$\\
-\hline
-$160\times 160$ & 206082   & $3.19\times 10^{-5}$ & $3.19\times 10^{-5}$ & $1.77\times10^{-3}$ & $5.49\times 10^{-5}$ & $9.79\times10^{-2}$ & $ 1.10\times10^{-2}$ \\
+$\alpha = 2, m=10$ & 
+$9.7179E-04$  & $9.7017E-04$ & $9.7179E-04$ & $9.7017E-04$\\
 \hline
 \end{tabular}}
 \end{table}
+
+\begin{table}[]
+\resizebox{\textwidth}{!}{
+\begin{tabular}{||ccccc||}
+\cline{2-5}
+\multicolumn{1}{c|}{} & \multicolumn{2}{c|}{$\Gamma_{in} := \{x=0\}$} & \multicolumn{2}{c|}{$\Gamma_{in} := \{x=1\}$}\\
+\hline 
+H1 Error & PF        & MMAP        & PF        & MMAP   \\
+\hline \hline
+$\alpha = 0$ &
+$1.2767E-04$  & $1.2767E-04$ & $1.2767E-04$ & $1.2767E-04$\\
+\hline
+$\alpha = 2, m=1$ & 
+$7.2261E-03$  & $2.2108E-04$ & $7.2261E-03$ & $2.2108E-04$\\
+\hline
+$\alpha = 2, m=10$ &
+$2.0097E-01$  & $4.9986E-02$ & $2.0097E-01$ & $4.9986E-02$\\
+\hline
+\end{tabular}}
+\caption{Error for different definitions of $\Gamma_{in}$ on an $80 \times 80$ quadrilateral grid with order $2$ Lagrange finite element, $51842$ degrees of freedom and $\varepsilon=10^{-10}$.}
+\label{tbl_E1_diff_Gam}
+\end{table}
+
+Thus from are numerical experimentation shown in Table \ref{tbl_E1_diff_Gam} it strongly suggests that the set $\mathcal{L}$ can be set to zero anywhere on the streamline. In other words, if $\Gamma_{SL} := \{\text{ one point on every streamline }\}$ then we can have $\mathcal{L} := \{\lambda \in \mathcal{H}^1(\Omega): \lambda|_{\Gamma_{SL}\cup \Gamma_{D}}\}$.
 
 \section{Example 2, Annulus}
 We now propose an example on an annulus with closed field lines.
-We will solve the PDE (\ref{}) with $\Omega := \{x,y \in \mathbb{R}, 1<x^2+y^2<4\}$, $\Gamma_D := \{x,y \in \mathbb{R}, (x^2+y^2=1 \text{ or } x^2+y^2=4)\}$ and $\Gamma_N := \emptyset$. We chose the magnetic field 
+We will solve the PDE (\ref{PDE}) with $\Omega := \{x,y \in \mathbb{R}, 1<x^2+y^2<4\}$, $\Gamma_D := \{x,y \in \mathbb{R}, (x^2+y^2=1 \text{ or } x^2+y^2=4)\}$ and $\Gamma_N := \emptyset$. We chose the magnetic field 
 \begin{equation}
 \mathbf{b} = \frac{\mathbf{B}}{|\mathbf{B}|} = 
 \left[ \begin{matrix}
@@ -1003,6 +1058,7 @@ which is visualised with its source term $f$ in Figure \ref{E2_uf} at $\varepsil
  \caption{Example $2$ with $\varepsilon = 0.1$} \label{E2_uf}
 \end{figure}
 
+Therefore, these results strongly suggests that we can apply the condition  will investigate the numerical solution when $\Gamma_{in}$ is applied to part of the streamline, as in the numerical
 
 \begin{figure}[H]
  \begin{subfigure}{0.44\textwidth}
@@ -1032,15 +1088,6 @@ which is visualised with its source term $f$ in Figure \ref{E2_uf} at $\varepsil
  \end{subfigure}
  \caption{Numerical demonstration for solver $MMAP, MMAP_STAB, PF$ and $PF_STAB$ on a $20\times 20$ quadrilateral grid using CG order $2$ for Example $2$, with $x=\varepsilon$ and $y=$ Error.} \label{E2_LH}
 \end{figure}
-
-Therefore, these results strongly suggests that we can apply the condition  will investigate the numerical solution when $\Gamma_{in}$ is applied to part of the streamline, as in the numerical
-
-Do u and f plot for different eps (4)
-Show error plots for example for ranging eps  L and H (6)
-Use MMAP, Limit, SP, PF
-Redo with stab variants (6)
-Show stabalisation gives different MMAP and Stab and streamline
-Do DN plot (1)
 
 \section{Example 3, Magnetic Islands}
 We now solve an example on a square domain with non-zero boundary conditions on $\Gamma_D$ and with closed and open field lines. We will solve the PDE (\ref{PDE}) with $\Omega = [0,1]^2, \Gamma_D = \{y=0 \text{ or } y=1\}$ and $\Gamma_N = \{x=0 \text{ or } x=1\}$. We choose a magnetic field such 
@@ -1407,7 +1454,15 @@ Future work would involve finding a mapping for the $f$ generated by the PDE (\r
 
 
 \subsection{More Finite Elements}
-Mainlt one which cont on derivative. (Hermite)
+Future work would involve looking at different finite elements. Currently, our numerical calculations have been done with an order $2$ Lagrange finite element. This means our solutions will be continuous but the solutions derivative will be discontinuous. This leads to the H1 error being large this can be countered by having a Hermite finite element which will give a continuous solution and the derivative will be continuous.
+
+We have the basis functions for a Hermite finite element stated at \cite{defelement}. Also, they can be calculated using a similar method discussed in section \ref{LDEF}. In Figure \ref{InterFuncsHER} we show the basis functions for the Hermite finite element on a unit interval.
+
+\begin{figure}[H]
+     \includegraphics[width=\textwidth]{Pics/BasisFunc/IntervalFuncsHER.png}
+     \caption{Hermite basis functions on interval $[0,1]$}
+     \label{InterFuncsHER}
+\end{figure}
 
 \subsection{Parallel Implementation}
 It is clear that a parallel implementation would speed up the calculation of the solution. Thus in the same amount of time as the sequential Firedrake implementation a higher density mesh can be used and this leads to a solution with less error.
