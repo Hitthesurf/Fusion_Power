@@ -852,28 +852,28 @@ $160\times 160$ & 206082   & $3.19\times 10^{-5}$ & $3.19\times 10^{-5}$ & $1.77
 As can be seen in Table \ref{tlb_E1_Error} when the number of finite elements in the grid is increased the error is reduced.
 
 \begin{figure}[H]
- \begin{subfigure}{0.44\textwidth}
+ \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/uf/U_E1a_eps1.png}
      \caption{$\alpha=0$ and $\varepsilon = 0.1$}
  \end{subfigure}
-   \begin{subfigure}{0.44\textwidth}
+   \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/uf/U_E1a_eps10.png}
      \caption{$\alpha=0$ and $\varepsilon = 10^{-10}$}
  \end{subfigure}
- \begin{subfigure}{0.44\textwidth}
+ \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/uf/U_E1b_eps1.png}
      \caption{$\alpha=2, m=1$ and $\varepsilon = 0.1$}
  \end{subfigure}
- \begin{subfigure}{0.44\textwidth}
+ \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/uf/U_E1b_eps_10.png}
      \caption{$\alpha=2, m=1$ and $\varepsilon = 10^{-10}$}
  \end{subfigure}
- \begin{subfigure}{0.44\textwidth}
+ \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/uf/U_E1c_eps_1.png}
      \caption{$\alpha=2, m=10$ and $\varepsilon = 0.1$}
  \end{subfigure}
  \hfill
- \begin{subfigure}{0.44\textwidth}
+ \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/uf/u_E1c_eps_10.png}
      \caption{$\alpha=2, m=10$ and $\varepsilon = 10^{-10}$}
  \end{subfigure}
@@ -881,28 +881,28 @@ As can be seen in Table \ref{tlb_E1_Error} when the number of finite elements in
 \end{figure}
 
 \begin{figure}[H]
- \begin{subfigure}{0.44\textwidth}
+ \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/uf/F_E1a_eps1.png}
      \caption{$\alpha=0$ and $\varepsilon = 0.1$}
  \end{subfigure}
-   \begin{subfigure}{0.44\textwidth}
+   \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/uf/F_E1a_eps10.png}
      \caption{$\alpha=0$ and $\varepsilon = 10^{-10}$}
  \end{subfigure}
- \begin{subfigure}{0.44\textwidth}
+ \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/uf/F_E1b_eps1.png}
      \caption{$\alpha=2, m=1$ and $\varepsilon = 0.1$}
  \end{subfigure}
- \begin{subfigure}{0.44\textwidth}
+ \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/uf/F_E1b_eps_10.png}
      \caption{$\alpha=2, m=1$ and $\varepsilon = 10^{-10}$}
  \end{subfigure}
- \begin{subfigure}{0.44\textwidth}
+ \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/uf/F_E1c_eps_1.png}
      \caption{$\alpha=2, m=10$ and $\varepsilon = 0.1$}
  \end{subfigure}
  \hfill
- \begin{subfigure}{0.44\textwidth}
+ \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/uf/f_E1c_eps_10.png}
      \caption{$\alpha=2, m=10$ and $\varepsilon = 10^{-10}$}
  \end{subfigure}
@@ -1013,7 +1013,7 @@ $2.0097E-01$  & $4.9986E-02$ & $2.0097E-01$ & $4.9986E-02$\\
 \label{tbl_E1_diff_Gam}
 \end{table}
 
-Thus from are numerical experimentation shown in Table \ref{tbl_E1_diff_Gam} it strongly suggests that the set $\mathcal{L}$ can be set to zero anywhere on the streamline. In other words, if $\Gamma_{SL} := \{\text{ one point on every streamline }\}$ then we can have $\mathcal{L} := \{\lambda \in \mathcal{H}^1(\Omega): \lambda|_{\Gamma_{SL}\cup \Gamma_{D}}\}$.
+Thus from are numerical experimentation shown in Table \ref{tbl_E1_diff_Gam} it strongly suggests that the set $\mathcal{L}$ can be set to zero anywhere on the streamline. In other words, if $\Gamma_{SL} := \{\text{ one point on every streamline }\}$ then we can have $\mathcal{L} := \{\lambda \in \mathcal{H}^1(\Omega): \lambda|_{\Gamma_{SL}\cup \Gamma_{D}}=0\}$.
 
 \section{Example 2, Annulus}
 We now propose an example on an annulus with closed field lines.
@@ -1141,11 +1141,11 @@ which is visualised with its source term $f$ in Figure \ref{E3_uf} at $\varepsil
 \begin{figure}[H]
  \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/ErrorPlots/E3_MMAP_STAB.png}
-     \caption{L2 $=2.6\times10^{-2}$ for $MMAP\_STAB$}
+     \caption{L2 $=2.6\times10^{-2}$ for $(MMAP\_STAB)$}
  \end{subfigure}
    \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/ErrorPlots/E3_PF_STAB.png}
-     \caption{L2 $=2.6\times10^{-2}$ for $PF\_STAB$}
+     \caption{L2 $=2.6\times10^{-2}$ for $(PF\_STAB)$}
  \end{subfigure}
  \caption{Visualisation of Error $u_e-u_h$ for Example $3$ with $\varepsilon = 10^{-10}$, CG order $2$ on a $80 \times 80$ quadralatoral grid.} \label{E3_Error}
 \end{figure}
@@ -1154,11 +1154,11 @@ which is visualised with its source term $f$ in Figure \ref{E3_uf} at $\varepsil
 \begin{figure}[H]
  \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/ErrorPlots/E3_MMAP_STAB_Q.png}
-     \caption{Solves $q$ defined in equation (\ref{MMAP_STAB_w}) for $MMAP\_STAB$}
+     \caption{Solves $q$ defined in equation (\ref{MMAP_STAB_w}) for $(MMAP\_STAB)$}
  \end{subfigure}
    \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/ErrorPlots/E3_PF_STAB_Q.png}
-     \caption{Solves $q$ defined in equation (\ref{PF_STAB_w}) for $PF\_STAB$}
+     \caption{Solves $q$ defined in equation (\ref{PF_STAB_w}) for $(PF\_STAB)$}
  \end{subfigure}
  \caption{Visualisation of $q$ defined in sections \ref{MMAP_STAB} and \ref{PF_STAB} for Example $3$ with $\varepsilon = 10^{-10}$, CG order $2$ on a $80 \times 80$ quadrilateral grid.} \label{E3_Q}
 \end{figure}
