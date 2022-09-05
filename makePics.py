@@ -7,6 +7,49 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
+def GenStream(al, m):
+    E1 = Example_1(eps = 1e-10, Size = 80, al = al, m=m)
+    u_e = E1[5]
+    Error = []
+    #Gamma_In x=0
+    u_h = Solve_PF_Method(*E1, Order = 2, eps = 1e-10)
+    Error.append(norm(u_e-u_h, "L2"))
+    Error.append(norm(u_e-u_h, "H1"))
+    
+    u_h = Solve_MMAP_Method(*E1, Order = 2, eps = 1e-10)
+    Error.append(norm(u_e-u_h, "L2"))
+    Error.append(norm(u_e-u_h, "H1"))
+    
+    E1 = *E1[0:4], [2], E1[5]
+    #Gamma_In x=1
+    u_h = Solve_PF_Method(*E1, Order = 2, eps = 1e-10)
+    Error.append(norm(u_e-u_h, "L2"))
+    Error.append(norm(u_e-u_h, "H1"))
+    
+    
+    u_h = Solve_MMAP_Method(*E1, Order = 2, eps = 1e-10)
+    Error.append(norm(u_e-u_h, "L2"))
+    Error.append(norm(u_e-u_h, "H1"))
+    
+    print("-------- Start -------")
+    print("al = "+str(al)+", m = " + str(m))
+    print(f"x=0, PF,   L2 Error: %.4E" % Decimal(Error[0]))
+    print(f"x=0, PF,   H1 Error: %.4E" % Decimal(Error[1]))
+    print(f"x=0, MMAP, L2 Error: %.4E" % Decimal(Error[2]))
+    print(f"x=0, MMAP, H1 Error: %.4E" % Decimal(Error[3]))
+    print(f"x=1, PF,   L2 Error: %.4E" % Decimal(Error[4]))
+    print(f"x=1, PF,   H1 Error: %.4E" % Decimal(Error[5]))
+    print(f"x=1, MMAP, L2 Error: %.4E" % Decimal(Error[6]))
+    print(f"x=1, MMAP, H1 Error: %.4E" % Decimal(Error[7]))
+    print("----------End---------")
+
+def StreamLine():
+    #E1 sim to show error doesn't change depending on \Gamm_In
+    GenStream(0,1)
+    GenStream(2,1)
+    GenStream(2,10)
+    
+
 def Map_f():
     E4 = Example_4(eps = 1e-15, Size = 40)
     epss = 10**(np.arange(-15,1,1,dtype=float))
@@ -41,6 +84,7 @@ def GenSize(Example, Solver, Sizes):
 def PlotFig(Example, Methods, Names, epss, strID):
     #Create Figure
     H1_Over = []
+    plt.rc('font', size=16)
     plt.figure(figsize=(10, 10), dpi=200)     
     for ID in range(len(Methods)):
         Name = Names[ID]
@@ -54,7 +98,6 @@ def PlotFig(Example, Methods, Names, epss, strID):
     #Save Figure
     plt.xlabel(r'$\varepsilon$')
     plt.ylabel(r'L2 Error')
-    plt.rc('font', size=16)
     plt.legend()
     plt.savefig("Pics/LHSims/"+strID+"L2.png")
     
@@ -86,6 +129,7 @@ def Plot1():
     
     E1a = lambda eps: Example_1(eps = eps, Size = 20)
     PlotFig(E1a, Methods, Method_Names, epss, "E1a_MMAP_AP_PF")
+    pass
     E1b = lambda eps: Example_1(al = 2, m = 1, eps = eps, Size = 20)
     PlotFig(E1b, Methods, Method_Names, epss, "E1b_MMAP_AP_PF")
     E1c = lambda eps: Example_1(al = 2, m = 10, eps = eps, Size = 20)
@@ -117,6 +161,7 @@ def Plot2():
     
     E1a = lambda eps: Example_1(eps = eps, Size = 20)
     PlotFig(E1a, Methods, Method_Names, epss, "E1a_MMAP_LM_SP")
+    pass
     E1b = lambda eps: Example_1(al = 2, m = 1, eps = eps, Size = 20)
     PlotFig(E1b, Methods, Method_Names, epss, "E1b_MMAP_LM_SP")
     E1c = lambda eps: Example_1(al = 2, m = 10, eps = eps, Size = 20)
@@ -133,6 +178,7 @@ def PlotE2():
     E2 = lambda eps: Example_2(eps = eps, Restrict_CL = False)
     PlotFig(E2, Methods, Method_Names, epss, "E2/E2_Normal")
     
+    pass
     #Gamma_In
     E2R = lambda eps: Example_2(eps = eps, Restrict_CL = True)
     PlotFig(E2R, Methods, Method_Names, epss, "E2/E2_IN")
@@ -243,6 +289,13 @@ def UpdateSave(to_save, a, ID):
         #Save file
     File("PVD/FU_"+ID+".pvd").write(u, f) 
     return to_save
+
+def UpdatePlot():
+    Plot1()
+    Plot2()
+    PlotE2()
+    PlotE4()
+    PlotE5()
 
 def Getfu():
     #Create pvd file
