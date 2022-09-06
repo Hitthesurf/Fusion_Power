@@ -778,7 +778,7 @@ Thus we have $\Gamma_{in}:= \{x=0\}$ and we have the streamlines defined by
 \begin{equation}
 \pi y + \alpha (y^2-y) \cos(m\pi x) = C,
 \end{equation}
-with $0 \leq C \leq \pi$. This is calculated in Appendix \ref{E1_Stream_Calc}. We have the solution must be constant along streamlines for $\varepsilon \ll 1$. We calculate the streamlines to find exact solutions to test. This leads to an exact solution 
+with $0 \leq C \leq \pi$. This is calculated in Appendix \ref{E1_Stream_Calc}. When $\varepsilon \ll 1$ the solution must be constant along streamlines. Hence, we calculate the streamlines to find exact solutions to test. This leads to an exact solution 
 \begin{equation} \label{E1_u}
 u = \sin(\pi y + \alpha (y^2-y) \cos(m\pi x)) + \varepsilon \cos(2 \pi x) \sin(\pi y)
 \end{equation}
@@ -798,7 +798,7 @@ In Figure \ref{E1_us} we have the exact solution $u$ (\ref{E1_u}) to example $1$
 
 In Figures \ref{E1_LH_PF} and \ref{E1_LM_SP} we numerically simulate the PDE created by Example $1$ with a $20 \times 20$ grid, where each finite element is a square with width $0.05$ discretised with an order $2$ Lagrange element. Also, each red dot represents a numerical calculation with varying $\varepsilon$. Where the degrees of freedom for $(MMAP), (PF), (LM)$ are $3362$, $(SP)$ is $1681$ and $(AP)$ is $8405$.
 
-In Figure \ref{E1_LH_PF} we compare methods $(MMAP), (PF)$ and $(AP)$. The error plot for $(MMAP)$ is located under the error plot for $(AP)$ this strongly suggests these methods will calculate a similar value for the error. Thus for further numerical calculations, we will only consider the $(MMAP)$ because for similar error it has fewer degrees of freedom than the $(AP)$ method. This decreases the amount of computational power used. Additionally, when the vector field is not anisotropic $(\alpha = 0)$ all methods produce small error for $0 <\varepsilon \leq 1$. Also, Figure \ref{E1_Mild_Ans} visually suggests when the vector field is mildly anisotropic the $(MMAP)$ method performs better than the $(PF)$ method. However, from Figure \ref{E1_Strong_Ans} we infer when the vector field is highly anisotropic $(PF)$ performs better than $(MMAP)$. 
+In Figure \ref{E1_LH_PF} we compare methods $(MMAP), (PF)$ and $(AP)$. The error plot for $(MMAP)$ is located under the error plot for $(AP)$ this strongly suggests these methods will calculate a similar value for the error. Thus for further numerical calculations, we will only consider the $(MMAP)$ because for similar error it has fewer degrees of freedom than the $(AP)$ method. This decreases the amount of computational power used. Additionally, when the vector field is not anisotropic $(\alpha = 0)$ all methods produce small errors for $0 <\varepsilon \leq 1$. Also, Figure \ref{E1_Mild_Ans} visually suggests when the vector field is mildly anisotropic the $(MMAP)$ method performs better than the $(PF)$ method. However, from Figure \ref{E1_Strong_Ans} we infer when the vector field is highly anisotropic $(PF)$ performs better than $(MMAP)$. 
 
 In the numerical calculations shown in Figure \ref{E1_LM_SP}, it follows our logic that the $(LM)$ method produces a small error for $\varepsilon \ll 1$ and a much larger error for $\varepsilon \approx 1$. Also, it shows the $(SP)$ method failing when $\varepsilon \ll 1$. This strongly suggests that we have implemented our code correctly. For further numerical calculations we use $(MMAP)$ instead of $(LM)$ and $(SP)$ as in Figure \ref{E1_LM_SP} $(MMAP)$ has the smallest error for  $0 < \varepsilon \leq 1$.
 
@@ -1102,7 +1102,7 @@ We now solve an example on a square domain with non-zero boundary conditions on 
 4a \sin(4 \pi x)
 \end{matrix} \right]
 \end{equation}
-which is visualised in Figure \ref{E3_VF}. Additionally, after some ODE analysis, we get the streamlines for this vector field are
+which is visualised in Figure \ref{E3_VF}. Additionally, after some ODE analysis, we get the streamlines for this vector field. Which are
 \begin{equation}
 \sin(\pi y)-a\cos(4\pi x) = C,
 \end{equation}
@@ -1121,7 +1121,7 @@ We will use the exact solution
 \begin{equation}
 u = \sin(10\sin(\pi y)-10a\cos(4 \pi x)) + \varepsilon \cos(2 \pi x)\sin(10 \pi y)
 \end{equation}
-which is visualised with its source term $f$ in Figure \ref{E3_uf} at $\varepsilon = 10^{-10}$. Additionally, we visualise this for $\varepsilon = 0.1$.
+which is visualised with its source term $f$ in Figure \ref{E3_uf} at $\varepsilon = 10^{-10}$. Furthermore, we visualise this for $\varepsilon = 0.1$.
 \begin{figure}[H]
  \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/uf/U_E3_eps_10.png}
@@ -1413,7 +1413,7 @@ u_{x} = 0, & \text{on }x=0,\\
 u = 0, &\text{on } y=0 \text{ or } y=1.
 \end{cases}
 \end{equation}
-This problem can be solved. From the first two equations in (\ref{LINE_ID1}) we get the solution for $u$ is constant along $\mathbf{b}$. Thus $u$ is independent of $x$. From this fact and last the two equations we get
+This problem can be solved. From the first two equations in (\ref{LINE_ID1}) we get the solution for $u$ is constant along $\mathbf{b}$. Thus $u$ is independent of $x$. From this fact and the last two equations we get
 \begin{equation}
 \begin{cases}
 -u_{yy} =\int_0^1 f(x, y) dx, &\text{on } x=0,\\
@@ -1428,7 +1428,7 @@ Thus after some integration, we get
 \begin{equation}
 u_{yy} = - \int_0^1 f(x,y)dx = - \int_0^1 \sin(\pi y)\pi^2(1+(4+\varepsilon)\cos(2\pi x)) dx = -\pi^2 sin(\pi y).
 \end{equation}
-Which implies $u= \sin(\pi y)$, this is missing the $\varepsilon$ order term from (\ref{E1_u}) because we have solved the limit problem. Therefore we get the value of $u$ as $\varepsilon \rightarrow 0$. Additionally, the paper \cite{LINE_INT} describes how to use this method for a vector field of the form $\mathbf{b} = [\cos(\theta), \sin(\theta)]$, then they parameterise $\theta$ to get an arbitrary vector field. Also, as Example $1$ is a popular example to use to demonstrate methods for solving PDE (\ref{PDE}), they cover $(\alpha = 0)$ and $(\alpha=2, m=1)$ in their numerical demonstrations. Additionally, our $(PF)$ and $(MMAP)$ seem to have smaller L2 Error for the same examples, this is hard to compare because they used a finite difference method to numerically solve their PDE.
+Which implies $u= \sin(\pi y)$, this is missing the $\varepsilon$ order term from (\ref{E1_u}) because we have solved the limit problem. Therefore we get the value of $u$ as $\varepsilon \rightarrow 0$. Additionally, the paper \cite{LINE_INT} describes how to use this method for a vector field of the form $\mathbf{b} = [\cos(\theta), \sin(\theta)]$, then they parameterise $\theta$ to get an arbitrary vector field. Also, as Example $1$ is a popular example to use to demonstrate methods for solving PDE (\ref{PDE}), they cover $(\alpha = 0)$ and $(\alpha=2, m=1)$ in their numerical demonstrations. Furthermore, our $(PF)$ and $(MMAP)$ seem to have smaller L2 Error for the same examples, this is hard to compare because they used a finite difference method to numerically solve their PDE.
  
  However, it is not clear how a stabilisation technique can be used to solve vector fields with closed field lines. At the end of their paper, they stated their future work would be to solve this problem. One potential solution could be to take a point on each streamline and then join the points together for streamlines that touch. Then solve the reduced dimension PDE.
 
@@ -1512,6 +1512,9 @@ Do pros and cons of methods
 $PF\_STAB$ works better when highly anisotropic
 State using lagrange element leads to high error in H1
 Check out github page \cite{Hub}
+Go through findings examples SP best method when eps =1 AP is worst method 
+Talk about two introduced variants 
+State most important future work
 
 \printbibliography[heading=bibintoc]
 
@@ -1549,6 +1552,8 @@ Thus the streamlines follow the function
 
 \chapter{Code File: Examples.py} \label{CFExample}
 
-\chapter{Code File: }
+\chapter{Code File: CUSP\_Par\_GMRES.cu} \label{CFGPU}
+
+\chapter{Code File: Python\_Seq\_GMRES.py} \label{CFCPU}
 
 \end{document}
