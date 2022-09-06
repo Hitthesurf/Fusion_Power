@@ -64,9 +64,9 @@ Diffusion Problems}
 
 \begin{acknowledgements} 
 
-Firstly, I would like to thank my supervisor Prof Patrick Farrell. He provided me with guidance and direction for this project. Additionally, he contributed his unpublished notes on the problem.
+Firstly, I would like to thank my supervisor, Prof Patrick Farrell. He provided me with guidance and direction for this project. Additionally, he contributed his unpublished notes on the problem.
 
-Secondly, thanks is given to Dr Kathryn Gillow for providing a well organised course and constant support.
+Secondly, thanks are given to Dr Kathryn Gillow for providing a well-organised course and constant support.
 
 Finally, I thank Culham Centre for Fusion Energy for funding this project. 
 
@@ -108,11 +108,11 @@ where $\Gamma_N \cap \Gamma_D := \partial \Omega$ and
   \item $\mathbf{b}\cdot \mathbf{n} = 0$ on $\Gamma_D$ the Dirichlet boundary;
   \item $\mathbf{b}\cdot \mathbf{n} \neq 0$ on $\Gamma_N$ the Neumann boundary;
 \end{enumerate}
-where $\mathbf{n}$ is the outward normal. Additionally, we have  $A_{||}$ is a positive scalar field and $\mathbb{A}$ is a symmetric positive definite matrix.
+where $\mathbf{n}$ is the outward normal. Additionally, we have  $A_{||}$ as a positive scalar field and $\mathbb{A}$ is a symmetric positive definite matrix.
 
 The main difficulty with solving this problem is that it is singular. Therefore, it is ill-conditioned for small $\varepsilon$ and when discretised we get a linear system that has an unbounded condition number. Thus we aim to find discretisations that are well posed.  
 
-From multiple papers the best notation for this problem is stated in \cite{DN} and \cite{AP}. Thus we will use a similar notation. For a scalar field $u\in\mathbb{R}$ and vector field $v \in \mathbb{R}^d$, we use the notation
+From multiple papers, the best notation for this problem is stated in \cite{DN} and \cite{AP}. Thus we will use a similar notation. For a scalar field $u\in\mathbb{R}$ and vector field $v \in \mathbb{R}^d$, we use the notation
 \begin{align}
 v_{||} &=(\mathbf{b} \otimes \mathbf{b})v = (v \cdot \mathbf{b})\mathbf{b}
 , & v_{\perp} &= (\mathbb{I}-\mathbf{b} \otimes \mathbf{b})v,\\
@@ -156,7 +156,7 @@ Where $u$ is a trial function and $\hat{u}$ is a test function. To simplify nota
 a_{||}(\alpha, \beta) &= \int_{\Omega} A_{||} \nabla_{||}\alpha \cdot \nabla_{||}\beta d\mathbf{x}, \\ \label{a_perp}
 a_{\perp}(\alpha, \beta) &= \int_{\Omega}(\mathbb{A}_{\perp} \nabla_{\perp}\alpha )\cdot \nabla_{\perp} \beta d\mathbf{x}.
 \end{align}
-For are numerical simulations we use Firedrake \cite{Dragon} which written in code is 
+For our numerical calculations, we use Firedrake \cite{Dragon} which written in code is 
 \lstinputlisting[language=Python]{CodeSnips/a_para.py}
 Also, we have 
 \begin{equation} \label{Intr_Simp}
@@ -167,18 +167,18 @@ on $\Gamma_D$ as restriction $3$ of the electromagnetic field $\mathbf{b}$ state
 \int_{\Omega}f\hat{u}d\mathbf{x} = -\int_{\Gamma_D}\hat{u}(\mathbb{A}_{\perp}\nabla_{\perp} u)_{\perp}\cdot \mathbf{n} d \mathbf{x} + 
 \varepsilon^{-1} a_{||}(u,\hat{u})+a_{\perp}(u, \hat{u}).\\
 \end{equation}
-In the integral over $\Gamma_D$ in (\ref{PDE_w}) $u$ can be replaced with $0$ because in the boundary conditions for (\ref{PDE}) $u,\hat{u} \in \mathcal{V}$. This is included in the formula to show how one would calculate the problem with non zero boundary conditions. And when there are non zero Dirichlet boundary conditions we would use weak form (\ref{WF_ND}).
+In the integral over $\Gamma_D$ in (\ref{PDE_w}) $u$ can be replaced with $0$ because in the boundary conditions for (\ref{PDE}) $u,\hat{u} \in \mathcal{V}$. This is included in the formula to show how one would calculate the problem with non-zero boundary conditions. And when there are non-zero Dirichlet boundary conditions we would use the weak form (\ref{WF_ND}).
 Our methods require the use of the sets 
 \begin{align}
 \Gamma_{in} &:= \{\mathbf{b} \in \Gamma : \mathbf{b} \cdot \mathbf{n} < 0\}, \\
 \mathcal{V} &:= \{v \in \mathcal{H}^1(\Omega) : v|_{\Gamma_{D}} = 0\}. \\
 \mathcal{L} &:= \{\lambda \in \mathcal{H}^1(\Omega) : \lambda |_{\Gamma_{in}\cup \Gamma_{D}} = 0\}.
 \end{align}
-Where $\mathcal{H}^k(\Omega)$ the Sobolev space of order $k$. Also, it should be noted that sets $\mathcal{V}$ and $\mathcal{L}$ are easy to discretise. However, when the magnetic field $\mathbf{b}$ contains closed field lines it is not clear how we should adapt $\mathcal{L}$. One approach found by our numerical simulations show we can still get a reasonable solution when we include a restriction to zero on a point for every closed streamline. Thus $\Gamma_{CL} := \{\text{one point on every closed streamline}\}$ and we can redefine $\mathcal{L} := \{\lambda \in \mathcal{H}^1(\Omega) : \lambda |_{\Gamma_{CL}\cup \Gamma_{in}\cup \Gamma_{D}} = 0\}$.
+Where $\mathcal{H}^k(\Omega)$ the Sobolev space of order $k$. Also, it should be noted that sets $\mathcal{V}$ and $\mathcal{L}$ are easy to discretise. However, when the magnetic field $\mathbf{b}$ contains closed field lines it is not clear how we should adapt $\mathcal{L}$. One approach found by our numerical simulations shows we can still get a reasonable solution when we include a restriction to zero on a point for every closed streamline. Thus $\Gamma_{CL} := \{\text{one point on every closed streamline}\}$ and we can redefine $\mathcal{L} := \{\lambda \in \mathcal{H}^1(\Omega) : \lambda |_{\Gamma_{CL}\cup \Gamma_{in}\cup \Gamma_{D}} = 0\}$.
 
 \section{Overview Of Current Methods}
- We now state some methods for solving the PDE (\ref{PDE}). Additionally, for a few methods we show the key parts of their Python implementation with Firedrake \cite{Dragon}. The full implementation of the methods can be found in Appendix \ref{CFSolve}.
-\subsection{Singular Pertubation Method} \label{SP}
+ We now state some methods for solving the PDE (\ref{PDE}). For a few methods, we show the key parts of their Python implementation with Firedrake \cite{Dragon}. The full implementation of the methods can be found in Appendix \ref{CFSolve}.
+\subsection{Singular Perturbation Method} \label{SP}
 The single perturbation method involves solving the weak form of equation (\ref{PDE}). Therefore we have a trial function $u \in \mathcal{V}$ and a test function $\psi \in \mathcal{V}$. Thus we solve the weak form (\ref{SP_w}) for $(u) \in \mathcal{V}$.
 \begin{equation} \label{SP_w}
 (SP)
@@ -188,10 +188,10 @@ The single perturbation method involves solving the weak form of equation (\ref{
 \end{equation}
 Below we have the key points of our Firedrake \cite{Dragon} implementation
 \lstinputlisting[language=Python]{CodeSnips/Methods/SP.py}
-This method excells for when $\varepsilon$ is normal size
+This method excels for when $\varepsilon$ is normal size
 
 \subsection{Limit Method} \label{LM}
-We now introduce a limit method discussed in paper \cite{AP}. The limit method involves solving the the equation (\ref{PDE}) when $\varepsilon \rightarrow 0$. Therefore, $\Delta_{||}u=0$ so since we have zero dirichlet boundary conditions the solution $u$ satisfies $\nabla_{||}u=0$ thus it is constant along the stream lines of the vector field. We apply this restriction using a Lagrangian parameter. This leads to solving the weak form (\ref{LM_w}) for the trial functions $(u, q) \in \mathcal{V} \times \mathcal{L}$.
+We now introduce a limit method discussed in paper \cite{AP}. The limit method involves solving the equation (\ref{PDE}) when $\varepsilon \rightarrow 0$. Therefore, $\Delta_{||}u=0$ so since we have zero Dirichlet boundary conditions the solution $u$ satisfies $\nabla_{||}u=0$ thus it is constant along the streamlines of the vector field. We apply this restriction using a Lagrangian parameter. This leads to solving the weak form (\ref{LM_w}) for the trial functions $(u, q) \in \mathcal{V} \times \mathcal{L}$.
 \begin{equation} \label{LM_w}
 (LM)
 \begin{cases}
@@ -204,7 +204,7 @@ where $(\hat{u}, \hat{q}) \in \mathcal{V} \times \mathcal{L}$ are test functions
 \lstinputlisting[language=Python]{CodeSnips/Methods/LM.py}
 
 \subsection{MMAP Method} \label{MMAP}
-We now introduce a Micro-Macro Asymptotic-Preserving method discussed in paper \cite{MMAP}. This method is similar to the $(LM)$ method from section \ref{LM} but from the additional $\varepsilon$ term it is able to deal with $\varepsilon \approx 1$. This leads to solving the weak form (\ref{MMAP_w}) for the trial functions $(u, q) \in  \mathcal{V} \times \mathcal{L}$. 
+We now introduce a Micro-Macro Asymptotic-Preserving method discussed in paper \cite{MMAP}. This method is similar to the $(LM)$ method from section \ref{LM} but from the additional $\varepsilon$ term it can deal with $\varepsilon \approx 1$. This leads to solving the weak form (\ref{MMAP_w}) for the trial functions $(u, q) \in  \mathcal{V} \times \mathcal{L}$. 
 \begin{equation} \label{MMAP_w}
 (MMAP)
 \begin{cases}
@@ -253,7 +253,7 @@ We can implement this in Firedrake \cite{Dragon} with the following code
 \lstinputlisting[language=Python]{CodeSnips/Methods/LM_STAB.py}
 
 \subsection{MMAP Stabilisation Method} \label{MMAP_STAB}
-We also apply the stabilisation method mentioned in \cite{STAB} to the $(MMAP)$ method stated in section \ref{MMAP}. Thus we get weak form
+We also apply the stabilisation method mentioned in \cite{STAB} to the $(MMAP)$ method stated in section \ref{MMAP}. Thus we get a weak form
 \begin{equation} \label{MMAP_STAB_w}
 (MMAP\_STAB)
 \begin{cases}
@@ -311,7 +311,7 @@ Therefore, by doing the substitution $q=\varepsilon^{-1} \mathbf{b} \cdot \nabla
 We solve for trial functions $(u,q) \in \mathcal{V} \times \mathcal{Q}_{in}$ with test functions $(\hat{u}, \hat{q}) \in \mathcal{V} \times \mathcal{Q}_{in}$. The key parts of our  Firedrake \cite{Dragon} implementation are
 \lstinputlisting[language=Python]{CodeSnips/Methods/PF.py}
 
-\subsection{PF Stabilisation Method}
+\subsection{PF Stabilisation Method} \label{PF_STAB}
 Additionally, we can use the stabilisation technique stated in \cite{STAB} to get the weak form
 \begin{equation} \label{PF_STAB_w}
 (PF\_STAB)
@@ -324,16 +324,16 @@ Additionally, we can use the stabilisation technique stated in \cite{STAB} to ge
 &\forall \hat{q} \in \mathcal{Q}.
 \end{cases}
 \end{equation}
-We solve for trial functions $(u,q) \in \mathcal{V} \times \mathcal{Q}$ with test functions $(\hat{u}, \hat{q}) \in \mathcal{V} \times \mathcal{Q}$. Thus in our code we change our $F$ and the boundary condition constraints to
+We solve for trial functions $(u,q) \in \mathcal{V} \times \mathcal{Q}$ with test functions $(\hat{u}, \hat{q}) \in \mathcal{V} \times \mathcal{Q}$. Thus in our code, we change our $F$ and the boundary condition constraints to
 \lstinputlisting[language=Python]{CodeSnips/Methods/PF_STAB.py}
 
 \chapter{Numerical Demonstrations}
-In these examples we calculate $f$ from passing $u$ through the PDE. Additionally, in these example we take $A_{||}=1$ and $\mathbb{A}_{\perp} = \mathbb{I}$. Where $\mathbb{I}$ is the identity matrix. But first we briefly discuss the basic idea of how the finite element solver Firedrake \cite{Dragon} calculates the solution. 
+In these examples, we calculate $f$ from passing $u$ through the PDE. Additionally, in these example we take $A_{||}=1$ and $\mathbb{A}_{\perp} = \mathbb{I}$. Where $\mathbb{I}$ is the identity matrix. Also, for the stabilisation methods we take $\sigma=0.1$. But first, we briefly discuss the basic idea of how the finite element solver Firedrake \cite{Dragon} calculates the solution. 
 
 Say use firedrake then do speed up test on GPU?
 
 \section{Mapping to Reference Element} \label{RE}
-For each finite element we would like to create a map to a reference element. Thus we only need to calculate the basis functions for one element. We will define a linear transformation $\mathcal{M}$ which takes the reference element $RE$ to a finite element $FE$. Where $\mathcal{M}^{-1}$ denotes the inverse. 
+For each finite element, we would like to create a linear transformation to a reference element. Thus we only need to calculate the basis functions for one element. We will define a linear transformation $\mathcal{M}$ which takes the reference element $RE$ to a finite element $FE$. Where $\mathcal{M}^{-1}$ denotes the inverse. 
 \begin{align}
 \mathcal{M}: &RE \rightarrow FE, \\
 \mathcal{M}^{-1}: &FE \rightarrow RE.
@@ -399,7 +399,7 @@ And the inverse linear transformation $\mathcal{M}^{-1}(x,y)$ defined as
 \end{matrix}
 \right ].
 \end{equation}
-Where $2A=(x_1-x_0)(y_2-y_0)-(x_2-x_0)(y_1-y_0)$ and $|A|$ is the area of the finite element traingle. Now we acquire the jaobian of the transformation $\mathcal{M}(\xi_0, \xi_1)$.
+Where $2A=(x_1-x_0)(y_2-y_0)-(x_2-x_0)(y_1-y_0)$ and $|A|$ is the area of the finite element triangle. Now we acquire the Jacobian of the transformation $\mathcal{M}(\xi_0, \xi_1)$.
 \begin{equation}
 D\mathcal{M}(\xi_0, \xi_1) = 
 \left [
@@ -415,7 +415,7 @@ y_1-y_0 & y_2-y_0
 \end{matrix}
 \right ]
 \end{equation}
-Next we calculate the absolute value of the determinant. 
+Next, we calculate the absolute value of the determinant. 
 \begin{equation}
 |\det(D\mathcal{M}(\xi))| = |(x_1-x_0)(y_2-y_0)-(x_2-x_0)(y_1-y_0)| = 2|A|.
 \end{equation}
@@ -469,9 +469,9 @@ x_0-x_2 & x_1-x_0
 \end{equation}
 
 \section{Derivation of Lagrange Finite Element of Order $2$} \label{LDEF}
-In our numerical simulations we use a continuous Lagrange order $2$ finite element. We now provide a method for the derivation of this finite element on an interval and a triangle. Additionally, following a similar procedure we can derive the basis functions for other domains. The resource \cite{defelement} states basis functions for many finite elements. This is not implemented in code we instead use the Firedrake implementation of CG order $2$. 
+In our numerical simulations, we use a continuous Lagrange order $2$ finite element. We now provide a method for the derivation of this finite element on an interval and a triangle. Additionally, following a similar procedure, we can derive the basis functions for other domains. The resource \cite{defelement} states basis functions for many finite elements. This is not implemented in code we instead use the Firedrake implementation of CG order $2$. 
 
-For each element we have basis functions $\phi_i(\mathbf{x})$ which have a linear combination from the set $\{1, x, x^2, y, y^2, z, z^2, xy, yz, xz\}$ and locations on domain $\ell_i$.  To find the coefficients of the linear combination we must solve
+For each element, we have basis functions $\phi_i(\mathbf{x})$ which have a linear combination from the set $\{1, x, x^2, y, y^2, z, z^2, xy, yz, xz\}$ and locations on a domain $\ell_i$.  To find the coefficients of the linear combination we must solve
 \begin{equation} \label{CG_eq}
 \phi_i(\ell_j) =
 \begin{cases}
@@ -560,7 +560,7 @@ With their visual representation in Figure \ref{InterFuncs}.
 \end{figure}
 
 \subsection{Triangle (2D)}
-For an order $2$ Lagrange element on a triangle we have $i \in \{0, 1, 2,3,4,5\}$ and the basis functions are of the form
+For a Lagrange element of order $2$ on a triangle we have $i \in \{0, 1, 2,3,4,5\}$ and the basis functions are of the form
 \begin{equation}
 \phi_i(x,y) = \xi_{i0} + \xi_{i1} x + \xi_{i2} y + \xi_{i3} xy + \xi_{i4} x^2 + \xi_{i5}y^2,
 \end{equation}
@@ -669,11 +669,11 @@ With the visual representation in Figure \ref{triBasisFuncs}.
 \end{figure}
 
 \section{Derivation of the Linear System}
-We wish to find a matrix $\mathbb{B}^{(G)}$ and vector $\mathbf{F}^{(G)}$ so that the solution $\mathbf{u}$ to $\mathbb{B}^{(G)} \mathbf{u} = \mathbf{F}^{(G)}$ contains the coefficients for $u$ in the discretised space. We can use a local formulation approach on the domain of a single finite element $(\Omega_{FE})$. Thus we calculate the local $\mathbb{B}^{(L)}$ and $\mathbf{F}^{(L)}$ and using a local to global map we add the results to the global system. Here is an algorithm to add the local system to the global system.
+We wish to find a matrix $\mathbb{B}^{(G)}$ and vector $\mathbf{F}^{(G)}$ so that the solution $\mathbf{u}$ to $\mathbb{B}^{(G)} \mathbf{u} = \mathbf{F}^{(G)}$ contains the coefficients for $u$ in the discretised space. We can use a local formulation approach on the domain of a single finite element $(\Omega_{FE})$. Thus we calculate the local $\mathbb{B}^{(L)}$ and $\mathbf{F}^{(L)}$. Then using a local to global map we add the results to the global system. Here is an algorithm to add the local system to the global system.
 \lstinputlisting[language=Python]{CodeSnips/Global_Local_Map.py}
 This approach is well known for one test function. But when multiple test functions are involved it may not be clear how this translates to a linear system. Thus we show the derivation of the linear system for the $(MMAP)$ method.
 
-In these derivations of linear systems we will use a finite element with two basis function. In this case $d=2$. But it is trivial how to introduce more basis functions. Additionally, Firedrake \cite{Dragon} does this automatically thus it does not need to be implemented in code.
+In these derivations of linear systems, we will use a finite element with two basis functions. In this case $d=2$. But it is trivial how to introduce more basis functions. Additionally, Firedrake \cite{Dragon} does this automatically thus it does not need to be implemented in code.
 \subsection{Linear System for $(SP)$}
 We will discrtise $u$ from (\ref{SP_w}) on the finite element domain with basis functions $\phi_0$ and $\phi_1$. Thus we substitute $u=u_0\phi_0 + u_1 \phi_1$ into (\ref{SP_w}) to get equations 
 \begin{equation} \label{SP_Eqs}
@@ -709,7 +709,7 @@ u_1
 Then we add this local system to the global system. For $\varepsilon \ll 0$ we can see this matrix is ill-conditioned thus the $(SP)$ method only works for $\varepsilon \approx 1$.
 
 \subsection{Linear System for $(MMAP)$}
-Now we will discrtise $u$ and  $q$ from (\ref{MMAP_w}). For the local formulation we get test functions $\hat{u}_0, \hat{u}_1, \hat{q_0}$ and $\hat{q_1}$. Now we substitute $u = u_0 \hat{u}_0 + u_1\hat{u}_1$ and $q = q_0\hat{q}_0 + q_1\hat{q}_1$ into (\ref{MMAP_w}). Thus we get equations
+Now we will discretise $u$ and  $q$ from (\ref{MMAP_w}). For the local formulation we get test functions $\hat{u}_0, \hat{u}_1, \hat{q_0}$ and $\hat{q_1}$. Now we substitute $u = u_0 \hat{u}_0 + u_1\hat{u}_1$ and $q = q_0\hat{q}_0 + q_1\hat{q}_1$ into (\ref{MMAP_w}). Thus we get equations
 \begin{equation} \label{MMAP_Eqs}
 \begin{cases}
 u_0a_{\perp}(\hat{u}_0, \hat{u}_i) +
@@ -724,7 +724,7 @@ u_1a_{||}(\hat{u}_1, \hat{q}_i) -
 0.
 \end{cases}
 \end{equation}
-For $i\in\{0,1\}$. Thus from (\ref{MMAP_Eqs}) we get the linear system
+For $i\in\{0,1\}$. Thus from (\ref{MMAP_Eqs}), we get the linear system
 \begin{equation}
 \left [
 \begin{matrix}
@@ -774,11 +774,11 @@ We will solve the PDE (\ref{PDE}) with $\Omega = [0,1]^2, \Gamma_D = \{y=0 \text
 \alpha m \pi (y^2-y)\sin(m \pi x)
 \end{matrix} \right]
 \end{equation}
-Thus we have $\Gamma_{in} := \{x=0\}$ and we have the streamlines are defined by 
+Thus we have $\Gamma_{in}:= \{x=0\}$ and we have the streamlines defined by 
 \begin{equation}
 \pi y + \alpha (y^2-y) \cos(m\pi x) = C,
 \end{equation}
-with $0 \leq C \leq \pi$. This is calculated in Appendix \ref{E1_Stream_Calc}. For $\varepsilon \ll 1$ we have the solution is constant along streamlines, thus to find exact solutions to test we need to calculate the streamlines. This leads to the exact solution 
+with $0 \leq C \leq \pi$. This is calculated in Appendix \ref{E1_Stream_Calc}. We have the solution is constant along streamlines for $\varepsilon \ll 1$. We calculate the streamlines to find exact solutions to test. This leads to an exact solution 
 \begin{equation} \label{E1_u}
 u = \sin(\pi y + \alpha (y^2-y) \cos(m\pi x)) + \varepsilon \cos(2 \pi x) \sin(\pi y)
 \end{equation}
@@ -794,15 +794,15 @@ This test problem came from \cite{DN}. However, the same or similar problem is v
  \end{subfigure}
  \caption{Electromagetic vector field $\mathbf{b}$ from (\ref{E1_b})} \label{E1_VFs}
 \end{figure}
-In Figure \ref{E1_us} we have the exact solution $u$ (\ref{E1_u}) to example $1$. We have the source term $f$ is too complicated to write analytically so the visualisation is given in Figure \ref{E1_fs}. We analysis the equation with $\varepsilon = 0.1$ and $\varepsilon = 10^{-10}$. We notice the $\varepsilon = 0.1$ and $\varepsilon = 10^{-10}$ variants are visually similar for the source term $f$ and exact term $u$ this suggests to consider a method discussed in section \ref{MAP_f}. The main difference is the solution $u$ is not constant on streamlines of the vector field $\mathbf{b}$ this makes logical sense because increasing the anisotripc strength (make $\varepsilon$ smaller) leads to less diffusion perpendicular to the magnetic field and undisturbed diffusion parralle to the magnetic field.
+In Figure \ref{E1_us} we have the exact solution $u$ (\ref{E1_u}) to example $1$. We have the source term $f$ is too complicated to write analytically so the visualisation is given in Figure \ref{E1_fs}. We analysis the equation with $\varepsilon = 0.1$ and $\varepsilon = 10^{-10}$. We notice the $\varepsilon = 0.1$ and $\varepsilon = 10^{-10}$ variants are visually similar for the source term $f$ and exact term $u$ this suggests to consider a method discussed in section \ref{MAP_f}. The main difference is the solution $u$ is not constant on streamlines of the vector field $\mathbf{b}$ this makes logical sense because increasing the anisotropic strength (make $\varepsilon$ smaller) leads to less diffusion perpendicular to the magnetic field and undisturbed diffusion parallel to the magnetic field.
 
-In Figures \ref{E1_LH_PF} and \ref{E1_LM_SP} we numerically simulate the PDE created by Example $1$ with a $20 \times 20$ grid, where each finite element is a square with width $0.05$ discrtised with an order $2$ Lagrange element. Also, each red dot represents a numerical calculation with varying $\varepsilon$. Where the degrees of freedom for $(MMAP), (PF), (LM)$ are $3362$, $(SP)$ is $1681$ and $(AP)$ is $8405$.
+In Figures \ref{E1_LH_PF} and \ref{E1_LM_SP} we numerically simulate the PDE created by Example $1$ with a $20 \times 20$ grid, where each finite element is a square with width $0.05$ discretised with an order $2$ Lagrange element. Also, each red dot represents a numerical calculation with varying $\varepsilon$. Where the degrees of freedom for $(MMAP), (PF), (LM)$ are $3362$, $(SP)$ is $1681$ and $(AP)$ is $8405$.
 
-In Figure \ref{E1_LH_PF} we compare methods $(MMAP), (PF)$ and $(AP)$. The error plot for $(MMAP)$ is located under the error plot for $(AP)$ this strongly suggests these methods will calculate a similar value for the error. Thus for further numerical calculations we will only consider the $(MMAP)$ because for similar error it has less degrees of freedom than the $(AP)$ method. This decreases the amount of computational power used. Additionally, when the vector field is not anisotropic $(\alpha = 0)$ all methods produce small error for $0 <\varepsilon \leq 1$. Also, from Figure \ref{E1_Mild_Ans} it visually suggests when the vector field is mildly anisotropic the $(MMAP)$ method performs better than the $(PF)$ method. However, from Figure \ref{E1_Strong_Ans} we infer when the vector field is highly anisotropic $(PF)$ performs better than $(MMAP)$. 
+In Figure \ref{E1_LH_PF} we compare methods $(MMAP), (PF)$ and $(AP)$. The error plot for $(MMAP)$ is located under the error plot for $(AP)$ this strongly suggests these methods will calculate a similar value for the error. Thus for further numerical calculations, we will only consider the $(MMAP)$ because for similar error it has fewer degrees of freedom than the $(AP)$ method. This decreases the amount of computational power used. Additionally, when the vector field is not anisotropic $(\alpha = 0)$ all methods produce small error for $0 <\varepsilon \leq 1$. Also, Figure \ref{E1_Mild_Ans} visually suggests when the vector field is mildly anisotropic the $(MMAP)$ method performs better than the $(PF)$ method. However, from Figure \ref{E1_Strong_Ans} we infer when the vector field is highly anisotropic $(PF)$ performs better than $(MMAP)$. 
 
-In the numerical calculations shown in Figure \ref{E1_LM_SP} it follows our logic that the $(LM)$ method produces small error for $\varepsilon \ll 1$ and much larger error for $\varepsilon \approx 1$. Also, it shows the $(SP)$ method failing when $\varepsilon \ll 1$. This strongly suggests that we have implemented our code correctly. For further numerical calculations we use $(MMAP)$ instead of $(LM)$ and $(SP)$ as in Figure \ref{E1_LM_SP} $(MMAP)$ has the smallest error for  $0 < \varepsilon \leq 1$.
+In the numerical calculations shown in Figure \ref{E1_LM_SP}, it follows our logic that the $(LM)$ method produces a small error for $\varepsilon \ll 1$ and a much larger error for $\varepsilon \approx 1$. Also, it shows the $(SP)$ method failing when $\varepsilon \ll 1$. This strongly suggests that we have implemented our code correctly. For further numerical calculations we use $(MMAP)$ instead of $(LM)$ and $(SP)$ as in Figure \ref{E1_LM_SP} $(MMAP)$ has the smallest error for  $0 < \varepsilon \leq 1$.
 
-However, the $(SP)$ method has less degrees of freedom than the $(MMAP)$ method and from the Figure \ref{E1_LM_SP} there exists an $\varepsilon_0$ where when $\varepsilon \geq \varepsilon_0$ the $(SP)$ method has similar error to the $(MMAP)$ method. Thus we can propose a new method that involves using $(MMAP)$ when $\varepsilon < \varepsilon_0$ and using the $(SP)$ method when $\varepsilon \leq \varepsilon_0$. One problem with this method is that when the PDE becomes more anisotropic $\varepsilon_0$ increases and we are interested in methods for highly anisotropic diffusion problem with $\varepsilon \ll 1$. Thus this method is not further discussed.
+However, the $(SP)$ method has fewer degrees of freedom than the $(MMAP)$ method and from Figure \ref{E1_LM_SP} there exists an $\varepsilon_0$ where when $\varepsilon \geq \varepsilon_0$ the $(SP)$ method has a similar error to the $(MMAP)$ method. Thus we can propose a new method that involves using $(MMAP)$ when $\varepsilon < \varepsilon_0$ and using the $(SP)$ method when $\varepsilon \leq \varepsilon_0$. One problem with this method is that when the PDE becomes more anisotropic $\varepsilon_0$ increases and we are interested in methods for solving highly anisotropic diffusion problems with $\varepsilon \ll 1$. Thus this method is not further discussed.
 
 \begin{table}[H]
 \resizebox{\textwidth}{!}{
@@ -849,7 +849,7 @@ $160\times 160$ & 206082   & $3.19\times 10^{-5}$ & $3.19\times 10^{-5}$ & $1.77
 \label{tlb_E1_Error}
 \end{table}
 
-As can be seen in Table \ref{tlb_E1_Error} when the number of finite elements in the grid is increased the error is reduced.
+As can be seen in Table \ref{tlb_E1_Error} when the number of finite elements in the grid has increased the error is reduced.
 
 \begin{figure}[H]
  \begin{subfigure}{0.5\textwidth}
@@ -1013,7 +1013,7 @@ $2.0097E-01$  & $4.9986E-02$ & $2.0097E-01$ & $4.9986E-02$\\
 \label{tbl_E1_diff_Gam}
 \end{table}
 
-Thus from are numerical experimentation shown in Table \ref{tbl_E1_diff_Gam} it strongly suggests that the set $\mathcal{L}$ can be set to zero anywhere on the streamline. In other words, if $\Gamma_{SL} := \{\text{ one point on every streamline }\}$ then we can have $\mathcal{L} := \{\lambda \in \mathcal{H}^1(\Omega): \lambda|_{\Gamma_{SL}\cup \Gamma_{D}}=0\}$.
+Thus numerical experimentation shown in Table \ref{tbl_E1_diff_Gam} strongly suggests that the set $\mathcal{L}$ can be set to zero anywhere on the streamline. In other words, if $\Gamma_{SL} := \{\text{ one point on every streamline }\}$ then we can have $\mathcal{L} := \{\lambda \in \mathcal{H}^1(\Omega): \lambda|_{\Gamma_{SL}\cup \Gamma_{D}}=0\}$.
 
 \section{Example 2, Annulus}
 We now propose an example on an annulus with closed field lines.
@@ -1039,7 +1039,7 @@ x^2 + y^2 = R^2, \text{ with } 1\leq R \leq 2.
  \label{E2_VF}
 \end{figure}
 
-From Fig \ref{E2_VF} it can be seen the magnetic field has closed lines. Therefore, for methods which involve $\Gamma_{in}$ we use the stabilisation variants. However, from the numerical investigation of Example 1 we found that we can change $\Gamma_{in}$ to $\Gamma_{out}$ and get similar error. This strongly suggests that $\Gamma_{in}$ can represent a point on each streamline. Thus we will numerically investigate the consequence of setting $\Gamma_{in}:=\{x,y \in \mathbb{R}, x>0, y=0\}$.
+From Fig \ref{E2_VF} it can be seen the magnetic field has closed lines. Therefore, for methods which involve $\Gamma_{in}$ we use the stabilisation variants. However, from the numerical investigation of Example 1 from Table \ref{tbl_E1_diff_Gam} we found that we can change $\Gamma_{in}$ to $\Gamma_{out}$ and get similar error. This strongly suggests that $\Gamma_{in}$ can represent a point on each streamline. Thus we will numerically investigate the consequence of setting $\Gamma_{in}:=\{x,y \in \mathbb{R}, x>0, y=0\}$.
 
 We will use solution
 \begin{equation}
@@ -1058,35 +1058,39 @@ which is visualised with its source term $f$ in Figure \ref{E2_uf} at $\varepsil
  \caption{Example $2$ with $\varepsilon = 0.1$} \label{E2_uf}
 \end{figure}
 
-Therefore, these results strongly suggests that we can apply the condition  will investigate the numerical solution when $\Gamma_{in}$ is applied to part of the streamline, as in the numerical
+In Figure \ref{E2_LH} we have numerical calculations for varying $\varepsilon$ for Example $2$ with degrees $36944$ of freedom. As can be seen by Figures \ref{E2_LH_L2} and \ref{E2_LH_H1} when there are closed field lines the methods $(PF)$ and $(MMAP)$ fail to produce accurate solutions for $\varepsilon \ll 1$.
+
+However, in Figures \ref{E2_LH_L2_CON} and \ref{E2_LH_H1_CON} we change $\Gamma_{in} := \emptyset$ to $\Gamma_{in}:=\{x,y \in \mathbb{R}, x>0, y=0\}$. This change makes negligible difference to the $(PF)$ method. It is currently unclear why there is no difference, the code has been checked multiple times but no error has been found. But, the change leads to a significant improvement for the $(MMAP)$. Therefore, we propose a new variant of the $(MMAP)$ where the definition of the set $\mathcal{L}$ is $\{\lambda \in \mathcal{H}^1(\Omega): \lambda|_{\Gamma_{CL}\cup \Gamma_{D}}=0\}$.
+
+The new $(MMAP)$ variant is not discussed further because Figures \ref{E2_LH_L2_STAB} and \ref{E2_LH_H1_STAB} show methods $(MMAP\_STAB)$ and $(PF\_STAB)$ outperform the $(MMAP)$ variant. Thus for the following examples we only consider methods $(MMAP\_STAB)$ and $(PF\_STAB)$.
 
 \begin{figure}[H]
  \begin{subfigure}{0.42\textwidth}
      \includegraphics[width=\textwidth]{Pics/LHSims/E2/E2_NormalL2.png}
-     \caption{L2 Error}
+     \caption{L2 Error} \label{E2_LH_L2}
  \end{subfigure}
    \begin{subfigure}{0.42\textwidth}
      \includegraphics[width=\textwidth]{Pics/LHSims/E2/E2_NormalH1.png}
-     \caption{H1 Error}
+     \caption{H1 Error} \label{E2_LH_H1}
  \end{subfigure}
  \begin{subfigure}{0.42\textwidth}
      \includegraphics[width=\textwidth]{Pics/LHSims/E2/E2_INL2.png}
-     \caption{L2 Error, with constraint}
+     \caption{L2 Error, with constraint} \label{E2_LH_L2_CON}
  \end{subfigure}
  \begin{subfigure}{0.42\textwidth}
      \includegraphics[width=\textwidth]{Pics/LHSims/E2/E2_INH1.png}
-     \caption{H1 Error, with constraint}
+     \caption{H1 Error, with constraint} \label{E2_LH_H1_CON}
  \end{subfigure}
  \begin{subfigure}{0.42\textwidth}
      \includegraphics[width=\textwidth]{Pics/LHSims/E2/E2_STABL2.png}
-     \caption{L2 Error, with stabilisation}
+     \caption{L2 Error, with stabilisation} \label{E2_LH_L2_STAB}
  \end{subfigure}
  \hfill
  \begin{subfigure}{0.42\textwidth}
      \includegraphics[width=\textwidth]{Pics/LHSims/E2/E2_STABH1.png}
-     \caption{H1 Error, with stabilisation}
+     \caption{H1 Error, with stabilisation} \label{E2_LH_H1_STAB}
  \end{subfigure}
- \caption{Numerical demonstration for solver $MMAP, MMAP_STAB, PF$ and $PF_STAB$ on a $20\times 20$ quadrilateral grid using CG order $2$ for Example $2$, with $x=\varepsilon$ and $y=$ Error.} \label{E2_LH}
+ \caption{Numerical demonstration for solver $(MMAP), (MMAP\_STAB), (PF)$ and $(PF\_STAB)$ on a $20\times 20$ quadrilateral grid using CG order $2$ for Example $2$. Also, $x=\varepsilon$ and $y=$ Error.} \label{E2_LH}
 \end{figure}
 
 \section{Example 3, Magnetic Islands}
@@ -1102,12 +1106,16 @@ which is visualised in Figure \ref{E3_VF}. Additionally, after some ODE analysis
 \begin{equation}
 \sin(\pi y)-a\cos(4\pi x) = C,
 \end{equation}
-with $-a\leq C \leq 1+a$. This example was proposed by \cite{DN} but it does not satisfy the restrictions we impose. The restrictions are $\mathbf{b} \cdot \mathbf{n} = 0$ on $\Gamma_D$ this failed restriction can be seen in Figure \ref{VF_E3} and $u = 0$ on $\Gamma_D$ this failed restriction can be seen in Figure \ref{E3_u}. Thus, our numerical solvers will struggle to solve this example, this problem is rectified by in Example $4$. Additionally, \cite{DN} rectified this problem by defining $\Gamma_D := \{\mathbf{x} \in \partial \Omega :  \mathbf{b} \cdot \mathbf{n} = 0\}$.
+with $-a\leq C \leq 1+a$.
 \begin{figure}[H]
- \includegraphics[width=\textwidth]{Pics/VectorField/E3b.png}
+\begin{center}
+ \includegraphics[width=0.85\textwidth]{Pics/VectorField/E3b.png}
   \caption{Electromagnetic field $\mathbf{b}$ for Example $3$.}
  \label{E3_VF}
+\end{center}
 \end{figure}
+
+ This example was proposed by \cite{DN} but it does not satisfy the restrictions we impose. The restrictions are $\mathbf{b} \cdot \mathbf{n} = 0$ on $\Gamma_D$ this failed restriction can be seen in Figure \ref{E3_VF} and $u = 0$ on $\Gamma_D$ this failed restriction can be seen in Figure \ref{E3_u}. Thus, our numerical solvers will struggle to solve this example, this problem is rectified by in Example $4$. Additionally, \cite{DN} rectified this problem by defining $\Gamma_D := \{\mathbf{x} \in \partial \Omega :  \mathbf{b} \cdot \mathbf{n} = 0\}$.
 
 We will use exact solution
 \begin{equation}
@@ -1115,9 +1123,9 @@ u = \sin(10\sin(\pi y)-10a\cos(4 \pi x)) + \varepsilon \cos(2 \pi x)\sin(10 \pi 
 \end{equation}
 which is visualised with its source term $f$ in Figure \ref{E3_uf} at $\varepsilon = 10^{-10}$. Additionally, we visualise this for $\varepsilon = 0.1$.
 \begin{figure}[H]
- \begin{subfigure}{0.5\textwidth} \label{E3_u}
+ \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/uf/U_E3_eps_10.png}
-     \caption{Exact solution $u$.}
+     \caption{Exact solution $u$.} \label{E3_u}
  \end{subfigure}
    \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/uf/F_E3_eps_10.png}
@@ -1147,7 +1155,7 @@ which is visualised with its source term $f$ in Figure \ref{E3_uf} at $\varepsil
      \includegraphics[width=\textwidth]{Pics/ErrorPlots/E3_PF_STAB.png}
      \caption{L2 $=2.6\times10^{-2}$ for $(PF\_STAB)$}
  \end{subfigure}
- \caption{Visualisation of Error $u_e-u_h$ for Example $3$ with $\varepsilon = 10^{-10}$, CG order $2$ on a $80 \times 80$ quadralatoral grid.} \label{E3_Error}
+ \caption{Visualisation of Error $u_e-u_h$ for Example $3$ with $\varepsilon = 10^{-10}$, CG order $2$ on a $80 \times 80$ quadrilateral grid with dof$=51842$} \label{E3_Error}
 \end{figure}
 
 
@@ -1160,21 +1168,13 @@ which is visualised with its source term $f$ in Figure \ref{E3_uf} at $\varepsil
      \includegraphics[width=\textwidth]{Pics/ErrorPlots/E3_PF_STAB_Q.png}
      \caption{Solves $q$ defined in equation (\ref{PF_STAB_w}) for $(PF\_STAB)$}
  \end{subfigure}
- \caption{Visualisation of $q$ defined in sections \ref{MMAP_STAB} and \ref{PF_STAB} for Example $3$ with $\varepsilon = 10^{-10}$, CG order $2$ on a $80 \times 80$ quadrilateral grid.} \label{E3_Q}
+ \caption{Visualisation of $q$ defined in sections \ref{MMAP_STAB} and \ref{PF_STAB} for Example $3$ with $\varepsilon = 10^{-10}$, CG order $2$ on a $80 \times 80$ quadrilateral grid with dof$=51842$.} \label{E3_Q}
 \end{figure}
 
-
-
-Do u and f plot for different eps (4)
-Use MMAP, Limit, SP, PF
-with stab variants (6)
-Do DN plot (1)
-Changing grid size table 
-size | dof | L2 error | H1 error PF, MMAP
-
+\newpage
 \section{Example 4, Magnetic Islands}
 
-We now introduce an example on a unit square where $\Gamma_D$ has zero boundary conditions. This is similar to example $3$ but example $3$ failed to satisfy $\mathbf{b}\cdot\mathbf{n} = 0$ on $\Gamma_D$ this can be visually seen from Figure \ref{E3_VF} showing its vector field as $\mathbf{b}$ on $y=0$ and $y=1$ is not parallel to the boundary. The vector field for this example shown in Figure \ref{E4_VF} is parallel to the $\Gamma_D$ boundary. Additionally, this has open and closed field lines.
+We now introduce an example on a unit square where $\Gamma_D$ has zero boundary conditions. This is similar to Example $3$ but Example $4$ satisfies $\mathbf{b}\cdot\mathbf{n} = 0$ on $\Gamma_D$ this can be seen in Figure \ref{E4_VF}. This shows its vector field $\mathbf{b}$ on $y=0$ and $y=1$ is parallel to the boundary. Additionally, this has open and closed field lines.
 Thus on $\Omega = [0,1]^2, \Gamma_D = \{y=0 \text{ or } y=1\}$ and $\Gamma_N = \{x=0 \text{ or } x=1\}$ we solve the PDE (\ref{PDE}) with the same magnetic
 \begin{equation}
 \mathbf{b} = \frac{\mathbf{B}}{|\mathbf{B}|}, 
@@ -1188,17 +1188,19 @@ where the electromagnetic field $\mathbf{b}$ is shown in Figure \ref{E4_VF}. Thi
 \sin(\pi y)\exp^{-a\cos(4\pi x)} = C,
 \end{equation}
 with $0\leq C \leq e^a$.
+
 \begin{figure}[H]
- \includegraphics[width=\textwidth]{Pics/VectorField/E4b.png}
+\begin{center}
+ \includegraphics[width=0.78\textwidth]{Pics/VectorField/E4b.png}
   \caption{Electromagnetic field $\mathbf{b}$ for Example $4$.}
  \label{E4_VF}
+\end{center}
 \end{figure}
-
 Where the exact solution is 
 \begin{equation}
 u = \sin(10 \sin(\pi y) \exp^{-a\cos(4 \pi x)})  + \varepsilon \sin(10 \sin(\pi y) \exp^{-a\cos(4 \pi x)})
 \end{equation}
-which is shown in Figure \ref{E4_uf}
+which is shown in Figure \ref{E4_uf}.
 
 \begin{figure}[H]
  \begin{subfigure}{0.5\textwidth}
@@ -1219,9 +1221,9 @@ which is shown in Figure \ref{E4_uf}
  \end{subfigure}
    \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/LHSims/E4/E4_STABH1.png}
-     \caption{H1 Error}
+     \caption{H1 Error} \label{E4_eps_H1}
  \end{subfigure}
- \caption{Numerical solution of Example $4$ for solver $MMAP\_STAB$ and $PF\_STAB$ with varying $\varepsilon$ on $20 \times 20$ quadrilateral grid with CG order $2$. This has $3362$ degrees of freedom.} \label{E4_eps}
+ \caption{Numerical solution of Example $4$ for solver $(MMAP\_STAB)$ and $(PF\_STAB)$ with varying $\varepsilon$ on $20 \times 20$ quadrilateral grid with CG order $2$. This has $3362$ degrees of freedom.} \label{E4_eps}
 \end{figure}
 
 \begin{table}[H]
@@ -1230,7 +1232,7 @@ which is shown in Figure \ref{E4_uf}
 \cline{3-6}
 \multicolumn{2}{c|}{Error} & \multicolumn{2}{c|}{L2 Error} & \multicolumn{2}{c|}{H1 Error} \\
 \hline 
-Size          & dof          & PF        & MMAP        & PF        & MMAP        \\
+Size          & dof          & PF\_STAB       & MMAP\_STAB        & PF\_STAB        & MMAP\_STAB        \\
 \hline \hline
 $10\times 10$  &  882    &  $2.33\times10^{-2}$ & $3.91\times10^{-2}$  & $1.97\times10^{0}$ & $2.16\times10^{0}$\\
 \hline
@@ -1243,19 +1245,24 @@ $80\times 80$  &  51842     & $1.45\times 10^{-4}$ & $1.56\times 10^{-4}$ & $7.5
 $160\times 160$ & 206082   & $1.84\times 10^{-5}$ & $1.92\times 10^{-5}$ & $1.93\times10^{-2}$ & $2.04\times 10^{-2}$ \\
 \hline
 \end{tabular}}
+\caption{Error for varying quadrilateral grid size for Example $4$ using $(PF\_STAB)$ and $(MMAP\_STAB)$ with order $2$ Lagrange finite element and $\varepsilon=10^{-10}$.} \label{tlb_E4_Error}
 \end{table}
 
 \begin{figure}[H]
  \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/ErrorPlots/E4_MMAP_STAB.png}
-     \caption{L2 $=1.6\times10^{-4}$ for $MMAP\_STAB$}
+     \caption{L2 $=1.56\times10^{-4}$ for $(MMAP\_STAB)$}
  \end{subfigure}
    \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/ErrorPlots/E4_PF_STAB.png}
-     \caption{L2 $=1.4\times10^{-4}$ for $PF\_STAB$}
+     \caption{L2 $=1.45\times10^{-4}$ for $(PF\_STAB)$}
  \end{subfigure}
- \caption{Visualisation of Error $u_e-u_h$ for Example $4$ with $\varepsilon = 10^{-10}$, CG order $2$ on a $80 \times 80$ quadrilateral grid.} \label{E4_Error}
+ \caption{Visualisation of Error $u_e-u_h$ for Example $4$ with $\varepsilon = 10^{-10}$, CG order $2$ on a $80 \times 80$ quadrilateral grid with dof$=51842$.} \label{E4_Error}
 \end{figure}
+
+Since Example $4$ is highly anisotropic the $(PF\_STAB)$ method performs slightly better than the $(MMAP\_STAB)$ method. This can be seen in the numerical calculations shown in Figure \ref{E4_eps}. Also, from Tables \ref{tlb_E1_Error} and \ref{tlb_E4_Error} we can infer higher density meshes lead to better solutions we discuss how we can take advantage of this in section \ref{FE_HER}.
+
+In Figure \ref{E4_eps_H1} and Table \ref{tlb_E4_Error} it states a large H1 Error. To fix this We could consider a Hermite finite element to reduce the H1 Error. This is discussed in section \ref{GMRES_GPU}.
 
 \begin{figure}[H]
  \begin{subfigure}{0.5\textwidth}
@@ -1287,16 +1294,16 @@ Here we discuss how to parameterise a torus and to find its inverted map. We use
 \end{figure}
 
 From visual inspection of Figure \ref{Torus_XY} we get 
-\begin{align}
+\begin{align} \label{FTC_Eq1}
 x &= (r_I + r_{xy})\cos(\theta)\\
 y &= (r_I + r_{xy})\sin(\theta)
 \end{align}
 Additionally, from Figure \ref{Torus_z} we get 
 \begin{align}
-r_{xy}& = r \cos(\phi) \\
+r_{xy}& = r \cos(\phi) \\ \label{FTC_Eq2}
 z &= r \sin(\phi)
 \end{align}
-Thus joining the equations (\ref{}) to (\ref{}) we get the toroidal parametrisation
+Thus joining the equations (\ref{FTC_Eq1}) to (\ref{FTC_Eq2}) we get the toroidal parametrisation
 \begin{align}
 x &= (r_I + r\cos(\phi))\cos(\theta) \\
 y &= (r_I + r \cos(\phi))\sin(\theta) \\
@@ -1323,10 +1330,10 @@ For completeness will we calculate $\theta$ and $\phi$. To get $\theta$ and $\ph
 \end{align}
 where atan2 is a common variation of the arctan function.
 
-We use the inverse of the map because calculating the differential operators leads to large expressions. These expressions can be found in \cite{}. When we need to solve a PDE on a domain which can be parameterised it is usually easier to turn the source term $f$ into Cartesian coordinates so we deal with the Cartesian differential operators.
+We use the inverse of the map because calculating the differential operators leads to large expressions.. When we need to solve a PDE on a domain which can be parameterised it is usually easier to turn the source term $f$ into Cartesian coordinates so we deal with the Cartesian differential operators.
 
 \section{Example 5, Torus}
-We now look at an example in 3D where the domain $\Omega $ is a torus with inner radius $r_I = 1$, outer radius $r_O = 0.5$ and is centred at the origin. It will have zero Dirichlet boundary conditions. For this example we will use Toroidal coordinates which are explained in section \ref{Form_Toro} and demonstrate how to find the inverse map. We invert back to cartesian cordinates because the toroidal laplacian \cite{} is very complicated. Thus the definition of $r$ is
+We now look at an example in 3D where the domain $\Omega $ is a torus with inner radius $r_I = 1$, outer radius $r_O = 0.5$ and is centred at the origin. It will have zero Dirichlet boundary conditions. For this example we will use Toroidal coordinates which are explained in section \ref{Form_Toro} and demonstrate how to find the inverse map. We invert back to Cartesian coordinates because the toroidal Laplacian is very complicated. Thus the definition of $r$ is
 \begin{equation}
 r = \sqrt{r_I^2 + x^2 + y^2 + z^2 -2r_I\sqrt{x^2+y^2}}
 \end{equation}
@@ -1379,8 +1386,10 @@ This $u$ is displayed in Figure \ref{E5_uf} with its source term $f$ and $\varep
      \includegraphics[width=\textwidth]{Pics/LHSims/E5/E5_STABH1.png}
      \caption{H1 Error}
  \end{subfigure}
- \caption{Numerical solution of Example $5$ for solver $MMAP\_STAB$ and $PF\_STAB$ with varying $\varepsilon$ on torus mesh with CG order $2$. This has $69976$ degrees of freedom.} \label{E5_eps}
+ \caption{Numerical solution of Example $5$ for solver $(MMAP\_STAB)$ and $(PF\_STAB)$ with varying $\varepsilon$ on torus mesh with CG order $2$. This has $69976$ degrees of freedom.} \label{E5_eps}
 \end{figure}
+
+The numerical calculations in Figure \ref{E5_eps} show the $(PF\_STAB)$ method and the $(MMAP\_STAB)$ method work with closed streamlines in $3D$. However, since the finite element is a tetrahedron and involves volume integrals it takes longer to calculate the entries to the linear system than a domain in $2D$.
 
 \chapter{Conclusion and Future Work}
 
@@ -1448,12 +1457,12 @@ $10^{0}$  &  $0.02904$   &  $0.31333$\\
 \caption{Error for solving with $(MMAP\_STAB)$ with $\varepsilon$ on a $40 \times 40$ quadrilateral grid with an order $2$ Lagrange Element (dof$=13122$) using $f$ from $\varepsilon=10^{-15}$.}
 \label{Tbl_Map_f}
 \end{table}
-Future work would involve finding a mapping for the $f$ generated by the PDE (\ref{PDE}) when $\varepsilon=10^{-15}$ and the $f$ generated by the PDE when $\varepsilon=10^{-1}$. This would lead to a reduced error because running the numerical simulation for Example $4$ on a $40 \times 40$ quadrilateral grid with order $2$ Lagrange elements with $\varepsilon = 0.1$ we get an L2 Error of $0.001249$.
+Future work would involve finding a mapping for the $f$ generated by the PDE (\ref{PDE}) when $\varepsilon=10^{-15}$ and the $f$ generated by the PDE when $\varepsilon=10^{-1}$. This would lead to a reduced error because running the numerical simulation for Example $4$ using the $(MMAP\_STAB)$ method on a $40 \times 40$ quadrilateral grid with order $2$ Lagrange elements with $\varepsilon = 0.1$ we get an L2 Error of $0.001249$.
 
 \subsection{Splitting of Domain}
 
 
-\subsection{More Finite Elements}
+\subsection{More Finite Elements} \label{FE_HER}
 Future work would involve looking at different finite elements. Currently, our numerical calculations have been done with an order $2$ Lagrange finite element. This means our solutions will be continuous but the solutions derivative will be discontinuous. This leads to the H1 error being large for the highly anisotropic examples. We can counter this by having a Hermite finite element which will give a continuous solution and the derivative will be continuous.
 
 We have the basis functions for a Hermite finite element stated at \cite{defelement}. Also, they can be calculated using a similar method discussed in section \ref{LDEF}. In Figure \ref{InterFuncsHER} we show the basis functions for the Hermite finite element on a unit interval.
@@ -1464,8 +1473,8 @@ We have the basis functions for a Hermite finite element stated at \cite{defelem
      \label{InterFuncsHER}
 \end{figure}
 
-\subsection{Parallel Implementation}
-It is clear that a parallel implementation would speed up the calculation of the solution. Thus in the same amount of time as the sequential Firedrake implementation a higher density mesh can be used and this leads to a solution with less error.
+\subsection{Parallel Implementation} \label{GMRES_GPU}
+It is clear that a parallel implementation would speed up the calculation of the solution. Thus in the same amount of time as the sequential Firedrake implementation a higher density mesh can be used and this leads to a solution with less error as shown in in Table \ref{tlb_E1_Error}.
 
 When using a local formulation it is trivial to calculate and add the contribution from each finite element to the global matrix in parallel.
 
@@ -1479,6 +1488,7 @@ Future work would involve a git branch
 
 \section{Conclusion}
 Do pros and cons of methods
+PF_STAB works better when highly anisotropic
 State using lagrange element leads to high error in H1
 Check out github page \cite{Hub}
 
