@@ -167,7 +167,7 @@ on $\Gamma_D$ as restriction $3$ of the electromagnetic field $\mathbf{b}$ state
 \int_{\Omega}f\hat{u}d\mathbf{x} = -\int_{\Gamma_D}\hat{u}(\mathbb{A}_{\perp}\nabla_{\perp} u)_{\perp}\cdot \mathbf{n} d \mathbf{x} + 
 \varepsilon^{-1} a_{||}(u,\hat{u})+a_{\perp}(u, \hat{u}).\\
 \end{equation}
-In the integral over $\Gamma_D$ in (\ref{PDE_w}) $u$ can be replaced with $0$ because in the boundary conditions for (\ref{PDE}) $u,\hat{u} \in \mathcal{V}$. This is included in the formula to show how one would calculate the problem with non-zero boundary conditions. And when there are non-zero Dirichlet boundary conditions we would use the weak form (\ref{WF_ND}).
+In the integral over $\Gamma_D$ in (\ref{PDE_w}) $u$ can be replaced with $0$ because in the boundary conditions for (\ref{PDE}) $u,\hat{u} \in \mathcal{V}$. This is included in the formula to show how one would calculate the problem with non-zero boundary conditions. When there are non-zero Dirichlet boundary conditions we would use the weak form (\ref{WF_ND}).
 Our methods require the use of the sets 
 \begin{align}
 \Gamma_{in} &:= \{\mathbf{b} \in \Gamma : \mathbf{b} \cdot \mathbf{n} < 0\}, \\
@@ -280,10 +280,10 @@ This method turns the strongly anisotropic equation into two mildly anisotropic 
   & \forall \hat{q} \in \mathcal{V}.
   \end{cases}
   \end{equation}
-With test functions $(\hat{u}, \hat{q}) \in \mathcal{V} \times \mathcal{V}$. Additionally, the Python implementation is in appendix \ref{CFSolve}.
+With test functions $(\hat{u}, \hat{q}) \in \mathcal{V} \times \mathcal{V}$. The Python implementation is in appendix \ref{CFSolve}.
 
 \section{Proposed Methods}
-We introduce a new method based on unpublished notes from Prof Patrick Farrell. This involves the substitution $q=\varepsilon^{-1} \mathbf{b} \cdot \nabla u$, after some algebraic manipulation we get the following are equivalent
+We introduce a new method based on unpublished notes from Prof Patrick Farrell. This involves the substitution $q=\varepsilon^{-1} \mathbf{b} \cdot \nabla u$, after some algebraic manipulation we get the following equations which are equivalent
 \begin{align}
 q &= \varepsilon^{-1} \mathbf{b}\cdot \nabla u,\\
 q &= \varepsilon^{-1} \mathbf{b} \cdot \nabla_{||} u, \\
@@ -312,7 +312,7 @@ We solve for trial functions $(u,q) \in \mathcal{V} \times \mathcal{Q}_{in}$ wit
 \lstinputlisting[language=Python]{CodeSnips/Methods/PF.py}
 
 \subsection{PF Stabilisation Method} \label{PF_STAB}
-Additionally, we can use the stabilisation technique stated in \cite{STAB} to get the weak form
+We can use the stabilisation technique stated in \cite{STAB} to get the weak form
 \begin{equation} \label{PF_STAB_w}
 (PF\_STAB)
 \begin{cases}
@@ -324,7 +324,7 @@ Additionally, we can use the stabilisation technique stated in \cite{STAB} to ge
 &\forall \hat{q} \in \mathcal{Q}.
 \end{cases}
 \end{equation}
-We solve for trial functions $(u,q) \in \mathcal{V} \times \mathcal{Q}$ with test functions $(\hat{u}, \hat{q}) \in \mathcal{V} \times \mathcal{Q}$. Thus in our code, we change our $F$ and the boundary condition constraints to
+We solve for trial functions $(u,q) \in \mathcal{V} \times \mathcal{Q}$ with test functions $(\hat{u}, \hat{q}) \in \mathcal{V} \times \mathcal{Q}$. Thus in our code, we change $F$ and the boundary condition constraints to
 \lstinputlisting[language=Python]{CodeSnips/Methods/PF_STAB.py}
 
 \chapter{Numerical Demonstrations}
@@ -778,7 +778,7 @@ Thus we have $\Gamma_{in}:= \{x=0\}$ and we have the streamlines defined by
 \begin{equation}
 \pi y + \alpha (y^2-y) \cos(m\pi x) = C,
 \end{equation}
-with $0 \leq C \leq \pi$. This is calculated in Appendix \ref{E1_Stream_Calc}. We have the solution is constant along streamlines for $\varepsilon \ll 1$. We calculate the streamlines to find exact solutions to test. This leads to an exact solution 
+with $0 \leq C \leq \pi$. This is calculated in Appendix \ref{E1_Stream_Calc}. We have the solution must be constant along streamlines for $\varepsilon \ll 1$. We calculate the streamlines to find exact solutions to test. This leads to an exact solution 
 \begin{equation} \label{E1_u}
 u = \sin(\pi y + \alpha (y^2-y) \cos(m\pi x)) + \varepsilon \cos(2 \pi x) \sin(\pi y)
 \end{equation}
@@ -794,7 +794,7 @@ This test problem came from \cite{DN}. However, the same or similar problem is v
  \end{subfigure}
  \caption{Electromagetic vector field $\mathbf{b}$ from (\ref{E1_b})} \label{E1_VFs}
 \end{figure}
-In Figure \ref{E1_us} we have the exact solution $u$ (\ref{E1_u}) to example $1$. We have the source term $f$ is too complicated to write analytically so the visualisation is given in Figure \ref{E1_fs}. We analysis the equation with $\varepsilon = 0.1$ and $\varepsilon = 10^{-10}$. We notice the $\varepsilon = 0.1$ and $\varepsilon = 10^{-10}$ variants are visually similar for the source term $f$ and exact term $u$ this suggests to consider a method discussed in section \ref{MAP_f}. The main difference is the solution $u$ is not constant on streamlines of the vector field $\mathbf{b}$ this makes logical sense because increasing the anisotropic strength (make $\varepsilon$ smaller) leads to less diffusion perpendicular to the magnetic field and undisturbed diffusion parallel to the magnetic field.
+In Figure \ref{E1_us} we have the exact solution $u$ (\ref{E1_u}) to example $1$. We have the source term $f$ which is too complicated to write analytically so the visualisation is given in Figure \ref{E1_fs}. We analysis the equation with $\varepsilon = 0.1$ and $\varepsilon = 10^{-10}$. We notice the $\varepsilon = 0.1$ and $\varepsilon = 10^{-10}$ variants are visually similar for the source term $f$ and exact term $u$ this suggests we should consider a method discussed in section \ref{MAP_f}. The main difference is the solution $u$ is not constant on streamlines of the vector field $\mathbf{b}$ this makes logical sense because increasing the anisotropic strength (make $\varepsilon$ smaller) leads to less diffusion perpendicular to the magnetic field and undisturbed diffusion parallel to the magnetic field.
 
 In Figures \ref{E1_LH_PF} and \ref{E1_LM_SP} we numerically simulate the PDE created by Example $1$ with a $20 \times 20$ grid, where each finite element is a square with width $0.05$ discretised with an order $2$ Lagrange element. Also, each red dot represents a numerical calculation with varying $\varepsilon$. Where the degrees of freedom for $(MMAP), (PF), (LM)$ are $3362$, $(SP)$ is $1681$ and $(AP)$ is $8405$.
 
@@ -1016,7 +1016,7 @@ $2.0097E-01$  & $4.9986E-02$ & $2.0097E-01$ & $4.9986E-02$\\
 Thus numerical experimentation shown in Table \ref{tbl_E1_diff_Gam} strongly suggests that the set $\mathcal{L}$ can be set to zero anywhere on the streamline. In other words, if $\Gamma_{SL} := \{\text{ one point on every streamline }\}$ then we can have $\mathcal{L} := \{\lambda \in \mathcal{H}^1(\Omega): \lambda|_{\Gamma_{SL}\cup \Gamma_{D}}=0\}$.
 
 \section{Example 2, Annulus}
-We now propose an example on an annulus with closed field lines.
+We now propose an example of an annulus with closed field lines.
 We will solve the PDE (\ref{PDE}) with $\Omega := \{x,y \in \mathbb{R}, 1<x^2+y^2<4\}$, $\Gamma_D := \{x,y \in \mathbb{R}, (x^2+y^2=1 \text{ or } x^2+y^2=4)\}$ and $\Gamma_N := \emptyset$. We chose the magnetic field 
 \begin{equation}
 \mathbf{b} = \frac{\mathbf{B}}{|\mathbf{B}|} = 
@@ -1039,9 +1039,9 @@ x^2 + y^2 = R^2, \text{ with } 1\leq R \leq 2.
  \label{E2_VF}
 \end{figure}
 
-From Fig \ref{E2_VF} it can be seen the magnetic field has closed lines. Therefore, for methods which involve $\Gamma_{in}$ we use the stabilisation variants. However, from the numerical investigation of Example 1 from Table \ref{tbl_E1_diff_Gam} we found that we can change $\Gamma_{in}$ to $\Gamma_{out}$ and get similar error. This strongly suggests that $\Gamma_{in}$ can represent a point on each streamline. Thus we will numerically investigate the consequence of setting $\Gamma_{in}:=\{x,y \in \mathbb{R}, x>0, y=0\}$.
+From Fig \ref{E2_VF} it can be seen the magnetic field has closed lines. Therefore, for methods which involve $\Gamma_{in}$ we use the stabilisation variants. However, from the numerical investigation of Example 1 from Table \ref{tbl_E1_diff_Gam} we found that we can change $\Gamma_{in}$ to $\Gamma_{out}$ and get a similar error. This strongly suggests that $\Gamma_{in}$ can represent a point on each streamline. Thus we will numerically investigate the consequence of setting $\Gamma_{in}:=\{x,y \in \mathbb{R}, x>0, y=0\}$.
 
-We will use solution
+We will use the solution
 \begin{equation}
 u = (1+\varepsilon)(x^2 + y^2 -1)(4-x^2-y^2)
 \end{equation}
@@ -1060,9 +1060,9 @@ which is visualised with its source term $f$ in Figure \ref{E2_uf} at $\varepsil
 
 In Figure \ref{E2_LH} we have numerical calculations for varying $\varepsilon$ for Example $2$ with degrees $36944$ of freedom. As can be seen by Figures \ref{E2_LH_L2} and \ref{E2_LH_H1} when there are closed field lines the methods $(PF)$ and $(MMAP)$ fail to produce accurate solutions for $\varepsilon \ll 1$.
 
-However, in Figures \ref{E2_LH_L2_CON} and \ref{E2_LH_H1_CON} we change $\Gamma_{in} := \emptyset$ to $\Gamma_{in}:=\{x,y \in \mathbb{R}, x>0, y=0\}$. This change makes negligible difference to the $(PF)$ method. It is currently unclear why there is no difference, the code has been checked multiple times but no error has been found. But, the change leads to a significant improvement for the $(MMAP)$. Therefore, we propose a new variant of the $(MMAP)$ where the definition of the set $\mathcal{L}$ is $\{\lambda \in \mathcal{H}^1(\Omega): \lambda|_{\Gamma_{CL}\cup \Gamma_{D}}=0\}$.
+However, in Figures \ref{E2_LH_L2_CON} and \ref{E2_LH_H1_CON} we change $\Gamma_{in} := \emptyset$ to $\Gamma_{in}:=\{x,y \in \mathbb{R}, x>0, y=0\}$. This change makes a negligible difference to the $(PF)$ method. It is currently unclear why there is no difference, the code has been checked multiple times but no error has been found. But, the change leads to a significant improvement for the $(MMAP)$. Therefore, we propose a new variant of the $(MMAP)$ where the definition of the set $\mathcal{L}$ is $\{\lambda \in \mathcal{H}^1(\Omega): \lambda|_{\Gamma_{CL}\cup \Gamma_{D}}=0\}$.
 
-The new $(MMAP)$ variant is not discussed further because Figures \ref{E2_LH_L2_STAB} and \ref{E2_LH_H1_STAB} show methods $(MMAP\_STAB)$ and $(PF\_STAB)$ outperform the $(MMAP)$ variant. Thus for the following examples we only consider methods $(MMAP\_STAB)$ and $(PF\_STAB)$.
+The new $(MMAP)$ variant is not discussed further because Figures \ref{E2_LH_L2_STAB} and \ref{E2_LH_H1_STAB} show methods $(MMAP\_STAB)$ and $(PF\_STAB)$ outperform the $(MMAP)$ variant. Thus for the following examples, we only consider methods $(MMAP\_STAB)$ and $(PF\_STAB)$.
 
 \begin{figure}[H]
  \begin{subfigure}{0.42\textwidth}
@@ -1102,7 +1102,7 @@ We now solve an example on a square domain with non-zero boundary conditions on 
 4a \sin(4 \pi x)
 \end{matrix} \right]
 \end{equation}
-which is visualised in Figure \ref{E3_VF}. Additionally, after some ODE analysis we get the streamlines for this vector field follow the equation
+which is visualised in Figure \ref{E3_VF}. Additionally, after some ODE analysis, we get the streamlines for this vector field are
 \begin{equation}
 \sin(\pi y)-a\cos(4\pi x) = C,
 \end{equation}
@@ -1117,7 +1117,7 @@ with $-a\leq C \leq 1+a$.
 
  This example was proposed by \cite{DN} but it does not satisfy the restrictions we impose. The restrictions are $\mathbf{b} \cdot \mathbf{n} = 0$ on $\Gamma_D$ this failed restriction can be seen in Figure \ref{E3_VF} and $u = 0$ on $\Gamma_D$ this failed restriction can be seen in Figure \ref{E3_u}. Thus, our numerical solvers will struggle to solve this example, this problem is rectified by in Example $4$. Additionally, \cite{DN} rectified this problem by defining $\Gamma_D := \{\mathbf{x} \in \partial \Omega :  \mathbf{b} \cdot \mathbf{n} = 0\}$.
 
-We will use exact solution
+We will use the exact solution
 \begin{equation}
 u = \sin(10\sin(\pi y)-10a\cos(4 \pi x)) + \varepsilon \cos(2 \pi x)\sin(10 \pi y)
 \end{equation}
@@ -1273,15 +1273,15 @@ In Figure \ref{E4_eps_H1} and Table \ref{tlb_E4_Error} it states a large H1 Erro
      \includegraphics[width=\textwidth]{Pics/ErrorPlots/E4_PF_STAB_Q.png}
      \caption{Solves $q$ defined in equation (\ref{PF_STAB_w}) for $(PF\_STAB)$}
  \end{subfigure}
- \caption{Visualisation of $q$ defined in sections \ref{MMAP_STAB} and \ref{PF_STAB} for Example $4$ with $\varepsilon = 10^{-10}$, CG order $2$ on a $80 \times 80$ quadrilateral grid.} \label{E3_Q}
+ \caption{Visualisation of $q$ defined in sections \ref{MMAP_STAB} and \ref{PF_STAB} for Example $4$ with $\varepsilon = 10^{-10}$, CG order $2$ on a $80 \times 80$ quadrilateral grid.} \label{E4_Q}
 \end{figure}
 
 \section{Formulation of Toroidal Coordinates} \label{Form_Toro}
-Here we discuss how to parameterise a torus and to find its inverted map. We use the Figures \ref{Torus_XY} and \ref{Torus_z} below to help us derive the parameterisation.
+Here we discuss how to parameterise a torus and to find its inverted map. We use Figures \ref{Torus_XY} and \ref{Torus_z} located below to help us derive the parameterisation.
 \begin{figure}[H]
  \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/TorusCordsXY.png}
-     \caption{Cross section of torus with $z=0$}
+     \caption{Cross section of a torus with $z=0$}
      \label{Torus_XY}
  \end{subfigure}
  \hfill
@@ -1293,7 +1293,7 @@ Here we discuss how to parameterise a torus and to find its inverted map. We use
  \caption{Visual aids for the derivation of the Toroidal parameterisation.} \label{BO}
 \end{figure}
 
-From visual inspection of Figure \ref{Torus_XY} we get 
+From visual inspection of Figure \ref{Torus_XY}, we get 
 \begin{align} \label{FTC_Eq1}
 x &= (r_I + r_{xy})\cos(\theta)\\
 y &= (r_I + r_{xy})\sin(\theta)
@@ -1330,14 +1330,14 @@ For completeness will we calculate $\theta$ and $\phi$. To get $\theta$ and $\ph
 \end{align}
 where atan2 is a common variation of the arctan function.
 
-We use the inverse of the map because calculating the differential operators leads to large expressions.. When we need to solve a PDE on a domain which can be parameterised it is usually easier to turn the source term $f$ into Cartesian coordinates so we deal with the Cartesian differential operators.
+We use the inverse of the map because calculating the differential operators leads to large expressions. When we need to solve a PDE on a domain which can be parameterised it is usually easier to turn the source term $f$ into Cartesian coordinates so we deal with the Cartesian differential operators.
 
 \section{Example 5, Torus}
-We now look at an example in 3D where the domain $\Omega $ is a torus with inner radius $r_I = 1$, outer radius $r_O = 0.5$ and is centred at the origin. It will have zero Dirichlet boundary conditions. For this example we will use Toroidal coordinates which are explained in section \ref{Form_Toro} and demonstrate how to find the inverse map. We invert back to Cartesian coordinates because the toroidal Laplacian is very complicated. Thus the definition of $r$ is
+We now look at an example in 3D where the domain $\Omega $ is a torus with inner radius $r_I = 1$, outer radius $r_O = 0.5$ and is centred at the origin. It will have zero Dirichlet boundary conditions. For this example, we will use Toroidal coordinates which are explained in section \ref{Form_Toro} and demonstrate how to find the inverse map. We invert back to Cartesian coordinates because the toroidal Laplacian is very complicated. Thus the definition of $r$ is
 \begin{equation}
 r = \sqrt{r_I^2 + x^2 + y^2 + z^2 -2r_I\sqrt{x^2+y^2}}
 \end{equation}
-Where $r$ denotes the minimum distance from the circulfurance of a circle centered at the origin with radius $r_I$ and has $z=0$. We have magnetic field 
+Where $r$ denotes the minimum distance from the circumference of a circle centred at the origin with radius $r_I$ and has $z=0$. We have a magnetic field 
 \begin{equation}
 \mathbf{b} = \frac{\mathbf{B}}{|\mathbf{B}|} = 
 \left[ \begin{matrix}
@@ -1355,7 +1355,7 @@ Therefore, we have the streamlines following the equation
 \begin{equation}
 x^2 + y^2 = R^2, \text{ with } r_I-\sqrt{r_O^2-z^2} \leq R \leq r_I+\sqrt{r_O^2-z^2}.
 \end{equation}
-In this case $1-\sqrt{0.25-z^2} \leq R \leq 1 + \sqrt{0.25+z^2}$. Also, we will have exact solution
+In this case $1-\sqrt{0.25-z^2} \leq R \leq 1 + \sqrt{0.25+z^2}$. Also, we will have the exact solution
 \begin{equation}
 u = 
 \begin{cases}
@@ -1424,18 +1424,18 @@ Now we demonstrate this works. For Example 1 with $\alpha = 0$ we get
 \begin{equation}
 f(x,y) = \sin(\pi y)\pi^2(1+(4+\varepsilon)\cos(2\pi x)) .
 \end{equation}
-Thus after some integration we get
+Thus after some integration, we get
 \begin{equation}
 u_{yy} = - \int_0^1 f(x,y)dx = - \int_0^1 \sin(\pi y)\pi^2(1+(4+\varepsilon)\cos(2\pi x)) dx = -\pi^2 sin(\pi y).
 \end{equation}
 Which implies $u= \sin(\pi y)$, this is missing the $\varepsilon$ order term from (\ref{E1_u}) because we have solved the limit problem. Therefore we get the value of $u$ as $\varepsilon \rightarrow 0$. Additionally, the paper \cite{LINE_INT} describes how to use this method for a vector field of the form $\mathbf{b} = [\cos(\theta), \sin(\theta)]$, then they parameterise $\theta$ to get an arbitrary vector field. Also, as Example $1$ is a popular example to use to demonstrate methods for solving PDE (\ref{PDE}), they cover $(\alpha = 0)$ and $(\alpha=2, m=1)$ in their numerical demonstrations. Additionally, our $(PF)$ and $(MMAP)$ seem to have smaller L2 Error for the same examples, this is hard to compare because they used a finite difference method to numerically solve their PDE.
  
- However, it is not clear how a stabilisation technique can be used to solve vector fields with closed field lines. At the end of their paper it stated their future would solve this problem. One potential solution could be to take a point on each stream line and then join the points together with respect to which streamlines are touching. Then solve the reduced dimension PDE.
+ However, it is not clear how a stabilisation technique can be used to solve vector fields with closed field lines. At the end of their paper, they stated their future work would be to solve this problem. One potential solution could be to take a point on each streamline and then join the points together for streamlines that touch. Then solve the reduced dimension PDE.
 
 \subsection{Mapping of $f$} \label{MAP_f}
 The idea behind this method is given $f$ for PDE (\ref{PDE}) when $\varepsilon = 10^{-15}$. We use this $f$ and solve the PDE for $\varepsilon = 10^{-1}$, this reduces the anisotropic strength and should reduce the error. We use the code below to quickly test this hypothesis on Example $4$ using the $(MMAP\_STAB)$ method.
 
-Table \ref{Tbl_Map_f} contains some output of the code. It shows doing this method slightly reduces H1 Error but slightly increases L2 Error. Therefore, this suggests this technique does not work. Also, by looking at our numerical demonstrations of the $(MMAP\_STAB)$ method shown in Figure \ref{E4_eps} it can be seen varying $\varepsilon$ does not change the error. This shows that the for the $(MMAP\_STAB)$ method the difficulty comes from having a vector field $\mathbf{b}$ that is highly anisotropic. 
+Table \ref{Tbl_Map_f} contains some output of the code. It shows doing this method slightly reduces H1 Error but slightly increases L2 Error. Therefore, this suggests this technique does not work. Also, by looking at our numerical demonstrations of the $(MMAP\_STAB)$ method shown in Figure \ref{E4_eps} it can be seen varying $\varepsilon$ does not change the error. This shows that for the $(MMAP\_STAB)$ method the difficulty comes from having a vector field $\mathbf{b}$ that is highly anisotropic. 
 \begin{table}[H]
 \begin{center}
 \begin{tabular}{||ccc||}
@@ -1457,7 +1457,7 @@ $10^{0}$  &  $0.02904$   &  $0.31333$\\
 \caption{Error for solving with $(MMAP\_STAB)$ with $\varepsilon$ on a $40 \times 40$ quadrilateral grid with an order $2$ Lagrange Element (dof$=13122$) using $f$ from $\varepsilon=10^{-15}$.}
 \label{Tbl_Map_f}
 \end{table}
-Future work would involve finding a mapping for the $f$ generated by the PDE (\ref{PDE}) when $\varepsilon=10^{-15}$ and the $f$ generated by the PDE when $\varepsilon=10^{-1}$. This would lead to a reduced error because running the numerical simulation for Example $4$ using the $(MMAP\_STAB)$ method on a $40 \times 40$ quadrilateral grid with order $2$ Lagrange elements with $\varepsilon = 0.1$ we get an L2 Error of $0.001249$.
+Future work would involve finding a mapping for the $f$ generated by the PDE (\ref{PDE}) when $\varepsilon=10^{-15}$ and the $f$ generated by the PDE when $\varepsilon=10^{-1}$. This would lead to a reduced error because solving Example $4$ with the $(MMAP\_STAB)$ method on a $40 \times 40$ quadrilateral grid with order $2$ Lagrange elements with $\varepsilon = 0.1$ we get an L2 Error of $0.001249$. Which is orders of magnitude lower than the L2 Error of $0.02880$ from Table \ref{Tbl_Map_f} at $\varepsilon=10^{-15}$.
 
 \subsection{Splitting of Domain}
 
@@ -1474,7 +1474,7 @@ We have the basis functions for a Hermite finite element stated at \cite{defelem
 \end{figure}
 
 \subsection{Parallel Implementation} \label{GMRES_GPU}
-It is clear that a parallel implementation would speed up the calculation of the solution. Thus in the same amount of time as the sequential Firedrake implementation a higher density mesh can be used and this leads to a solution with less error as shown in in Table \ref{tlb_E1_Error}.
+A parallel implementation would speed up the calculation of the solution. Thus in the same amount of time as the sequential Firedrake implementation, a higher density mesh can be used and this leads to a solution with less error as shown in Tables \ref{tlb_E1_Error} and \ref{tlb_E4_Error}.
 
 When using a local formulation it is trivial to calculate and add the contribution from each finite element to the global matrix in parallel.
 
@@ -1488,7 +1488,7 @@ Future work would involve a git branch
 
 \section{Conclusion}
 Do pros and cons of methods
-PF_STAB works better when highly anisotropic
+$PF\_STAB$ works better when highly anisotropic
 State using lagrange element leads to high error in H1
 Check out github page \cite{Hub}
 
@@ -1501,15 +1501,15 @@ The code below shows how to use our code to calculate a solution to Example $1$ 
 \lstinputlisting[language=Python]{CodeSnips/SolveE1.py}
 This will output the following text to the command line
 \lstinputlisting{CodeSnips/SolveE1Out.txt}
-From this code it is trivial to change the example and method used.
+From this code, it is trivial to change the example and method used.
 
 \chapter{Calculation of Streamlines} \label{E1_Stream_Calc}
-Here we present the method we used to calculate the streamlines for the vector field $\mathbf{b}$ (\ref{E1_b}) in Example $1$. A similar approach can be used to calculate the streamlines for the other examples covered in this paper. First we have
+Here we present the method we used to calculate the streamlines for the vector field $\mathbf{b}$ (\ref{E1_b}) in Example $1$. A similar approach can be used to calculate the streamlines for the other examples covered in this paper. First, we have
 \begin{equation}
 \frac{dy}{dx} = \frac{\dot{y}}{\dot{x}} = 
 \frac{\alpha m \pi (y^2-y)\sin(m \pi x)}{\alpha(2y-1)\cos(m\pi x) + \pi},
 \end{equation}
-after some algerbraic manipulation we get
+after some algebraic manipulation, we get
 \begin{equation}
 df = (\alpha m\pi (y^2-y)\sin(m\pi x))dx + 
 (\alpha(2y-1)\cos(m\pi x)+\pi)dy = 0.
@@ -1519,7 +1519,7 @@ This is in exact form so we must solve the following equations
 \frac{\partial f}{\partial x} &= \alpha m\pi (y^2-y)\sin(m\pi x)\\
 \frac{\partial f}{\partial y} &= (\alpha(2y-1)\cos(m\pi x)+\pi)
 \end{align}
-Thus we get the following function for the streamlines
+Thus the streamlines follow the function
 \begin{equation}
 \pi y + \alpha (y^2-y)\cos(m\pi x) = C.
 \end{equation}
