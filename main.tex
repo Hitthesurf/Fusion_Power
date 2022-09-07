@@ -75,7 +75,7 @@ Finally, I thank Culham Centre for Fusion Energy for funding this project.
 \newpage
 
 \begin{abstract}
-In this thesis, we wish to solve highly anisotropic diffusion problems on a domain $\Omega$. We discuss existing methods, propose new methods and demonstrate how to implement these methods in Python using Firedrake. Then we test and compare the different methods on a range of examples. Additionally, we provide the code on GitHub at \cite{Hub}.
+In this thesis, we wish to solve highly anisotropic diffusion problems on a domain $\Omega$. We discuss existing methods, propose new methods and demonstrate how to implement these methods in Python using Firedrake. Then we test and compare the different methods on a range of examples. Additionally, we show this problem can benefit from a parallel implementation and we provide the code on GitHub at \cite{Hub}.
 \end{abstract}
 
 \newpage
@@ -1519,32 +1519,22 @@ Currently, Firedrake does not support calculations on the GPU this can be seen b
 
 
 \section{Conclusion}
-In this thesis, we discussed multiple existing methods to solve anisotropic diffusion problems and propose a new method $(PF\_STAB)$ which is slightly better than the best current method $(MMAP\_STAB)$ for highly anisotropic diffusion problems. However, a value for $\sigma$ must be chosen and it is unclear what value it should take.
+In this thesis, we discussed multiple existing methods to solve anisotropic diffusion problems. We proposed a new method $(PF\_STAB)$. When the problem is highly anisotropic the $(PF\_STAB)$ method performs slightly better than the best existing method $(MMAP\_STAB)$. Also, these methods do not require grid alignment. However, it is unclear what value to assign $\sigma$.
 
-Moreover, methods $(PF)$ and $(MMAP)$ do not work on closed field lines and we have to find $\Gamma_{in}$. But we found for the $(MMAP)$ method we can use a modified version of $\mathcal{L}$ to get reasonable error on closed field lines more research is needed to know if the selected points on the streamlines have to form a continuous line.
+Moreover, methods $(PF)$ and $(MMAP)$ do not work on closed field lines and we have to find $\Gamma_{in}$.But we found for the $(MMAP)$ method we can use a modified version of $\mathcal{L}$ to get a reasonable error on closed field lines. More research is needed to know if the selected points on the streamlines have to form a continuous line.
 
 The $(SP)$ method is the best for solving $\varepsilon \approx 1$ and it contains one PDE so there are fewer degrees of freedom than other methods. However, the method fails to produce a sufficiently small error for $\varepsilon \ll 1$ as it is not well-posed.  
 
-From the numerical calculations from \cite{DN} the DN shows 
-DN method shows promise but has a forced iteration scheme
-
-We found no reason to use the $(AP)$ method when the $(MMAP)$ method produces the same error for fewer degrees of freedom. Additionally, a similar argument is made for the $(LM)$ method, for $\varepsilon \ll 1$ discretisations from $(MMAP)$ and $(LM)$ are almost identical. Since the $(LM)$ method fails to calculate acceptable error for larger $\varepsilon$ there is no reason to use the $(LM)$ method. This is the same for the stabilisation variants. 
-
-
-Check out Github Page \cite{Hub}
+We found no reason to use the $(AP)$ method when the $(MMAP)$ method produces the same error for fewer degrees of freedom. 
+Additionally, when $\varepsilon \ll 1$ discretisations from $(MMAP)$ and $(LM)$ are almost identical. However, the $(LM)$ method fails to calculate an acceptable error for larger $\varepsilon$. Thus there is no reason to use the $(LM)$ method. The same reasoning is used for the stabilisation variants. 
  
-State most important future work
+We have shown it is possible to solve partial differential equations via the finite element method on a GPU cluster. In a sequential implementation,  assembling the linear system of equations takes longer than finding the solution to the linear system. As integration over finite elements takes time. However, with a parallel implementation, the bottlenecks become data communication and processes that can not be run in parallel.  As assembling the linear system in parallel is straightforward funding and research should go into finding parallel linear system solvers that spread the computational load more efficiently. Then we can use robust discretisations $(PF\_STAB)$ and $(MMAP\_STAB)$ on a high-density mesh to get an accurate solution to a highly anisotropic diffusion problem in a reasonable time. 
 
-We have shown it is possible to solve partial differential equations via the finite element method on a GPU cluster. On a sequential implementation the calculation of the linear system of equations from the integration over the finite elements will take longer than finding the solution to the linear system. However, with a paraelle implementation the bottlenecks become data commication and any parts parts . Thus with more funding and reasearch into parelle linear system solvers we can then use robust discretisations $(PF\_STAB)$ and $(MMAP\_STAB)$ to get an accurate solution to a highly anisotropic diffsion problem in a reasonable time. 
+Further research can be done into finding better discretisations but it is unclear if significantly better methods can be found. With research into parallel implementation, you will also get the benefit of other industries driving development for better parallel hardware.  
 
-Further research can be done into finding better discretisations but it is unclear if better methods can be found. With research into better pareller solvers you will also get the benifit of other industies driving development for better hardware.  
+Thus future work would be focused on using heterogeneous computing techniques and fully utilising the hardware available to solve the PDE.
 
-Finally, 
-
-Thus is can find method, we can then use the addition of GPU methods to solve and get splution fast.
-important to take advantage of latest hardware
-
-Finally, the code used for the methods, the examples and generating data can be found on GitHub at \cite{Hub}. This mean results can be easily reproduced. To generate the data in the graphs and tables we used the functions in "makePics.py" located at \cite{Hub}.
+Finally, the code used for the methods, the examples and generating data can be found on GitHub at \cite{Hub}. This means results can be easily reproduced. To generate the data in the graphs and tables we used the functions in "makePics.py" located at \cite{Hub}.
 
 \printbibliography[heading=bibintoc]
 
@@ -1579,11 +1569,15 @@ Thus the streamlines follow the function
 \end{equation}
 
 \chapter{Code File: Solvers.py} \label{CFSolve}
+\lstinputlisting[language=Python]{Solvers.py}
 
 \chapter{Code File: Examples.py} \label{CFExample}
+\lstinputlisting[language=Python]{Examples.py}
 
 \chapter{Code File: CUSP\_Par\_GMRES.cu} \label{CFGPU}
+\lstinputlisting[language=C++]{Parallel_Tests/CUSP_Par_GMRES.cu}
 
 \chapter{Code File: Python\_Seq\_GMRES.py} \label{CFCPU}
+\lstinputlisting[language=Python]{Parallel_Tests/Python_Seq_GMRES.py}
 
 \end{document}
