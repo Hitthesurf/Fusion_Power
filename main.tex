@@ -75,16 +75,17 @@ Finally, I thank Culham Centre for Fusion Energy for funding this project.
 \newpage
 
 \begin{abstract}
-In this paper, we wish to solve highly anisotropic diffusion problems on a domain $\Omega$. We discuss existing methods, propose new methods and demonstrate how to implement these methods in Python using Firedrake. Then we test and compare the different methods on a range of examples. Additionally, we provide the code on GitHub at \cite{Hub}.
+In this thesis, we wish to solve highly anisotropic diffusion problems on a domain $\Omega$. We discuss existing methods, propose new methods and demonstrate how to implement these methods in Python using Firedrake. Then we test and compare the different methods on a range of examples. Additionally, we provide the code on GitHub at \cite{Hub}.
 \end{abstract}
 
 \newpage
 \setcounter{page}{1}
-
+\begin{romanpages}
 \tableofcontents
-
+\end{romanpages}
 
 \chapter{Introduction and Current Methods}
+\setcounter{page}{1}
 \section{Introduction}
 In this paper, we aim to find robust methods to solve highly anisotropic diffusion problems. Thus we want to solve
 
@@ -176,7 +177,7 @@ Our methods require the use of the sets
 \end{align}
 Where $\mathcal{H}^k(\Omega)$ the Sobolev space of order $k$. Also, it should be noted that sets $\mathcal{V}$ and $\mathcal{L}$ are easy to discretise. However, when the magnetic field $\mathbf{b}$ contains closed field lines it is not clear how we should adapt $\mathcal{L}$. One approach found by our numerical simulations shows we can still get a reasonable solution when we include a restriction to zero on a point for every closed streamline. Thus $\Gamma_{CL} := \{\text{one point on every closed streamline}\}$ and we can redefine $\mathcal{L} := \{\lambda \in \mathcal{H}^1(\Omega) : \lambda |_{\Gamma_{CL}\cup \Gamma_{in}\cup \Gamma_{D}} = 0\}$.
 
-\section{Overview Of Current Methods}
+\section{Overview of Current Methods}
  We now state some methods for solving the PDE (\ref{PDE}). For a few methods, we show the key parts of their Python implementation with Firedrake \cite{Dragon}. The full implementation of the methods can be found in Appendix \ref{CFSolve}.
 \subsection{Singular Perturbation Method} \label{SP}
 The single perturbation method involves solving the weak form of equation (\ref{PDE}). Therefore we have a trial function $u \in \mathcal{V}$ and a test function $\psi \in \mathcal{V}$. Thus we solve the weak form (\ref{SP_w}) for $(u) \in \mathcal{V}$.
@@ -188,7 +189,7 @@ The single perturbation method involves solving the weak form of equation (\ref{
 \end{equation}
 Below we have the key points of our Firedrake \cite{Dragon} implementation
 \lstinputlisting[language=Python]{CodeSnips/Methods/SP.py}
-This method excels for when $\varepsilon$ is normal size
+This method excels for when $\varepsilon \approx 1$.
 
 \subsection{Limit Method} \label{LM}
 We now introduce a limit method discussed in paper \cite{AP}. The limit method involves solving the equation (\ref{PDE}) when $\varepsilon \rightarrow 0$. Therefore, $\Delta_{||}u=0$ so since we have zero Dirichlet boundary conditions the solution $u$ satisfies $\nabla_{||}u=0$ thus it is constant along the streamlines of the vector field. We apply this restriction using a Lagrangian parameter. This leads to solving the weak form (\ref{LM_w}) for the trial functions $(u, q) \in \mathcal{V} \times \mathcal{L}$.
@@ -328,9 +329,9 @@ We solve for trial functions $(u,q) \in \mathcal{V} \times \mathcal{Q}$ with tes
 \lstinputlisting[language=Python]{CodeSnips/Methods/PF_STAB.py}
 
 \chapter{Numerical Demonstrations}
-In these examples, we calculate $f$ from passing $u$ through the PDE. Additionally, in these example we take $A_{||}=1$ and $\mathbb{A}_{\perp} = \mathbb{I}$. Where $\mathbb{I}$ is the identity matrix. Also, for the stabilisation methods we take $\sigma=0.1$. But first, we briefly discuss the basic idea of how the finite element solver Firedrake \cite{Dragon} calculates the solution. 
+In these examples, we calculate $f$ from passing $u$ through the PDE. Additionally, in these example we take $A_{||}=1$ and $\mathbb{A}_{\perp} = \mathbb{I}$. Where $\mathbb{I}$ is the identity matrix. Also, for the stabilisation methods we take $\sigma=0.1$. But first, we briefly discuss the basic idea of how the finite element solver Firedrake \cite{Dragon} which is based on the package FEniCSx \cite{FEniCSx} calculates the solution. Also, we visualise data in ParaView \cite{Para}, Ipyvolume \cite{Ipyvolume} and Matplotlib \cite{Matplotlib}. 
 
-Say use firedrake then do speed up test on GPU?
+Moreover, in section \ref{GMRES_GPU} we discuss how our solution can be improved using heterogeneous computing techniques.
 
 \section{Mapping to Reference Element} \label{RE}
 For each finite element, we would like to create a linear transformation to a reference element. Thus we only need to calculate the basis functions for one element. We will define a linear transformation $\mathcal{M}$ which takes the reference element $RE$ to a finite element $FE$. Where $\mathcal{M}^{-1}$ denotes the inverse. 
@@ -468,7 +469,7 @@ x_0-x_2 & x_1-x_0
 \right].
 \end{equation}
 
-\section{Derivation of Lagrange Finite Element of Order $2$} \label{LDEF}
+\section{Derivation of Order $2$ Lagrange Finite Element} \label{LDEF}
 In our numerical simulations, we use a continuous Lagrange order $2$ finite element. We now provide a method for the derivation of this finite element on an interval and a triangle. Additionally, following a similar procedure, we can derive the basis functions for other domains. The resource \cite{defelement} states basis functions for many finite elements. This is not implemented in code we instead use the Firedrake implementation of CG order $2$. 
 
 For each element, we have basis functions $\phi_i(\mathbf{x})$ which have a linear combination from the set $\{1, x, x^2, y, y^2, z, z^2, xy, yz, xz\}$ and locations on a domain $\ell_i$.  To find the coefficients of the linear combination we must solve
@@ -1459,9 +1460,6 @@ $10^{0}$  &  $0.02904$   &  $0.31333$\\
 \end{table}
 Future work would involve finding a mapping for the $f$ generated by the PDE (\ref{PDE}) when $\varepsilon=10^{-15}$ and the $f$ generated by the PDE when $\varepsilon=10^{-1}$. This would lead to a reduced error because solving Example $4$ with the $(MMAP\_STAB)$ method on a $40 \times 40$ quadrilateral grid with order $2$ Lagrange elements with $\varepsilon = 0.1$ we get an L2 Error of $0.001249$. Which is orders of magnitude lower than the L2 Error of $0.02880$ from Table \ref{Tbl_Map_f} at $\varepsilon=10^{-15}$.
 
-\subsection{Splitting of Domain}
-
-
 \subsection{More Finite Elements} \label{FE_HER}
 Future work would involve looking at different finite elements. Currently, our numerical calculations have been done with an order $2$ Lagrange finite element. This means our solutions will be continuous but the solutions derivative will be discontinuous. This leads to the H1 error being large for the highly anisotropic examples. We can counter this by having a Hermite finite element which will give a continuous solution and the derivative will be continuous.
 
@@ -1478,11 +1476,23 @@ A parallel implementation would speed up the calculation of the solution. Thus i
 
 When using a local formulation it is trivial to calculate and add the contribution from each finite element to the global matrix in parallel.
 
-\begin{table}[] 
+What is not so clear is how to solve a linear system in parallel. First, we note that a matrix calculated from a finite element problem is sparse. In \cite{thesisGPUPara} it discusses how to implement a parallel GMRES (generalised minimal residual method) algorithm to solve sparse linear systems. Also, in \cite{SpeedClaim} it states in its abstract that a cluster of $12$ GPUs is $8$ times faster than a cluster of $12$ CPUs for solving a sparse linear system.
+
+We now demonstrate a parallel GMRES algorithm with restarts. For our tests we use the sparse linear system thermal1 \cite{thermal1} which is shown in Figure \ref{ShowThermal1}. We denote $\mathbb{K}$ as the matrix and $\mathbf{d}$ as the vector in the data set thermal1. This symmetric matrix has $82654$ rows and $82654$ columns with $574,458$ non-zero entries. The matrix data contains the linear system from a finite element method on a steady-state thermal problem. For our CPU execution, we use the GMRES function from SciPy \cite{SciPy} and our GPU execution uses the GMRES function from \cite{Cusp} which provides a high-level interface for linear algebra algorithms on sparse matrices. It requires CUDA \cite{CUDA} to work.
+
+\begin{figure}[H]
+     \includegraphics[width=\textwidth]{Pics/thermal1.png}
+     \caption{Visual representation of $\mathbb{K}$ from data set thermal1 \cite{thermal1}. Darker squares represent a higher density of non-zero entries.}
+     \label{ShowThermal1}
+\end{figure}
+
+Now we run our parallel CPU implementation on an $8$ Core i7-11800H Processor \cite{CPUSPEC} with code in Appendix \ref{CFCPU}. Also, we run our GPU code on a NVIDIA GeForce RTX 3050 Ti Laptop GPU \cite{GPUSPEC} with code in Appendix \ref{CFGPU}. In both cases we represent the matrix in COO format \cite{COOFormat} and use no preconditioner. The results are shown in Table \ref{tbl_GPU}.
+
+\begin{table}[H] 
 \resizebox{\textwidth}{!}{
 \begin{tabular}{||ccccc||} 
 \cline{2-5}
-\multicolumn{1}{c|}{} & \multicolumn{2}{c|}{Time Seconds} & \multicolumn{2}{c|}{Residual $|\mathbb{A}\mathbf{x}=\mathbf{b}|$}\\
+\multicolumn{1}{c|}{} & \multicolumn{2}{c|}{Time Seconds} & \multicolumn{2}{c|}{Residual $|\mathbb{K}\mathbf{x}=\mathbf{d}|$}\\
 \hline 
 tol & Python SciPy        & CUDA CUSP &  Python SciPy        & CUDA CUSP \\
 \hline \hline
@@ -1495,26 +1505,46 @@ $10^{-4}$ &  $9.6704$   &  $5.5791$   &   $1.715E-03$ &  $1.715E-03$   \\
 $10^{-5}$ &  $45.5871$   &  $30.7765$   &  $1.715E-04$ & $ 1.715E-04$  \\
 \hline
 \end{tabular}}
-\caption{Comparison of solving linear system created by the data set thermal1 \cite{} using SciPy \cite{} GMRES $8$ Core CPU implementation  and CUDA CUSP \cite{} GMRES GPU implementation.}
+\caption{Comparison of solving linear system created by the data set thermal1 \cite{thermal1} using SciPy \cite{SciPy} GMRES $8$ Core CPU implementation and CUDA CUSP \cite{Cusp} GMRES GPU implementation.}
 \label{tbl_GPU}
 \end{table} 
 
-What is not so clear is how to solve a linear system in parallel. 
+From Table \ref{tbl_GPU} the GPU implementation is faster. However, when running the CPU implementation, it used $100\%$ of the CPU cores. The GPU implementation achieved a maximum of $30\%$ of its computational power. This could be because SciPy is a popular library and thus constantly updated to optimise its performance and take advantage of the latest hardware. While CUSP was last updated in $2018$ and required file tweaks to make it compatible with the latest version of CUDA \cite{CUDA}.
 
-What takes the most time in FEM
+However, the most likely reason is the matrix is not large enough to take advantage of the $2560$ cores on this GPU. For larger systems, the GPU implementation will perform better than its CPU implementation. 
 
-No one uses Guassian or direct methods for large systems.
+Also, the gaming industry is driving hardware development for GPUs. So GPUs are going to get more powerful. Therefore, future work would involve finding better parallel algorithms to solve sparse linear systems and better communication protocols between cores. Then it will be coded in CUDA for simply implementation by third parties. 
 
-Future work would involve a git branch 
+Currently, Firedrake does not support calculations on the GPU this can be seen by the open issue on GitHub located at \cite{GPUIS}. Other potential future work would involve helping integrate parallel algorithms for Firedrake.
+
 
 \section{Conclusion}
-Do pros and cons of methods
-$PF\_STAB$ works better when highly anisotropic
-State using lagrange element leads to high error in H1
-Check out github page \cite{Hub}
-Go through findings examples SP best method when eps =1 AP is worst method 
-Talk about two introduced variants 
+In this thesis, we discussed multiple existing methods to solve anisotropic diffusion problems and propose a new method $(PF\_STAB)$ which is slightly better than the best current method $(MMAP\_STAB)$ for highly anisotropic diffusion problems. However, a value for $\sigma$ must be chosen and it is unclear what value it should take.
+
+Moreover, methods $(PF)$ and $(MMAP)$ do not work on closed field lines and we have to find $\Gamma_{in}$. But we found for the $(MMAP)$ method we can use a modified version of $\mathcal{L}$ to get reasonable error on closed field lines more research is needed to know if the selected points on the streamlines have to form a continuous line.
+
+The $(SP)$ method is the best for solving $\varepsilon \approx 1$ and it contains one PDE so there are fewer degrees of freedom than other methods. However, the method fails to produce a sufficiently small error for $\varepsilon \ll 1$ as it is not well-posed.  
+
+From the numerical calculations from \cite{DN} the DN shows 
+DN method shows promise but has a forced iteration scheme
+
+We found no reason to use the $(AP)$ method when the $(MMAP)$ method produces the same error for fewer degrees of freedom. Additionally, a similar argument is made for the $(LM)$ method, for $\varepsilon \ll 1$ discretisations from $(MMAP)$ and $(LM)$ are almost identical. Since the $(LM)$ method fails to calculate acceptable error for larger $\varepsilon$ there is no reason to use the $(LM)$ method. This is the same for the stabilisation variants. 
+
+
+Check out Github Page \cite{Hub}
+ 
 State most important future work
+
+We have shown it is possible to solve partial differential equations via the finite element method on a GPU cluster. On a sequential implementation the calculation of the linear system of equations from the integration over the finite elements will take longer than finding the solution to the linear system. However, with a paraelle implementation the bottlenecks become data commication and any parts parts . Thus with more funding and reasearch into parelle linear system solvers we can then use robust discretisations $(PF\_STAB)$ and $(MMAP\_STAB)$ to get an accurate solution to a highly anisotropic diffsion problem in a reasonable time. 
+
+Further research can be done into finding better discretisations but it is unclear if better methods can be found. With research into better pareller solvers you will also get the benifit of other industies driving development for better hardware.  
+
+Finally, 
+
+Thus is can find method, we can then use the addition of GPU methods to solve and get splution fast.
+important to take advantage of latest hardware
+
+Finally, the code used for the methods, the examples and generating data can be found on GitHub at \cite{Hub}. This mean results can be easily reproduced. To generate the data in the graphs and tables we used the functions in "makePics.py" located at \cite{Hub}.
 
 \printbibliography[heading=bibintoc]
 

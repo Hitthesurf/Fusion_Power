@@ -142,3 +142,98 @@ URL = {https://www.cise.ufl.edu/research/sparse/matrices/Schmid/thermal1.html},
          NOTE = {[Online; accessed 14-August-2022]}
 }
 
+
+
+@misc{thesisGPUPara,
+       AUTHOR = {Morgan Görtz},
+        TITLE = {Parallelization Of The GMRES
+Method},
+URL = {https://lup.lub.lu.se/luur/download?func=downloadFile&recordOId=8889583&fileOId=8890947},
+         NOTE = {[Online; accessed 14-August-2022]}
+}
+
+@inproceedings{SpeedClaim,
+author = {Bahi, Jacques M. and Couturier, Rapha\"{e}l and Khodja, Lilia Ziane},
+title = {Parallel GMRES Implementation for Solving Sparse Linear Systems on GPU Clusters},
+year = {2011},
+publisher = {Society for Computer Simulation International},
+address = {San Diego, CA, USA},
+abstract = {In this paper, we propose an efficient parallel implementation of the GMRES method for GPU clusters. This implementation requires us to parallelize the GMRES algorithm between the CPUs of the cluster. Hence, all parallel and intensive computations on local data are performed on GPUs and reduction operations to compute global results are carried out by CPUs. The performances of our parallel GMRES solver are evaluated on test matrices of sizes exceeding 107 rows. They show that solving large and sparse linear systems on a GPU cluster is faster than those performed on its CPU counterpart. It is noticed that a cluster of 12 GPUs is about 8 times faster than a cluster of 12 CPUs and about 5 times faster than a cluster of 24 CPUs.},
+booktitle = {Proceedings of the 19th High Performance Computing Symposia},
+pages = {12–19},
+numpages = {8},
+keywords = {sparse linear systems, GPU cluster, GMRES, CUDA},
+location = {Boston, Massachusetts},
+series = {HPC '11}
+}
+
+@misc{CPUSPEC,
+        TITLE = {Intel® Core™ i7-11800H Processor},
+URL = {https://www.intel.com/content/www/us/en/products/sku/213803/intel-core-i711800h-processor-24m-cache-up-to-4-60-ghz/specifications.html},
+         NOTE = {[Online; accessed 26-August-2022]}
+}
+
+@misc{GPUSPEC,
+        TITLE = {NVIDIA GeForce RTX 3050 Ti Mobile},
+URL = {https://www.techpowerup.com/gpu-specs/geforce-rtx-3050-ti-mobile.c3778},
+         NOTE = {[Online; accessed 26-August-2022]}
+}
+
+@misc{GPUIS,
+        TITLE = {GPU support for Firedrake 1605},
+URL = {https://github.com/firedrakeproject/firedrake/pull/1605},
+         NOTE = {[Online; accessed 26-August-2022]}
+}
+
+@misc{CUDA,
+        TITLE = {NVIDIA CUDA},
+URL = {https://developer.nvidia.com/cuda-toolkit},
+         NOTE = {[Online; accessed 26-August-2022]}
+}
+
+@misc{Para,
+        TITLE = {ParaView},
+URL = {https://www.paraview.org/},
+         NOTE = {[Online; accessed 26-August-2022]}
+}
+
+
+@misc{Ipyvolume,
+        TITLE = {Ipyvolume},
+URL = {https://ipyvolume.readthedocs.io/en/latest/},
+         NOTE = {[Online; accessed 26-August-2022]}
+}
+
+@Article{Matplotlib,
+  Author    = {Hunter, J. D.},
+  Title     = {Matplotlib: A 2D graphics environment},
+  Journal   = {Computing in Science \& Engineering},
+  Volume    = {9},
+  Number    = {3},
+  Pages     = {90--95},
+  abstract  = {Matplotlib is a 2D graphics package used for Python for
+  application development, interactive scripting, and publication-quality
+  image generation across user interfaces and operating systems.},
+  publisher = {IEEE COMPUTER SOC},
+  doi       = {10.1109/MCSE.2007.55},
+  year      = 2007
+}
+
+
+@article{COOFormat,
+title = {The Sliced COO Format for Sparse Matrix-Vector Multiplication on CUDA-enabled GPUs},
+journal = {Procedia Computer Science},
+volume = {9},
+pages = {57-66},
+year = {2012},
+note = {Proceedings of the International Conference on Computational Science, ICCS 2012},
+issn = {1877-0509},
+doi = {https://doi.org/10.1016/j.procs.2012.04.007},
+url = {https://www.sciencedirect.com/science/article/pii/S1877050912001287},
+author = {Hoang-Vu Dang and Bertil Schmidt},
+keywords = {SpMV, CUDA, Fermi},
+abstract = {Existing formats for Sparse Matrix-Vector Multiplication (SpMV) on the GPU are outperforming their corresponding implementations on multi-core CPUs. In this paper, we present a new format called Sliced COO (SCOO) and an effcient CUDA implementation to perform SpMV on the GPU. While previous work shows experiments on small to medium-sized sparse matrices, we perform evaluations on large sparse matrices. We compared SCOO performance to existing formats of the NVIDIA Cusp library. Our resutls on a Fermi GPU show that SCOO outperforms the COO and CSR format for all tested matrices and the HYB format for all tested unstructured matrices. Furthermore, comparison to a Sandy-Bridge CPU shows that SCOO on a Fermi GPU outperforms the multi-threaded CSR implementation of the Intel MKL Library on an i7-2700K by a factor between 5.5 and 18.}
+}
+
+
+
