@@ -1437,6 +1437,8 @@ Which implies $u= \sin(\pi y)$, this is missing the $\varepsilon$ order term fro
 \subsection{Mapping of $f$} \label{MAP_f}
 The idea behind this method is given $f$ for PDE (\ref{PDE}) when $\varepsilon = 10^{-15}$. We use this $f$ and solve the PDE for $\varepsilon = 10^{-1}$, this reduces the anisotropic strength and should reduce the error. We use the code below to quickly test this hypothesis on Example $4$ using the $(MMAP\_STAB)$ method.
 
+\lstinputlisting[language=Python]{CodeSnips/Map_f.py}
+
 Table \ref{Tbl_Map_f} contains some output of the code. It shows doing this method slightly reduces H1 Error but slightly increases L2 Error. Therefore, this suggests this technique does not work. Also, by looking at our numerical demonstrations of the $(MMAP\_STAB)$ method shown in Figure \ref{E4_eps} it can be seen varying $\varepsilon$ does not change the error. This shows that for the $(MMAP\_STAB)$ method the difficulty comes from having a vector field $\mathbf{b}$ that is highly anisotropic. 
 \begin{table}[H]
 \begin{center}
