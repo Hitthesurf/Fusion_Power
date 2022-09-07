@@ -64,7 +64,7 @@ Diffusion Problems}
 
 \begin{acknowledgements} 
 
-Firstly, I would like to thank my supervisor, Prof Patrick Farrell. He provided me with guidance and direction for this project. Additionally, he contributed his unpublished notes on the problem.
+Firstly, I would like to thank my supervisor, Prof Patrick Farrell. He provided me with guidance and direction for this project. Furthermore, he contributed his unpublished notes on the problem.
 
 Secondly, thanks are given to Dr Kathryn Gillow for providing a well-organised course and constant support.
 
@@ -104,7 +104,7 @@ where $\Gamma_N \cap \Gamma_D := \partial \Omega$ and
 \end{equation}
     Here $\epsilon \ll 1$ is the anisotropic coefficient. And $\mathbf{b}$ represents the electromagnetic vector field. From \cite{DN} we have restrictions on $\mathbf{b}$ they demand that
     \begin{enumerate}
-  \item $\mathbf{b} \in \mathcal{C}^{\infty}(\Omega; \mathrm{R}^d);$.
+  \item $\mathbf{b} \in \mathcal{C}^{\infty}(\Omega; \mathrm{R}^d);$
   \item $|\mathbf{b}|=1$ for all $\mathbf{x} \in \Omega$;
   \item $\mathbf{b}\cdot \mathbf{n} = 0$ on $\Gamma_D$ the Dirichlet boundary;
   \item $\mathbf{b}\cdot \mathbf{n} \neq 0$ on $\Gamma_N$ the Neumann boundary;
@@ -133,7 +133,7 @@ Thus from (\ref{Lap_para}) and (\ref{Lap_perp}) it is clear to see (\ref{Mat_A})
 \begin{align} \label{A_grad_u}
 \mathbb{A} \nabla u = 
 \varepsilon^{-1}(A_{||}\nabla_{||} u)_{||} + 
-(\mathbb{A}_{\perp}\nabla_{\perp}u)_{\perp} 
+(\mathbb{A}_{\perp}\nabla_{\perp}u)_{\perp}.
 \end{align}
 Thus putting (\ref{A_grad_u}) into the PDE (\ref{PDE}) we get
 \begin{equation}
@@ -172,7 +172,7 @@ In the integral over $\Gamma_D$ in (\ref{PDE_w}) $u$ can be replaced with $0$ be
 Our methods require the use of the sets 
 \begin{align}
 \Gamma_{in} &:= \{\mathbf{b} \in \Gamma : \mathbf{b} \cdot \mathbf{n} < 0\}, \\
-\mathcal{V} &:= \{v \in \mathcal{H}^1(\Omega) : v|_{\Gamma_{D}} = 0\}. \\
+\mathcal{V} &:= \{v \in \mathcal{H}^1(\Omega) : v|_{\Gamma_{D}} = 0\}, \\
 \mathcal{L} &:= \{\lambda \in \mathcal{H}^1(\Omega) : \lambda |_{\Gamma_{in}\cup \Gamma_{D}} = 0\}.
 \end{align}
 Where $\mathcal{H}^k(\Omega)$ the Sobolev space of order $k$. Also, it should be noted that sets $\mathcal{V}$ and $\mathcal{L}$ are easy to discretise. However, when the magnetic field $\mathbf{b}$ contains closed field lines it is not clear how we should adapt $\mathcal{L}$. One approach found by our numerical simulations shows we can still get a reasonable solution when we include a restriction to zero on a point for every closed streamline. Thus $\Gamma_{CL} := \{\text{one point on every closed streamline}\}$ and we can redefine $\mathcal{L} := \{\lambda \in \mathcal{H}^1(\Omega) : \lambda |_{\Gamma_{CL}\cup \Gamma_{in}\cup \Gamma_{D}} = 0\}$.
@@ -189,7 +189,7 @@ The single perturbation method involves solving the weak form of equation (\ref{
 \end{equation}
 Below we have the key points of our Firedrake \cite{Dragon} implementation
 \lstinputlisting[language=Python]{CodeSnips/Methods/SP.py}
-This method excels for when $\varepsilon \approx 1$.
+This method excels when $\varepsilon \approx 1$.
 
 \subsection{Limit Method} \label{LM}
 We now introduce a limit method discussed in paper \cite{AP}. The limit method involves solving the equation (\ref{PDE}) when $\varepsilon \rightarrow 0$. Therefore, $\Delta_{||}u=0$ so since we have zero Dirichlet boundary conditions the solution $u$ satisfies $\nabla_{||}u=0$ thus it is constant along the streamlines of the vector field. We apply this restriction using a Lagrangian parameter. This leads to solving the weak form (\ref{LM_w}) for the trial functions $(u, q) \in \mathcal{V} \times \mathcal{L}$.
@@ -329,7 +329,7 @@ We solve for trial functions $(u,q) \in \mathcal{V} \times \mathcal{Q}$ with tes
 \lstinputlisting[language=Python]{CodeSnips/Methods/PF_STAB.py}
 
 \chapter{Numerical Demonstrations}
-In these examples, we calculate $f$ from passing $u$ through the PDE. Additionally, in these example we take $A_{||}=1$ and $\mathbb{A}_{\perp} = \mathbb{I}$. Where $\mathbb{I}$ is the identity matrix. Also, for the stabilisation methods we take $\sigma=0.1$. But first, we briefly discuss the basic idea of how the finite element solver Firedrake \cite{Dragon} which is based on the package FEniCSx \cite{FEniCSx} calculates the solution. Also, we visualise data in ParaView \cite{Para}, Ipyvolume \cite{Ipyvolume} and Matplotlib \cite{Matplotlib}. 
+In these examples, we calculate $f$ from passing $u$ through the PDE. Additionally, in these examples we take $A_{||}=1$ and $\mathbb{A}_{\perp} = \mathbb{I}$. Where $\mathbb{I}$ is the identity matrix. Also, for the stabilisation methods we take $\sigma=0.1$. But first, we briefly discuss the basic idea of how the finite element solver Firedrake \cite{Dragon} which is based on the package FEniCSx \cite{FEniCSx} calculates the solution. Also, we visualise data in ParaView \cite{Para}, Ipyvolume \cite{Ipyvolume} and Matplotlib \cite{Matplotlib}. 
 
 Moreover, in section \ref{GMRES_GPU} we discuss how our solution can be improved using heterogeneous computing techniques.
 
@@ -348,7 +348,7 @@ We denote $\phi_i^{(RE)}$ as the basis functions on the reference element and $\
 where $\mathbf{x} \in FE$ and $\mathbf{\xi} \in RE$. Also, the $i$ means the same basis function location in other words $\mathcal{M}(\ell_i^{(RE)}) = \ell_i^{(FE)}$. Thus we will use the equation (\ref{CoC}) to calculate the integral in the $RE$ region.
 \begin{equation} \label{CoC}
 \int_{\mathcal{M}(RE)=FE}g(\mathbf{x}) d\mathbf{x} =
-\int_{RE}g(\mathcal{M(\xi)})\cdot |\det(D\mathcal{M}(\xi))| d\mathbf{x}.
+\int_{RE}g(\mathcal{M(\xi)})\cdot |\det(D\mathcal{M}(\xi))| d\mathbf{x},
 \end{equation}
 where $g$ is an arbitrary function.
 \subsection{Interval (1D)}
@@ -414,7 +414,7 @@ D\mathcal{M}(\xi_0, \xi_1) =
 x_1-x_0 & x_2-x_0 \\
 y_1-y_0 & y_2-y_0
 \end{matrix}
-\right ]
+\right ].
 \end{equation}
 Next, we calculate the absolute value of the determinant. 
 \begin{equation}
@@ -590,7 +590,7 @@ This leads to the set of equations
  \end{subfigure}
  \hfill
 \end{figure}
-Therefore, using the equations created by (\ref{CG_eq}) we get the matrix of coefficients
+\noindent Therefore, using the equations created by (\ref{CG_eq}) we get the matrix of coefficients
 \begin{align}
 \left[ \begin{matrix}
 \xi_{00} & \xi_{01} & \xi_{02} & \xi_{03} & \xi_{04} & \xi_{05}\\
@@ -773,7 +773,7 @@ We will solve the PDE (\ref{PDE}) with $\Omega = [0,1]^2, \Gamma_D = \{y=0 \text
 \mathbf{B} = \left[ \begin{matrix}
 \alpha(2y-1)\cos(m\pi x) + \pi\\
 \alpha m \pi (y^2-y)\sin(m \pi x)
-\end{matrix} \right]
+\end{matrix} \right].
 \end{equation}
 Thus we have $\Gamma_{in}:= \{x=0\}$ and we have the streamlines defined by 
 \begin{equation}
@@ -781,21 +781,21 @@ Thus we have $\Gamma_{in}:= \{x=0\}$ and we have the streamlines defined by
 \end{equation}
 with $0 \leq C \leq \pi$. This is calculated in Appendix \ref{E1_Stream_Calc}. When $\varepsilon \ll 1$ the solution must be constant along streamlines. Hence, we calculate the streamlines to find exact solutions to test. This leads to an exact solution 
 \begin{equation} \label{E1_u}
-u = \sin(\pi y + \alpha (y^2-y) \cos(m\pi x)) + \varepsilon \cos(2 \pi x) \sin(\pi y)
+u = \sin(\pi y + \alpha (y^2-y) \cos(m\pi x)) + \varepsilon \cos(2 \pi x) \sin(\pi y).
 \end{equation}
 This test problem came from \cite{DN}. However, the same or similar problem is very popular and appears in papers \cite{LINE_INT}, \cite{AP}, \cite{MMAP} and \cite{STAB}. We will cover three sub-examples with $(\alpha=0),(\alpha=2,m=1)$ and $(\alpha = 2, m=10)$. Thus we get electromagnetic fields shown in Figure \ref{E1_VFs}. The field for $\alpha = 0$ is not shown as it is a simple vector field with $\mathbf{b}= [1, 0]$.
 \begin{figure}[H]
  \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/VectorField/E1b_a2_m1.png}
-     \caption{$\alpha=2, m=1$}
+     \caption{$\alpha=2, m=1$.}
  \end{subfigure}
    \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/VectorField/E1b_a2_m10.png}
-     \caption{$\alpha=2, m=10$}
+     \caption{$\alpha=2, m=10$.}
  \end{subfigure}
- \caption{Electromagetic vector field $\mathbf{b}$ from (\ref{E1_b})} \label{E1_VFs}
+ \caption{Electromagetic vector field $\mathbf{b}$ from (\ref{E1_b}).} \label{E1_VFs}
 \end{figure}
-In Figure \ref{E1_us} we have the exact solution $u$ (\ref{E1_u}) to example $1$. We have the source term $f$ which is too complicated to write analytically so the visualisation is given in Figure \ref{E1_fs}. We analysis the equation with $\varepsilon = 0.1$ and $\varepsilon = 10^{-10}$. We notice the $\varepsilon = 0.1$ and $\varepsilon = 10^{-10}$ variants are visually similar for the source term $f$ and exact term $u$ this suggests we should consider a method discussed in section \ref{MAP_f}. The main difference is the solution $u$ is not constant on streamlines of the vector field $\mathbf{b}$ this makes logical sense because increasing the anisotropic strength (make $\varepsilon$ smaller) leads to less diffusion perpendicular to the magnetic field and undisturbed diffusion parallel to the magnetic field.
+In Figure \ref{E1_us} we have the exact solution $u$ (\ref{E1_u}) to Example $1$. We have the source term $f$ which is too complicated to write analytically so the visualisation is given in Figure \ref{E1_fs}. We analysis the equation with $\varepsilon = 0.1$ and $\varepsilon = 10^{-10}$. We notice the $\varepsilon = 0.1$ and $\varepsilon = 10^{-10}$ variants are visually similar for the source term $f$ and exact term $u$ this suggests we should consider a method discussed in section \ref{MAP_f}. The main difference is the solution $u$ is not constant on streamlines of the vector field $\mathbf{b}$ this makes logical sense because increasing the anisotropic strength (make $\varepsilon$ smaller) leads to less diffusion perpendicular to the magnetic field and undisturbed diffusion parallel to the magnetic field.
 
 In Figures \ref{E1_LH_PF} and \ref{E1_LM_SP} we numerically simulate the PDE created by Example $1$ with a $20 \times 20$ grid, where each finite element is a square with width $0.05$ discretised with an order $2$ Lagrange element. Also, each red dot represents a numerical calculation with varying $\varepsilon$. Where the degrees of freedom for $(MMAP), (PF), (LM)$ are $3362$, $(SP)$ is $1681$ and $(AP)$ is $8405$.
 
@@ -855,28 +855,28 @@ As can be seen in Table \ref{tlb_E1_Error} when the number of finite elements in
 \begin{figure}[H]
  \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/uf/U_E1a_eps1.png}
-     \caption{$\alpha=0$ and $\varepsilon = 0.1$}
+     \caption{$\alpha=0$ and $\varepsilon = 0.1$.}
  \end{subfigure}
    \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/uf/U_E1a_eps10.png}
-     \caption{$\alpha=0$ and $\varepsilon = 10^{-10}$}
+     \caption{$\alpha=0$ and $\varepsilon = 10^{-10}$.}
  \end{subfigure}
  \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/uf/U_E1b_eps1.png}
-     \caption{$\alpha=2, m=1$ and $\varepsilon = 0.1$}
+     \caption{$\alpha=2, m=1$ and $\varepsilon = 0.1$.}
  \end{subfigure}
  \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/uf/U_E1b_eps_10.png}
-     \caption{$\alpha=2, m=1$ and $\varepsilon = 10^{-10}$}
+     \caption{$\alpha=2, m=1$ and $\varepsilon = 10^{-10}$.}
  \end{subfigure}
  \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/uf/U_E1c_eps_1.png}
-     \caption{$\alpha=2, m=10$ and $\varepsilon = 0.1$}
+     \caption{$\alpha=2, m=10$ and $\varepsilon = 0.1$.}
  \end{subfigure}
  \hfill
  \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/uf/u_E1c_eps_10.png}
-     \caption{$\alpha=2, m=10$ and $\varepsilon = 10^{-10}$}
+     \caption{$\alpha=2, m=10$ and $\varepsilon = 10^{-10}$.}
  \end{subfigure}
  \caption{Exact solution $u$ (\ref{E1_u}) for Example $1$.} \label{E1_us}
 \end{figure}
@@ -884,28 +884,28 @@ As can be seen in Table \ref{tlb_E1_Error} when the number of finite elements in
 \begin{figure}[H]
  \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/uf/F_E1a_eps1.png}
-     \caption{$\alpha=0$ and $\varepsilon = 0.1$}
+     \caption{$\alpha=0$ and $\varepsilon = 0.1$.}
  \end{subfigure}
    \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/uf/F_E1a_eps10.png}
-     \caption{$\alpha=0$ and $\varepsilon = 10^{-10}$}
+     \caption{$\alpha=0$ and $\varepsilon = 10^{-10}$.}
  \end{subfigure}
  \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/uf/F_E1b_eps1.png}
-     \caption{$\alpha=2, m=1$ and $\varepsilon = 0.1$}
+     \caption{$\alpha=2, m=1$ and $\varepsilon = 0.1$.}
  \end{subfigure}
  \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/uf/F_E1b_eps_10.png}
-     \caption{$\alpha=2, m=1$ and $\varepsilon = 10^{-10}$}
+     \caption{$\alpha=2, m=1$ and $\varepsilon = 10^{-10}$.}
  \end{subfigure}
  \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/uf/F_E1c_eps_1.png}
-     \caption{$\alpha=2, m=10$ and $\varepsilon = 0.1$}
+     \caption{$\alpha=2, m=10$ and $\varepsilon = 0.1$.}
  \end{subfigure}
  \hfill
  \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/uf/f_E1c_eps_10.png}
-     \caption{$\alpha=2, m=10$ and $\varepsilon = 10^{-10}$}
+     \caption{$\alpha=2, m=10$ and $\varepsilon = 10^{-10}$.}
  \end{subfigure}
  \caption{Source term $f$ for Example $1$.} \label{E1_fs}
 \end{figure}
@@ -913,28 +913,28 @@ As can be seen in Table \ref{tlb_E1_Error} when the number of finite elements in
 \begin{figure}[H]
  \begin{subfigure}{0.42\textwidth}
      \includegraphics[width=\textwidth]{Pics/LHSims/E1a_MMAP_AP_PFL2.png}
-     \caption{L2 Error $\alpha=0$}
+     \caption{L2 Error $\alpha=0$.}
  \end{subfigure}
    \begin{subfigure}{0.42\textwidth}
      \includegraphics[width=\textwidth]{Pics/LHSims/E1a_MMAP_AP_PFH1.png}
-     \caption{H1 Error $\alpha=0$}
+     \caption{H1 Error $\alpha=0$.}
  \end{subfigure}
  \begin{subfigure}{0.42\textwidth}
      \includegraphics[width=\textwidth]{Pics/LHSims/E1b_MMAP_AP_PFL2.png}
-     \caption{L2 Error $\alpha=2, m=1$} \label{E1_Mild_Ans}
+     \caption{L2 Error $\alpha=2, m=1$.} \label{E1_Mild_Ans}
  \end{subfigure}
  \begin{subfigure}{0.42\textwidth}
      \includegraphics[width=\textwidth]{Pics/LHSims/E1b_MMAP_AP_PFH1.png}
-     \caption{H1 Error, $\alpha=2, m=1$}
+     \caption{H1 Error, $\alpha=2, m=1$.}
  \end{subfigure}
  \begin{subfigure}{0.42\textwidth}
      \includegraphics[width=\textwidth]{Pics/LHSims/E1c_MMAP_AP_PFL2.png}
-     \caption{L2 Error, $\alpha=2, m=10$} \label{E1_Strong_Ans}
+     \caption{L2 Error, $\alpha=2, m=10$.} \label{E1_Strong_Ans}
  \end{subfigure}
  \hfill
  \begin{subfigure}{0.42\textwidth}
      \includegraphics[width=\textwidth]{Pics/LHSims/E1c_MMAP_AP_PFH1.png}
-     \caption{H1 Error, $\alpha=2, m=10$}
+     \caption{H1 Error, $\alpha=2, m=10$.}
  \end{subfigure}
  \caption{Numerical demonstration for solver $MMAP, AP$ and $PF$ on a $20\times 20$ quadrilateral grid using CG order $2$ for Example $1$, with $x=\varepsilon$ and $y=$ Error.} \label{E1_LH_PF}
 \end{figure}
@@ -942,28 +942,28 @@ As can be seen in Table \ref{tlb_E1_Error} when the number of finite elements in
 \begin{figure}[H]
  \begin{subfigure}{0.42\textwidth}
      \includegraphics[width=\textwidth]{Pics/LHSims/E1a_MMAP_LM_SPL2.png}
-     \caption{L2 Error $\alpha=0$}
+     \caption{L2 Error $\alpha=0$.}
  \end{subfigure}
    \begin{subfigure}{0.42\textwidth}
      \includegraphics[width=\textwidth]{Pics/LHSims/E1a_MMAP_LM_SPH1.png}
-     \caption{H1 Error $\alpha=0$}
+     \caption{H1 Error $\alpha=0$.}
  \end{subfigure}
  \begin{subfigure}{0.42\textwidth}
      \includegraphics[width=\textwidth]{Pics/LHSims/E1b_MMAP_LM_SPL2.png}
-     \caption{L2 Error $\alpha=2, m=1$}
+     \caption{L2 Error $\alpha=2, m=1$.}
  \end{subfigure}
  \begin{subfigure}{0.42\textwidth}
      \includegraphics[width=\textwidth]{Pics/LHSims/E1b_MMAP_LM_SPH1.png}
-     \caption{H1 Error, $\alpha=2, m=1$}
+     \caption{H1 Error, $\alpha=2, m=1$.}
  \end{subfigure}
  \begin{subfigure}{0.42\textwidth}
      \includegraphics[width=\textwidth]{Pics/LHSims/E1c_MMAP_LM_SPL2.png}
-     \caption{L2 Error, $\alpha=2, m=10$}
+     \caption{L2 Error, $\alpha=2, m=10$.}
  \end{subfigure}
  \hfill
  \begin{subfigure}{0.42\textwidth}
      \includegraphics[width=\textwidth]{Pics/LHSims/E1c_MMAP_LM_SPH1.png}
-     \caption{H1 Error, $\alpha=2, m=10$}
+     \caption{H1 Error, $\alpha=2, m=10$.}
  \end{subfigure}
  \caption{Numerical demonstration for solver $MMAP, LM$ and $SP$ on a $20\times 20$ quadrilateral grid using CG order $2$ for Example $1$, with $x=\varepsilon$ and $y=$ Error.} \label{E1_LM_SP}
 \end{figure}
@@ -1028,7 +1028,7 @@ We will solve the PDE (\ref{PDE}) with $\Omega := \{x,y \in \mathbb{R}, 1<x^2+y^
 \mathbf{B} = \left[ \begin{matrix}
 -y\\
  x
-\end{matrix} \right]
+\end{matrix} \right],
 \end{equation}
 which is visualised in Figure \ref{E2_VF} and the streamlines follow the equation
 \begin{equation}
@@ -1044,7 +1044,7 @@ From Fig \ref{E2_VF} it can be seen the magnetic field has closed lines. Therefo
 
 We will use the solution
 \begin{equation}
-u = (1+\varepsilon)(x^2 + y^2 -1)(4-x^2-y^2)
+u = (1+\varepsilon)(x^2 + y^2 -1)(4-x^2-y^2),
 \end{equation}
 which is visualised with its source term $f$ in Figure \ref{E2_uf} at $\varepsilon = 0.1$.
 \begin{figure}[H]
@@ -1056,7 +1056,7 @@ which is visualised with its source term $f$ in Figure \ref{E2_uf} at $\varepsil
      \includegraphics[width=\textwidth]{Pics/uf/F_E2_eps_1.png}
      \caption{Source term $f$.}
  \end{subfigure}
- \caption{Example $2$ with $\varepsilon = 0.1$} \label{E2_uf}
+ \caption{Example $2$ with $\varepsilon = 0.1$.} \label{E2_uf}
 \end{figure}
 
 In Figure \ref{E2_LH} we have numerical calculations for varying $\varepsilon$ for Example $2$ with degrees $36944$ of freedom. As can be seen by Figures \ref{E2_LH_L2} and \ref{E2_LH_H1} when there are closed field lines the methods $(PF)$ and $(MMAP)$ fail to produce accurate solutions for $\varepsilon \ll 1$.
@@ -1068,40 +1068,40 @@ The new $(MMAP)$ variant is not discussed further because Figures \ref{E2_LH_L2_
 \begin{figure}[H]
  \begin{subfigure}{0.42\textwidth}
      \includegraphics[width=\textwidth]{Pics/LHSims/E2/E2_NormalL2.png}
-     \caption{L2 Error} \label{E2_LH_L2}
+     \caption{L2 Error.} \label{E2_LH_L2}
  \end{subfigure}
    \begin{subfigure}{0.42\textwidth}
      \includegraphics[width=\textwidth]{Pics/LHSims/E2/E2_NormalH1.png}
-     \caption{H1 Error} \label{E2_LH_H1}
+     \caption{H1 Error.} \label{E2_LH_H1}
  \end{subfigure}
  \begin{subfigure}{0.42\textwidth}
      \includegraphics[width=\textwidth]{Pics/LHSims/E2/E2_INL2.png}
-     \caption{L2 Error, with constraint} \label{E2_LH_L2_CON}
+     \caption{L2 Error, with constraint.} \label{E2_LH_L2_CON}
  \end{subfigure}
  \begin{subfigure}{0.42\textwidth}
      \includegraphics[width=\textwidth]{Pics/LHSims/E2/E2_INH1.png}
-     \caption{H1 Error, with constraint} \label{E2_LH_H1_CON}
+     \caption{H1 Error, with constraint.} \label{E2_LH_H1_CON}
  \end{subfigure}
  \begin{subfigure}{0.42\textwidth}
      \includegraphics[width=\textwidth]{Pics/LHSims/E2/E2_STABL2.png}
-     \caption{L2 Error, with stabilisation} \label{E2_LH_L2_STAB}
+     \caption{L2 Error, with stabilisation.} \label{E2_LH_L2_STAB}
  \end{subfigure}
  \hfill
  \begin{subfigure}{0.42\textwidth}
      \includegraphics[width=\textwidth]{Pics/LHSims/E2/E2_STABH1.png}
-     \caption{H1 Error, with stabilisation} \label{E2_LH_H1_STAB}
+     \caption{H1 Error, with stabilisation.} \label{E2_LH_H1_STAB}
  \end{subfigure}
  \caption{Numerical demonstration for solver $(MMAP), (MMAP\_STAB), (PF)$ and $(PF\_STAB)$ on a $20\times 20$ quadrilateral grid using CG order $2$ for Example $2$. Also, $x=\varepsilon$ and $y=$ Error.} \label{E2_LH}
 \end{figure}
 
 \section{Example 3, Magnetic Islands}
-We now solve an example on a square domain with non-zero boundary conditions on $\Gamma_D$ and with closed and open field lines. We will solve the PDE (\ref{PDE}) with $\Omega = [0,1]^2, \Gamma_D = \{y=0 \text{ or } y=1\}$ and $\Gamma_N = \{x=0 \text{ or } x=1\}$. We choose a magnetic field such 
+We now solve an example on a square domain with non-zero boundary conditions on $\Gamma_D$ and with closed and open field lines. We will solve the PDE (\ref{PDE}) with $\Omega = [0,1]^2, \Gamma_D = \{y=0 \text{ or } y=1\}$ and $\Gamma_N = \{x=0 \text{ or } x=1\}$. We choose a magnetic field such that 
 \begin{equation}
 \mathbf{b} = \frac{\mathbf{B}}{|\mathbf{B}|}, 
 \mathbf{B} = \left[ \begin{matrix}
 -\cos(\pi y)\\
 4a \sin(4 \pi x)
-\end{matrix} \right]
+\end{matrix} \right],
 \end{equation}
 which is visualised in Figure \ref{E3_VF}. Additionally, after some ODE analysis, we get the streamlines for this vector field. Which are
 \begin{equation}
@@ -1120,7 +1120,7 @@ with $-a\leq C \leq 1+a$.
 
 We will use the exact solution
 \begin{equation}
-u = \sin(10\sin(\pi y)-10a\cos(4 \pi x)) + \varepsilon \cos(2 \pi x)\sin(10 \pi y)
+u = \sin(10\sin(\pi y)-10a\cos(4 \pi x)) + \varepsilon \cos(2 \pi x)\sin(10 \pi y),
 \end{equation}
 which is visualised with its source term $f$ in Figure \ref{E3_uf} at $\varepsilon = 10^{-10}$. Furthermore, we visualise this for $\varepsilon = 0.1$.
 \begin{figure}[H]
@@ -1150,24 +1150,24 @@ which is visualised with its source term $f$ in Figure \ref{E3_uf} at $\varepsil
 \begin{figure}[H]
  \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/ErrorPlots/E3_MMAP_STAB.png}
-     \caption{L2 $=2.6\times10^{-2}$ for $(MMAP\_STAB)$}
+     \caption{L2 $=2.6\times10^{-2}$ for $(MMAP\_STAB)$.}
  \end{subfigure}
    \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/ErrorPlots/E3_PF_STAB.png}
-     \caption{L2 $=2.6\times10^{-2}$ for $(PF\_STAB)$}
+     \caption{L2 $=2.6\times10^{-2}$ for $(PF\_STAB)$.}
  \end{subfigure}
- \caption{Visualisation of Error $u_e-u_h$ for Example $3$ with $\varepsilon = 10^{-10}$, CG order $2$ on a $80 \times 80$ quadrilateral grid with dof$=51842$} \label{E3_Error}
+ \caption{Visualisation of Error $u_e-u_h$ for Example $3$ with $\varepsilon = 10^{-10}$, CG order $2$ on a $80 \times 80$ quadrilateral grid with dof$=51842$.} \label{E3_Error}
 \end{figure}
 
 
 \begin{figure}[H]
  \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/ErrorPlots/E3_MMAP_STAB_Q.png}
-     \caption{Solves $q$ defined in equation (\ref{MMAP_STAB_w}) for $(MMAP\_STAB)$}
+     \caption{Solves $q$ defined in equation (\ref{MMAP_STAB_w}) for $(MMAP\_STAB)$.}
  \end{subfigure}
    \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/ErrorPlots/E3_PF_STAB_Q.png}
-     \caption{Solves $q$ defined in equation (\ref{PF_STAB_w}) for $(PF\_STAB)$}
+     \caption{Solves $q$ defined in equation (\ref{PF_STAB_w}) for $(PF\_STAB)$.}
  \end{subfigure}
  \caption{Visualisation of $q$ defined in sections \ref{MMAP_STAB} and \ref{PF_STAB} for Example $3$ with $\varepsilon = 10^{-10}$, CG order $2$ on a $80 \times 80$ quadrilateral grid with dof$=51842$.} \label{E3_Q}
 \end{figure}
@@ -1176,13 +1176,13 @@ which is visualised with its source term $f$ in Figure \ref{E3_uf} at $\varepsil
 \section{Example 4, Magnetic Islands}
 
 We now introduce an example on a unit square where $\Gamma_D$ has zero boundary conditions. This is similar to Example $3$ but Example $4$ satisfies $\mathbf{b}\cdot\mathbf{n} = 0$ on $\Gamma_D$ this can be seen in Figure \ref{E4_VF}. This shows its vector field $\mathbf{b}$ on $y=0$ and $y=1$ is parallel to the boundary. Additionally, this has open and closed field lines.
-Thus on $\Omega = [0,1]^2, \Gamma_D = \{y=0 \text{ or } y=1\}$ and $\Gamma_N = \{x=0 \text{ or } x=1\}$ we solve the PDE (\ref{PDE}) with the same magnetic
+Thus on $\Omega = [0,1]^2, \Gamma_D = \{y=0 \text{ or } y=1\}$ and $\Gamma_N = \{x=0 \text{ or } x=1\}$ we solve the PDE (\ref{PDE}) with the magnetic field
 \begin{equation}
 \mathbf{b} = \frac{\mathbf{B}}{|\mathbf{B}|}, 
 \mathbf{B} = \left[ \begin{matrix}
 -\cos(\pi y)\\
 4a \sin(4 \pi x) \sin(\pi y)
-\end{matrix} \right]
+\end{matrix} \right],
 \end{equation}
 where the electromagnetic field $\mathbf{b}$ is shown in Figure \ref{E4_VF}. This vector field has streamlines 
 \begin{equation}
@@ -1199,7 +1199,7 @@ with $0\leq C \leq e^a$.
 \end{figure}
 Where the exact solution is 
 \begin{equation}
-u = \sin(10 \sin(\pi y) \exp^{-a\cos(4 \pi x)})  + \varepsilon \sin(10 \sin(\pi y) \exp^{-a\cos(4 \pi x)})
+u = \sin(10 \sin(\pi y) \exp^{-a\cos(4 \pi x)})  + \varepsilon \sin(10 \sin(\pi y) \exp^{-a\cos(4 \pi x)}),
 \end{equation}
 which is shown in Figure \ref{E4_uf}.
 
@@ -1218,11 +1218,11 @@ which is shown in Figure \ref{E4_uf}.
 \begin{figure}[H]
  \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/LHSims/E4/E4_STABL2.png}
-     \caption{L2 Error}
+     \caption{L2 Error.}
  \end{subfigure}
    \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/LHSims/E4/E4_STABH1.png}
-     \caption{H1 Error} \label{E4_eps_H1}
+     \caption{H1 Error.} \label{E4_eps_H1}
  \end{subfigure}
  \caption{Numerical solution of Example $4$ for solver $(MMAP\_STAB)$ and $(PF\_STAB)$ with varying $\varepsilon$ on $20 \times 20$ quadrilateral grid with CG order $2$. This has $3362$ degrees of freedom.} \label{E4_eps}
 \end{figure}
@@ -1252,11 +1252,11 @@ $160\times 160$ & 206082   & $1.84\times 10^{-5}$ & $1.92\times 10^{-5}$ & $1.93
 \begin{figure}[H]
  \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/ErrorPlots/E4_MMAP_STAB.png}
-     \caption{L2 $=1.56\times10^{-4}$ for $(MMAP\_STAB)$}
+     \caption{L2 $=1.56\times10^{-4}$ for $(MMAP\_STAB)$.}
  \end{subfigure}
    \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/ErrorPlots/E4_PF_STAB.png}
-     \caption{L2 $=1.45\times10^{-4}$ for $(PF\_STAB)$}
+     \caption{L2 $=1.45\times10^{-4}$ for $(PF\_STAB)$.}
  \end{subfigure}
  \caption{Visualisation of Error $u_e-u_h$ for Example $4$ with $\varepsilon = 10^{-10}$, CG order $2$ on a $80 \times 80$ quadrilateral grid with dof$=51842$.} \label{E4_Error}
 \end{figure}
@@ -1268,11 +1268,11 @@ In Figure \ref{E4_eps_H1} and Table \ref{tlb_E4_Error} it states a large H1 Erro
 \begin{figure}[H]
  \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/ErrorPlots/E4_MMAP_STAB_Q.png}
-     \caption{Solves $q$ defined in equation (\ref{MMAP_STAB_w}) for $(MMAP\_STAB)$}
+     \caption{Solves $q$ defined in equation (\ref{MMAP_STAB_w}) for $(MMAP\_STAB)$.}
  \end{subfigure}
    \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/ErrorPlots/E4_PF_STAB_Q.png}
-     \caption{Solves $q$ defined in equation (\ref{PF_STAB_w}) for $(PF\_STAB)$}
+     \caption{Solves $q$ defined in equation (\ref{PF_STAB_w}) for $(PF\_STAB)$.}
  \end{subfigure}
  \caption{Visualisation of $q$ defined in sections \ref{MMAP_STAB} and \ref{PF_STAB} for Example $4$ with $\varepsilon = 10^{-10}$, CG order $2$ on a $80 \times 80$ quadrilateral grid.} \label{E4_Q}
 \end{figure}
@@ -1282,13 +1282,13 @@ Here we discuss how to parameterise a torus and to find its inverted map. We use
 \begin{figure}[H]
  \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/TorusCordsXY.png}
-     \caption{Cross section of a torus with $z=0$}
+     \caption{Cross section of a torus with $z=0$.}
      \label{Torus_XY}
  \end{subfigure}
  \hfill
  \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/TorusCordsr_XYZ.png}
-     \caption{Cross section of torus}
+     \caption{Cross section of torus.}
      \label{Torus_z}
  \end{subfigure}
  \caption{Visual aids for the derivation of the Toroidal parameterisation.} \label{BO}
@@ -1296,38 +1296,38 @@ Here we discuss how to parameterise a torus and to find its inverted map. We use
 
 From visual inspection of Figure \ref{Torus_XY}, we get 
 \begin{align} \label{FTC_Eq1}
-x &= (r_I + r_{xy})\cos(\theta)\\
-y &= (r_I + r_{xy})\sin(\theta)
+x &= (r_I + r_{xy})\cos(\theta), \\
+y &= (r_I + r_{xy})\sin(\theta).
 \end{align}
 Additionally, from Figure \ref{Torus_z} we get 
 \begin{align}
-r_{xy}& = r \cos(\phi) \\ \label{FTC_Eq2}
-z &= r \sin(\phi)
+r_{xy}& = r \cos(\phi), \\ \label{FTC_Eq2}
+z &= r \sin(\phi).
 \end{align}
 Thus joining the equations (\ref{FTC_Eq1}) to (\ref{FTC_Eq2}) we get the toroidal parametrisation
 \begin{align}
-x &= (r_I + r\cos(\phi))\cos(\theta) \\
-y &= (r_I + r \cos(\phi))\sin(\theta) \\
-z &= r \sin(\phi)
+x &= (r_I + r\cos(\phi))\cos(\theta), \\
+y &= (r_I + r \cos(\phi))\sin(\theta), \\
+z &= r \sin(\phi),
 \end{align}
 where $0\leq r \leq r_O$ and $0 \leq \phi, \theta \leq 2 \pi$. Now we calculate the inverse of this map by considering $x^2 + y^2 + z^2$. 
 \begin{align}
-x^2 + y^2 + z^2 &= (r_I + r \cos(\phi))^2 + r^2\sin^2(\phi)\\
-&= r_I^2 + 2r_Ir\cos(\phi) + r^2\\
-&= r_I^2 +2r_I \sqrt{r^2-z^2} + r^2
+x^2 + y^2 + z^2 &= (r_I + r \cos(\phi))^2 + r^2\sin^2(\phi),\\
+&= r_I^2 + 2r_Ir\cos(\phi) + r^2,\\
+&= r_I^2 +2r_I \sqrt{r^2-z^2} + r^2.
 \end{align}
 This is a quadratic in disguise thus after some algebraic manipulation we get $4$ possible solutions
 \begin{equation}
-r = \pm\sqrt{r_I^2 + x^2 + y^2 + z^2 \pm 2r_I\sqrt{x^2+y^2}}
+r = \pm\sqrt{r_I^2 + x^2 + y^2 + z^2 \pm 2r_I\sqrt{x^2+y^2}}.
 \end{equation}
 However, by using enforcing $r\geq0$ we remove two solutions. We find the final solution by substitution. We use the substitution $(x, y, z) = (r_I, 0, 0)$ where $r=0$. With $+$ we get $r=2r_I$ and for $-$ we get $r = 0$. Thus we have 
 \begin{equation}
-r = \sqrt{r_I^2 + x^2 + y^2 + z^2 - 2r_I\sqrt{x^2+y^2}}
+r = \sqrt{r_I^2 + x^2 + y^2 + z^2 - 2r_I\sqrt{x^2+y^2}}.
 \end{equation}
 For completeness will we calculate $\theta$ and $\phi$. To get $\theta$ and $\phi$ we do a similar process used for calculating the argument of complex numbers. We note $r_{xy}=x^2+y^2-r_I$ thus we get
 \begin{align}
-\theta &= \text{atan2}(y, x) \\
-\phi &= \text{atan2}(z, x^2+y^2-r_{I})
+\theta &= \text{atan2}(y, x), \\
+\phi &= \text{atan2}(z, x^2+y^2-r_{I}),
 \end{align}
 where atan2 is a common variation of the arctan function.
 
@@ -1336,7 +1336,7 @@ We use the inverse of the map because calculating the differential operators lea
 \section{Example 5, Torus}
 We now look at an example in 3D where the domain $\Omega $ is a torus with inner radius $r_I = 1$, outer radius $r_O = 0.5$ and is centred at the origin. It will have zero Dirichlet boundary conditions. For this example, we will use Toroidal coordinates which are explained in section \ref{Form_Toro} and demonstrate how to find the inverse map. We invert back to Cartesian coordinates because the toroidal Laplacian is very complicated. Thus the definition of $r$ is
 \begin{equation}
-r = \sqrt{r_I^2 + x^2 + y^2 + z^2 -2r_I\sqrt{x^2+y^2}}
+r = \sqrt{r_I^2 + x^2 + y^2 + z^2 -2r_I\sqrt{x^2+y^2}}.
 \end{equation}
 Where $r$ denotes the minimum distance from the circumference of a circle centred at the origin with radius $r_I$ and has $z=0$. We have a magnetic field 
 \begin{equation}
@@ -1350,7 +1350,7 @@ Where $r$ denotes the minimum distance from the circumference of a circle centre
 -y\\
  x\\
  0
-\end{matrix} \right]
+\end{matrix} \right].
 \end{equation}
 Therefore, we have the streamlines following the equation
 \begin{equation}
@@ -1361,7 +1361,8 @@ In this case $1-\sqrt{0.25-z^2} \leq R \leq 1 + \sqrt{0.25+z^2}$. Also, we will 
 u = 
 \begin{cases}
 (1+\varepsilon)((0.5)^2 - r ),\\
-(1+\varepsilon)(0.25 -  \sqrt{r_I^2 + x^2 + y^2 + z^2 -2r_I\sqrt{x^2+y^2}})
+(1+\varepsilon)
+\left(0.25 -  \sqrt{r_I^2 + x^2 + y^2 + z^2 -2r_I\sqrt{x^2+y^2}}\right).
 \end{cases}
 \end{equation}
 This $u$ is displayed in Figure \ref{E5_uf} with its source term $f$ and $\varepsilon=10^{-10}$.
@@ -1381,11 +1382,11 @@ This $u$ is displayed in Figure \ref{E5_uf} with its source term $f$ and $\varep
 \begin{figure}[H]
  \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/LHSims/E5/E5_STABL2.png}
-     \caption{L2 Error}
+     \caption{L2 Error.}
  \end{subfigure}
    \begin{subfigure}{0.5\textwidth}
      \includegraphics[width=\textwidth]{Pics/LHSims/E5/E5_STABH1.png}
-     \caption{H1 Error}
+     \caption{H1 Error.}
  \end{subfigure}
  \caption{Numerical solution of Example $5$ for solver $(MMAP\_STAB)$ and $(PF\_STAB)$ with varying $\varepsilon$ on torus mesh with CG order $2$. This has $69976$ degrees of freedom.} \label{E5_eps}
 \end{figure}
@@ -1458,7 +1459,7 @@ $10^{0}$  &  $0.02904$   &  $0.31333$\\
 \caption{Error for solving with $(MMAP\_STAB)$ with $\varepsilon$ on a $40 \times 40$ quadrilateral grid with an order $2$ Lagrange Element (dof$=13122$) using $f$ from $\varepsilon=10^{-15}$.}
 \label{Tbl_Map_f}
 \end{table}
-Future work would involve finding a mapping for the $f$ generated by the PDE (\ref{PDE}) when $\varepsilon=10^{-15}$ and the $f$ generated by the PDE when $\varepsilon=10^{-1}$. This would lead to a reduced error because solving Example $4$ with the $(MMAP\_STAB)$ method on a $40 \times 40$ quadrilateral grid with order $2$ Lagrange elements with $\varepsilon = 0.1$ we get an L2 Error of $0.001249$. Which is orders of magnitude lower than the L2 Error of $0.02880$ from Table \ref{Tbl_Map_f} at $\varepsilon=10^{-15}$.
+Future work would involve finding a mapping for the $f$ generated by the PDE (\ref{PDE}) when $\varepsilon=10^{-15}$ and the $f$ generated by the PDE when $\varepsilon=10^{-1}$. This would lead to a reduced error because solving Example $4$ with the $(MMAP\_STAB)$ method on a $40 \times 40$ quadrilateral grid with order $2$ Lagrange elements with $\varepsilon = 0.1$ we get an L2 Error of $0.001249$. Which is an order of magnitude lower than the L2 Error of $0.02880$ from Table \ref{Tbl_Map_f} at $\varepsilon=10^{-15}$.
 
 \subsection{More Finite Elements} \label{FE_HER}
 Future work would involve looking at different finite elements. Currently, our numerical calculations have been done with an order $2$ Lagrange finite element. This means our solutions will be continuous but the solutions derivative will be discontinuous. This leads to the H1 error being large for the highly anisotropic examples. We can counter this by having a Hermite finite element which will give a continuous solution and the derivative will be continuous.
@@ -1467,7 +1468,7 @@ We have the basis functions for a Hermite finite element stated at \cite{defelem
 
 \begin{figure}[H]
      \includegraphics[width=\textwidth]{Pics/BasisFunc/IntervalFuncsHER.png}
-     \caption{Hermite basis functions on interval $[0,1]$}
+     \caption{Hermite basis functions on interval $[0,1]$.}
      \label{InterFuncsHER}
 \end{figure}
 
@@ -1519,7 +1520,7 @@ Currently, Firedrake does not support calculations on the GPU this can be seen b
 
 
 \section{Conclusion}
-In this thesis, we discussed multiple existing methods to solve anisotropic diffusion problems. We proposed a new method $(PF\_STAB)$. When the problem is highly anisotropic the $(PF\_STAB)$ method performs slightly better than the best existing method $(MMAP\_STAB)$. Also, these methods do not require grid alignment. However, it is unclear what value to assign $\sigma$.
+In this thesis, we have discussed existing methods to solve anisotropic diffusion problems. We proposed a new method $(PF\_STAB)$. When the problem is highly anisotropic the $(PF\_STAB)$ method performs slightly better than the best existing method $(MMAP\_STAB)$. Also, these methods do not require grid alignment. However, it is unclear what value to assign $\sigma$.
 
 Moreover, methods $(PF)$ and $(MMAP)$ do not work on closed field lines and we have to find $\Gamma_{in}$.But we found for the $(MMAP)$ method we can use a modified version of $\mathcal{L}$ to get a reasonable error on closed field lines. More research is needed to know if the selected points on the streamlines have to form a continuous line.
 
@@ -1534,7 +1535,7 @@ Further research can be done into finding better discretisations but it is uncle
 
 Thus future work would be focused on using heterogeneous computing techniques and fully utilising the hardware available to solve the PDE.
 
-Finally, the code used for the methods, the examples and generating data can be found on GitHub at \cite{Hub}. This means results can be easily reproduced. To generate the data in the graphs and tables we used the functions in "makePics.py" located at \cite{Hub}.
+Finally, the code used for the methods, the examples and generating data can be found on GitHub at \cite{Hub}. This means results can be easily reproduced. To generate the data in the graphs and tables we used the functions in ``makePics.py" located at \cite{Hub}.
 
 \printbibliography[heading=bibintoc]
 
@@ -1560,8 +1561,8 @@ df = (\alpha m\pi (y^2-y)\sin(m\pi x))dx +
 \end{equation}
 This is in exact form so we must solve the following equations
 \begin{align}
-\frac{\partial f}{\partial x} &= \alpha m\pi (y^2-y)\sin(m\pi x)\\
-\frac{\partial f}{\partial y} &= (\alpha(2y-1)\cos(m\pi x)+\pi)
+\frac{\partial f}{\partial x} &= \alpha m\pi (y^2-y)\sin(m\pi x),\\
+\frac{\partial f}{\partial y} &= (\alpha(2y-1)\cos(m\pi x)+\pi).
 \end{align}
 Thus the streamlines follow the function
 \begin{equation}
